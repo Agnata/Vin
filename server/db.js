@@ -83,6 +83,36 @@ const MIGRATIONS = [
      expires_at TEXT NOT NULL,
      attempts   INTEGER NOT NULL DEFAULT 0
    );`,
+  // 4: new wine type 'sott' (dessert wines). SQLite cannot change a CHECK constraint, so the
+  // wines table is rebuilt with identical columns. No foreign keys point at wines.
+  `CREATE TABLE wines_new (
+     id          INTEGER PRIMARY KEY,
+     type        TEXT NOT NULL CHECK (type IN ('rott','vitt','rose','bubbel','sott','orange')),
+     name        TEXT NOT NULL,
+     producer    TEXT NOT NULL DEFAULT '',
+     grapes      TEXT NOT NULL DEFAULT '',
+     vintage     TEXT NOT NULL DEFAULT '',
+     country     TEXT NOT NULL DEFAULT '',
+     region      TEXT NOT NULL DEFAULT '',
+     style       TEXT NOT NULL DEFAULT '',
+     quantity    INTEGER NOT NULL DEFAULT 1 CHECK (quantity >= 0),
+     opened      INTEGER NOT NULL DEFAULT 0,
+     drink_from  INTEGER,
+     drink_to    INTEGER,
+     taste_kind  TEXT CHECK (taste_kind IN ('r','w')),
+     taste1      INTEGER,
+     taste2      INTEGER,
+     taste3      INTEGER,
+     note        TEXT NOT NULL DEFAULT '',
+     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+     updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
+   );
+   INSERT INTO wines_new SELECT id, type, name, producer, grapes, vintage, country, region, style, quantity, opened,
+     drink_from, drink_to, taste_kind, taste1, taste2, taste3, note, created_at, updated_at FROM wines;
+   DROP TABLE wines;
+   ALTER TABLE wines_new RENAME TO wines;`,
+  // 5: label photo per wine (file id in DATA_DIR/photos)
+  `ALTER TABLE wines ADD COLUMN photo TEXT;`,
 ];
 
 // Runs fn inside a transaction; rolls back if it throws.

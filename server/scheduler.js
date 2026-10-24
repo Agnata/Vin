@@ -24,7 +24,7 @@ export function startScheduler(db, config, mailer) {
       const due = !last || (stockholm(new Date(last.created)).date < sthlm.date && sthlm.hour >= BACKUP_HOUR);
       if (due && !(failedAt && now - new Date(failedAt) < 36e5)) {
         try {
-          const b = createBackup(db, config.backupDir, config.backupKeep, now);
+          const b = createBackup(db, config.backupDir, config.backupKeep, now, config.photosDir);
           setMeta(db, "backup_error", "");
           setMeta(db, "backup_failed_at", "");
           console.log(`Backup klar: ${b.name}`);

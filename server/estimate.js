@@ -5,6 +5,7 @@ const BY_TYPE = {
   vitt:   { from: 1, to: 5,  kind: "w", taste: [7, 2, 8] },
   rose:   { from: 0, to: 2,  kind: "w", taste: [6, 2, 8] },
   bubbel: { from: 3, to: 12, kind: "w", taste: [6, 2, 10] },
+  sott:   { from: 3, to: 25, kind: "w", taste: [9, 10, 8] },
   orange: { from: 1, to: 6,  kind: "r", taste: [8, 6, 8] },
 };
 

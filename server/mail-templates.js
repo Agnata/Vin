@@ -1,7 +1,7 @@
 // Plain-text and HTML versions of every e-mail the app sends.
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-const TYPE_COLOR = { rott: "#6B1A2A", vitt: "#CDB24E", rose: "#DC928E", bubbel: "#E3D69A", orange: "#C46E27" };
+const TYPE_COLOR = { rott: "#6B1A2A", vitt: "#CDB24E", rose: "#DC928E", bubbel: "#E3D69A", sott: "#8C4A2F", orange: "#C46E27" };
 
 function layout(title, body, footer = "") {
   return `<!doctype html><html lang="sv"><body style="margin:0;background:#DEDDD5;padding:24px 12px;font-family:Georgia,'Times New Roman',serif;color:#1E211F">

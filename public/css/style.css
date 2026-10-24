@@ -1,6 +1,6 @@
 :root{
   --bg:#DEDDD5; --paper:#E9E8E1; --ink:#1E211F; --muted:#5C605A; --rule:#BEBEB4;
-  --rott:#6B1A2A; --vitt:#CDB24E; --rose:#DC928E; --bubbel:#EFE6BF; --orange:#C46E27;
+  --rott:#6B1A2A; --vitt:#CDB24E; --rose:#DC928E; --bubbel:#EFE6BF; --sott:#8C4A2F; --orange:#C46E27;
   --focus:#6B1A2A;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -9,12 +9,12 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
-    --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+    --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --sott:#B87452; --orange:#D2813A; --focus:#E3A09C;
   }
 }
 :root[data-theme="dark"]{
   --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
-  --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+  --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --sott:#B87452; --orange:#D2813A; --focus:#E3A09C;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -261,3 +261,16 @@ details.tbl td:not(:first-child),details.tbl th:not(:first-child){text-align:rig
 .label-scan .note{flex:1;min-width:180px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .panel .stats{border-top:0;padding-top:0}
+
+/* ---------- label photos ---------- */
+.wine .head{display:flex;gap:12px;align-items:flex-start}
+.wine .head>div{min-width:0}
+.thumb{flex:0 0 auto;padding:0;border:1px solid var(--rule);border-radius:6px;background:var(--paper);cursor:zoom-in;overflow:hidden;line-height:0}
+.thumb img{width:54px;height:72px;object-fit:cover;display:block}
+.photo-edit{display:flex;align-items:center;gap:14px;margin:0 0 16px}
+.photo-edit img{width:72px;height:96px;object-fit:cover;border-radius:6px;border:1px solid var(--rule)}
+.photo-btns{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+dialog.viewer{width:auto;max-width:min(92vw,900px);padding:14px;text-align:center}
+dialog.viewer figure{margin:0}
+dialog.viewer img{display:block;max-width:100%;max-height:78dvh;margin:0 auto;border-radius:6px}
+dialog.viewer figcaption{margin:10px 0 8px;font-style:italic;color:var(--muted)}

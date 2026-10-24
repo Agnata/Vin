@@ -52,9 +52,17 @@
       <input type="file" id="scanFile" accept="image/*" capture="environment" class="visually-hidden" tabindex="-1" aria-hidden="true">
       <span class="note" id="scanMsg">Claude fyller i uppgifterna. Kontrollera dem innan du sparar.</span>
     </div>
+    <div class="photo-edit">
+      <img id="photoPreview" class="hidden" alt="Foto av etiketten">
+      <div class="photo-btns">
+        <button type="button" class="btn ghost small" id="photoBtn">Lägg till foto av etiketten</button>
+        <button type="button" class="linkbtn hidden" id="photoRemove">Ta bort foto</button>
+      </div>
+      <input type="file" id="photoFile" accept="image/*" class="visually-hidden" tabindex="-1" aria-hidden="true">
+    </div>
     <div class="grid">
       <label class="f full">Namn<input name="name" required maxlength="200"></label>
-      <label class="f">Vintyp<select name="type"><option value="rott">Rött</option><option value="vitt">Vitt</option><option value="rose">Rosé</option><option value="bubbel">Mousserande</option><option value="orange">Orange</option></select></label>
+      <label class="f">Vintyp<select name="type"><option value="rott">Rött</option><option value="vitt">Vitt</option><option value="rose">Rosé</option><option value="bubbel">Mousserande</option><option value="sott">Sött</option><option value="orange">Orange</option></select></label>
       <label class="f">Årgång<input name="vintage" inputmode="numeric" pattern="\d{4}" placeholder="t.ex. 2021" maxlength="4"></label>
       <label class="f">Producent<input name="producer" maxlength="200"></label>
       <label class="f">Druvor<input name="grapes" maxlength="200"></label>
@@ -89,6 +97,10 @@
       <button type="submit" class="btn" id="saveBtn">Spara</button>
     </div>
   </form>
+</dialog>
+<dialog id="viewer" class="viewer" aria-labelledby="viewerCap">
+  <figure><img id="viewerImg" alt=""><figcaption id="viewerCap"></figcaption></figure>
+  <button type="button" class="btn ghost small" id="viewerClose">Stäng</button>
 </dialog>
 <datalist id="countries"></datalist>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

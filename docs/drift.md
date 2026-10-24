@@ -39,7 +39,7 @@ Sökvägarna nedan är standardvärdena i `deploy/install.sh`. De har ännu inte
 
 | Vad | Sökväg |
 |---|---|
-| Utvecklings-/deploycheckout | `/home/parnes/work/vin` |
+| Utvecklings-/deploycheckout | `/home/parnes/work/Vin` |
 | Bygganvändare | `parnes` |
 | Node / npm | `/usr/local/bin/node`, `/usr/local/bin/npm` |
 | Installerad applikation | `/opt/vinkallaren/app` (arbetskatalog för tjänsten) |
@@ -48,6 +48,7 @@ Sökvägarna nedan är standardvärdena i `deploy/install.sh`. De har ännu inte
 | Miljökonfiguration | `/etc/vinkallaren.env` |
 | Datakatalog | `/var/lib/vinkallaren` |
 | Databas | `/var/lib/vinkallaren/vin.db` (+ `-wal`, `-shm`) |
+| Etikettfoton | `/var/lib/vinkallaren/photos/` (`<id>.jpg` och `<id>-thumb.jpg`) |
 | Applikationsbackuper | `/var/lib/vinkallaren/backups/` |
 | HTTP-vhost (port 80) | `/etc/apache2/sites-available/vin.parnes.com.conf` |
 | HTTPS-vhost | `/etc/apache2/sites-available/vin.parnes.com-le-ssl.conf` (skapas av certbot) |
@@ -158,6 +159,7 @@ Header always set Strict-Transport-Security "max-age=31536000"
   ```
   Ange gärna `CERTBOT_EMAIL=…`. Med `--no-certbot` avbryter installern i stället och visar vad som behöver göras.
 - **Andra värdnamn:** vhosten har bara `ServerName vin.parnes.com` och inga alias, så andra namn hamnar aldrig här.
+- **Adressen i `<VirtualHost …>` måste vara samma som de andra sajternas.** På servern är LB3 och de andra HTTPS-sajterna bundna till `www.parnes.com:443`, som pekar på `192.168.2.80`. Apache jämför bara vhostar på samma adress, så en vhost på `*:443` väljs aldrig för trafik till `192.168.2.80`. Då svarar `www.parnes.com` med fel certifikat. Installern läser därför adressen ur `apache2ctl -S`, sätter den i Vinkällarens två vhost-filer (`VHOST_ADDR`, överstyrbar) och kontrollerar efter omladdningen att rätt certifikat kommer tillbaka för `vin.parnes.com`. `dash.parnes.com` ligger på `*:443` och har sannolikt samma problem.
 
 ```bash
 sudo apache2ctl configtest
@@ -170,8 +172,10 @@ sudo systemctl reload apache2
 
 Huvudskriptet är `deploy/install.sh`.
 
+Skalet på servern är tcsh. Kör kommandona med `2>&1` och liknande i `bash`.
+
 ```bash
-cd /home/parnes/work/vin
+cd /home/parnes/work/Vin
 git pull
 ./deploy/install.sh --check
 sudo ./deploy/install.sh
@@ -236,7 +240,7 @@ Det finns sparade versioner och konfigurationsbackuper, men ingen automatisk rol
 Kontrollera parametrarna innan du upprepar en anpassad installation, annars återinförs standardvärdena. Variabler som kan anges vid installationen:
 - `REPO_DIR`, `NODE_BIN`, `NPM_BIN`, `BUILD_USER`, `PUBLIC_ORIGIN`, `PORT`
 - `INSTALL_ROOT` (under `/opt`), `ENV_FILE`, `UNIT_FILE`, `OFFSITE_UNIT`, `OFFSITE_TIMER`, `PROXY_FILE`
-- `HTTP_VHOST`, `APACHE_VHOST`, `SERVICE_USER`, `SERVICE_GROUP`
+- `HTTP_VHOST`, `APACHE_VHOST`, `VHOST_ADDR`, `SERVICE_USER`, `SERVICE_GROUP`
 - `DATA_DIR` (under `/var/lib`), `DB_PATH`, `CONFIG_BACKUP_ROOT`, `KEEP_PREVIOUS`, `CERTBOT_EMAIL`
 
 ## 8. Data och inloggning
@@ -292,9 +296,10 @@ Backupen sköts inuti Node-tjänsten:
 - **Därefter:** dagligen från kl. 03.00 Europe/Stockholm. Schemat kontrolleras varje minut.
 - **Efter fel:** minst en timmes väntan innan nästa försök. Felet visas på sidan Admin.
 
-Varje backup är en katalog `backups/vin-YYYYMMDD-HHMMSS/` med två filer:
+Varje backup är en katalog `backups/vin-YYYYMMDD-HHMMSS/` med:
 - `vin.db`, en konsistent kopia gjord med SQLites `VACUUM INTO`, säker under drift
-- `manifest.json` med schemaversion, storlek, sha256 och antal viner och användare
+- `photos/` med etikettfotona som databasen pekar på
+- `manifest.json` med schemaversion, storlek, sha256, antal viner och användare, och en lista över fotona med sha256
 
 Ofärdiga backuper ligger tillfälligt som `.partial` och listas, laddas ned och kopieras inte. De 30 senaste behålls (`BACKUP_KEEP`).
 
@@ -309,7 +314,7 @@ Sidan Admin, under "Drift", visar:
 2. Kontrollsumman mot `manifest.json` kontrolleras.
 3. Backupen får inte komma från en nyare schemaversion än den som körs.
 4. En räddningskopia av nuläget sparas.
-5. **Viner och historik** ersätts i en transaktion. Användarkonton, sessioner, tvåsteg och prenumerationer rörs inte, så ingen blir utelåst.
+5. **Viner, historik och etikettfoton** ersätts. Fotonas kontrollsummor kontrolleras först, och foton som inget vin längre pekar på tas bort (de finns kvar i räddningskopian). Användarkonton, sessioner, tvåsteg och prenumerationer rörs inte, så ingen blir utelåst.
 6. Händelsen loggas i journalen och som en händelse i historiken.
 
 Hela databasen, inklusive konton, återställs manuellt (avsnitt 13).
@@ -446,11 +451,11 @@ En databasåterställning återställer inte miljöfilen, TLS eller den installe
 ## 15. Verifiera på den faktiska servern
 
 - [ ] Att port 3104 är ledig: `sudo ss -ltnp`.
-- [ ] Att `/usr/local/bin/node` är Node 24 och att `parnes` kan köra `npm ci` i `/home/parnes/work/vin`.
+- [ ] Att `/usr/local/bin/node` är Node 24 och att `parnes` kan köra `npm ci` i `/home/parnes/work/Vin`.
 - [ ] Att DNS för `vin.parnes.com` pekar på servern och att port 80 och 443 är öppna i brandväggen.
 - [ ] Att certbot har ett konto (det har det troligen, för LB3) och att förnyelsen fungerar: `sudo certbot renew --dry-run`.
 - [ ] Att den skapade HTTPS-vhosten heter `vin.parnes.com-le-ssl.conf`. Ange annars `APACHE_VHOST=…`.
-- [ ] Att `apache2ctl -S` visar `vin.parnes.com` på både *:80 och *:443, och att LB3:s vhostar är opåverkade.
+- [ ] Att `apache2ctl -S` visar `vin.parnes.com` under samma adress som de andra sajterna (`192.168.2.80:443` och `:80`), och att LB3:s vhostar är opåverkade.
 - [ ] Vilken SMTP som ska användas (samma som LB3?), samt SPF och DKIM för `parnes.com`.
 - [ ] Mål för extern backup (samma NAS som LB3, egen underkatalog) och SSH-nyckel för `vinkallaren`.
 - [ ] Efter ett dygn: att `/api/health` svarar 200 och att `offsite.json` visar en lyckad kopia.

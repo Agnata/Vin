@@ -11,6 +11,7 @@ export const config = {
   dbPath,
   dataDir,
   backupDir: env.BACKUP_DIR || path.join(dataDir, "backups"),
+  photosDir: env.PHOTOS_DIR || path.join(dataDir, "photos"),
   backupKeep: Number(env.BACKUP_KEEP || 30),
   // rsync target for deploy/vinkallaren-backup-offsite.sh; empty = off.
   offsiteTarget: env.BACKUP_OFFSITE_TARGET || "",

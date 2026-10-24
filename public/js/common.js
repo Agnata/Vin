@@ -1,5 +1,5 @@
-export const TYPES = { rott: "Rött", vitt: "Vitt", rose: "Rosé", bubbel: "Mousserande", orange: "Orange" };
-export const ORDER = ["rott", "vitt", "rose", "bubbel", "orange"];
+export const TYPES = { rott: "Rött", vitt: "Vitt", rose: "Rosé", bubbel: "Mousserande", sott: "Sött", orange: "Orange" };
+export const ORDER = ["rott", "vitt", "rose", "bubbel", "sott", "orange"];
 export const col = t => `var(--${t})`;
 export const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 

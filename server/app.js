@@ -8,6 +8,7 @@ import { openDb } from "./db.js";
 import { createAuth, requireUser, requireAdmin, sameOriginJson } from "./auth.js";
 import { createMailer } from "./mailer.js";
 import { winesRouter } from "./routes/wines.js";
+import { createPhotos } from "./photos.js";
 import { accountRouter } from "./routes/account.js";
 import { adminRouter } from "./routes/admin.js";
 import { claudeRouter } from "./routes/claude.js";
@@ -48,8 +49,9 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
       },
     },
   }));
-  // Label photos are the only large request bodies; everything else stays small.
+  // Photos are the only large request bodies; everything else stays small.
   app.use("/api/claude/label", express.json({ limit: "8mb" }));
+  app.use(/^\/api\/wines\/\d+\/photo$/, express.json({ limit: "5mb" }));
   app.use(express.json({ limit: "50kb" }));
   // Signed-in pages and the API are never cached by browsers or proxies.
   app.use(["/api", "/kallaren", "/konto", "/statistik", "/admin", "/login", "/losenord"], (_req, res, next) => {
@@ -118,7 +120,7 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
   app.use("/api/stats", requireUser, statsRouter(db));
   app.get("/admin", requireAdmin, (_req, res) => res.sendFile(page("admin.html")));
   app.use("/api/admin", requireAdmin, adminRouter(db, auth, mailer, config, twoFactor));
-  app.use("/api/wines", requireUser, winesRouter(db));
+  app.use("/api/wines", requireUser, winesRouter(db, createPhotos(config.photosDir)));
   if (config.claude.enabled) app.use("/api/claude", requireUser, claudeRouter(db, config));
 
   app.use(express.static(PUBLIC, { index: false, extensions: [], maxAge: config.production ? "1h" : 0 }));

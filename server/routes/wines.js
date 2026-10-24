@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { estimate } from "../estimate.js";
 
-const TYPES = ["rott", "vitt", "rose", "bubbel", "orange"];
+const TYPES = ["rott", "vitt", "rose", "bubbel", "sott", "orange"];
 const TEXT = ["name", "producer", "grapes", "vintage", "country", "region", "style", "note"];
 const INTS = ["drink_from", "drink_to", "taste1", "taste2", "taste3"];
 
@@ -47,7 +47,7 @@ export function validateWine(body, partial = false) {
   return [out, null];
 }
 
-export function winesRouter(db) {
+export function winesRouter(db, photos) {
   const r = Router();
   const q = {
     list: db.prepare("SELECT * FROM wines WHERE quantity > 0 ORDER BY id"),
@@ -122,9 +122,41 @@ export function winesRouter(db) {
 
   r.get("/:id/history", load, (req, res) => res.json(q.history.all(req.wine.id)));
 
+  // ---- label photo ----
+  // Body: { image, thumb } as base64 JPEG, already shrunk in the browser.
+  r.put("/:id/photo", load, (req, res) => {
+    const { image, thumb } = req.body || {};
+    if (typeof image !== "string" || typeof thumb !== "string") return res.status(400).json({ error: "Ingen bild skickades." });
+    let id;
+    try {
+      id = photos.save(Buffer.from(image, "base64"), Buffer.from(thumb, "base64"));
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    db.prepare("UPDATE wines SET photo = ?, updated_at = datetime('now') WHERE id = ?").run(id, req.wine.id);
+    if (req.wine.photo) photos.remove(req.wine.photo);
+    log(req.wine.id, req, "photo");
+    res.json(q.get.get(req.wine.id));
+  });
+
+  r.delete("/:id/photo", load, (req, res) => {
+    if (req.wine.photo) photos.remove(req.wine.photo);
+    db.prepare("UPDATE wines SET photo = NULL, updated_at = datetime('now') WHERE id = ?").run(req.wine.id);
+    res.json(q.get.get(req.wine.id));
+  });
+
+  // ?size=thumb for the list. The id changes with every new photo, so it can be cached for good.
+  r.get("/:id/photo", load, (req, res) => {
+    const file = req.wine.photo && photos.path(req.wine.photo, req.query.size === "thumb" ? "thumb" : "full");
+    if (!file) return res.status(404).json({ error: "Vinet har inget foto." });
+    res.set("Cache-Control", "private, max-age=31536000, immutable");
+    res.type("jpeg").sendFile(file);
+  });
+
   r.delete("/:id", load, (req, res) => {
     log(req.wine.id, req, "deleted", req.wine.name);
     q.remove.run(req.wine.id);
+    if (req.wine.photo) photos.remove(req.wine.photo);
     res.status(204).end();
   });
 
