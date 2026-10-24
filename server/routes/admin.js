@@ -121,7 +121,7 @@ export function adminRouter(db, auth, mailer, config, twoFactor) {
 
   r.post("/backups", (_req, res) => {
     try {
-      res.status(201).json(createBackup(db, config.backupDir, config.backupKeep));
+      res.status(201).json(createBackup(db, config.backupDir, config.backupKeep, new Date(), config.photosDir));
     } catch (err) {
       res.status(500).json({ error: `Backupen misslyckades: ${err.message}` });
     }
@@ -130,7 +130,7 @@ export function adminRouter(db, auth, mailer, config, twoFactor) {
   r.post("/backups/:name/restore", (req, res) => {
     if (req.body?.confirm !== "ÅTERSTÄLL") return res.status(400).json({ error: "Bekräfta genom att skriva ÅTERSTÄLL." });
     try {
-      const r = restoreBackup(db, config.backupDir, req.params.name, config.backupKeep);
+      const r = restoreBackup(db, config.backupDir, req.params.name, config.backupKeep, config.photosDir);
       db.prepare("INSERT INTO events (wine_id, user_id, kind, detail) VALUES (0, ?, 'restored', ?)").run(req.user.id, req.params.name);
       console.log(`Återställde ${r.restored} (räddningskopia ${r.rescue}) på begäran av ${req.user.email}`);
       res.json(r);

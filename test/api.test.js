@@ -11,7 +11,7 @@ import path from "node:path";
 
 const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "vk-test-"));
 const config = { dbPath: ":memory:", production: false, origin: "", sessionDays: 1, publicStats: true, baseUrl: "https://vin.test",
-  dataDir, backupDir: path.join(dataDir, "backups"), backupKeep: 2, loginLimit: 1000, offsiteTarget: "", mail: {}, claude: { enabled: false } };
+  dataDir, backupDir: path.join(dataDir, "backups"), photosDir: path.join(dataDir, "photos"), backupKeep: 2, loginLimit: 1000, offsiteTarget: "", mail: {}, claude: { enabled: false } };
 let server, base, db, mailer, cookie = "", annaRecovery = [];
 
 before(async () => {
@@ -293,6 +293,43 @@ test("statistics", async () => {
   assert.equal(s.months.at(-1).drank, s.drank);
   assert.ok(s.byUser.some(u => u.label.startsWith("Anna")));
   assert.equal(Object.values(s.window).reduce((a, b) => a + b), s.drank);
+});
+
+test("label photos: upload, view, replace, remove, backup and restore", async () => {
+  const jpeg = tag => Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.from(tag)]).toString("base64");
+  const [wine] = await (await call("/api/wines")).json();
+  const put = body => call(`/api/wines/${wine.id}/photo`, { method: "PUT", body });
+
+  assert.equal((await call(`/api/wines/${wine.id}/photo`)).status, 404);
+  assert.equal((await put({ image: Buffer.from("<svg/>").toString("base64"), thumb: jpeg("t") })).status, 400, "only JPEG");
+  const first = await (await put({ image: jpeg("full-1"), thumb: jpeg("thumb-1") })).json();
+  assert.match(first.photo, /^[\w-]{16}$/);
+
+  const full = await call(`/api/wines/${wine.id}/photo`);
+  assert.equal(full.status, 200);
+  assert.equal(full.headers.get("content-type"), "image/jpeg");
+  assert.match(full.headers.get("cache-control"), /private/);
+  assert.ok(Buffer.from(await full.arrayBuffer()).includes("full-1"));
+  assert.ok(Buffer.from(await (await call(`/api/wines/${wine.id}/photo?size=thumb`)).arrayBuffer()).includes("thumb-1"));
+  assert.equal((await fetch(`${base}/api/wines/${wine.id}/photo`)).status, 401, "photos need a login");
+
+  // A backup holds the photo; replacing it removes the old file; restore brings it back.
+  await new Promise(res => setTimeout(res, 1100)); // backup names have one-second resolution
+  const b = await (await call("/api/admin/backups", { method: "POST", body: {} })).json();
+  assert.equal(b.photos?.length, 2, JSON.stringify(b));
+  const second = await (await put({ image: jpeg("full-2"), thumb: jpeg("thumb-2") })).json();
+  assert.notEqual(second.photo, first.photo);
+  assert.ok(!fs.existsSync(path.join(config.photosDir, `${first.photo}.jpg`)), "old file removed");
+  await new Promise(res => setTimeout(res, 1100));
+  assert.equal((await call(`/api/admin/backups/${b.name}/restore`, { method: "POST", body: { confirm: "ÅTERSTÄLL" } })).status, 200);
+  const restored = (await (await call("/api/wines")).json()).find(w => w.id === wine.id);
+  assert.equal(restored.photo, first.photo);
+  assert.ok(Buffer.from(await (await call(`/api/wines/${wine.id}/photo`)).arrayBuffer()).includes("full-1"));
+  assert.ok(!fs.existsSync(path.join(config.photosDir, `${second.photo}.jpg`)), "unreferenced photo cleaned up");
+
+  const removed = await (await call(`/api/wines/${wine.id}/photo`, { method: "DELETE" })).json();
+  assert.equal(removed.photo, null);
+  assert.equal(fs.readdirSync(config.photosDir).length, 0);
 });
 
 test("offsite status feeds health", async () => {

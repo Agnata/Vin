@@ -48,6 +48,7 @@ Sökvägarna nedan är standardvärdena i `deploy/install.sh`. De har ännu inte
 | Miljökonfiguration | `/etc/vinkallaren.env` |
 | Datakatalog | `/var/lib/vinkallaren` |
 | Databas | `/var/lib/vinkallaren/vin.db` (+ `-wal`, `-shm`) |
+| Etikettfoton | `/var/lib/vinkallaren/photos/` (`<id>.jpg` och `<id>-thumb.jpg`) |
 | Applikationsbackuper | `/var/lib/vinkallaren/backups/` |
 | HTTP-vhost (port 80) | `/etc/apache2/sites-available/vin.parnes.com.conf` |
 | HTTPS-vhost | `/etc/apache2/sites-available/vin.parnes.com-le-ssl.conf` (skapas av certbot) |
@@ -295,9 +296,10 @@ Backupen sköts inuti Node-tjänsten:
 - **Därefter:** dagligen från kl. 03.00 Europe/Stockholm. Schemat kontrolleras varje minut.
 - **Efter fel:** minst en timmes väntan innan nästa försök. Felet visas på sidan Admin.
 
-Varje backup är en katalog `backups/vin-YYYYMMDD-HHMMSS/` med två filer:
+Varje backup är en katalog `backups/vin-YYYYMMDD-HHMMSS/` med:
 - `vin.db`, en konsistent kopia gjord med SQLites `VACUUM INTO`, säker under drift
-- `manifest.json` med schemaversion, storlek, sha256 och antal viner och användare
+- `photos/` med etikettfotona som databasen pekar på
+- `manifest.json` med schemaversion, storlek, sha256, antal viner och användare, och en lista över fotona med sha256
 
 Ofärdiga backuper ligger tillfälligt som `.partial` och listas, laddas ned och kopieras inte. De 30 senaste behålls (`BACKUP_KEEP`).
 
@@ -312,7 +314,7 @@ Sidan Admin, under "Drift", visar:
 2. Kontrollsumman mot `manifest.json` kontrolleras.
 3. Backupen får inte komma från en nyare schemaversion än den som körs.
 4. En räddningskopia av nuläget sparas.
-5. **Viner och historik** ersätts i en transaktion. Användarkonton, sessioner, tvåsteg och prenumerationer rörs inte, så ingen blir utelåst.
+5. **Viner, historik och etikettfoton** ersätts. Fotonas kontrollsummor kontrolleras först, och foton som inget vin längre pekar på tas bort (de finns kvar i räddningskopian). Användarkonton, sessioner, tvåsteg och prenumerationer rörs inte, så ingen blir utelåst.
 6. Händelsen loggas i journalen och som en händelse i historiken.
 
 Hela databasen, inklusive konton, återställs manuellt (avsnitt 13).

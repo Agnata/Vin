@@ -8,6 +8,7 @@ Vår gemensamma vinkällare på **https://vin.parnes.com**: en publik framsida s
 - **Admin:** bjud in, redigera och ta bort användare, administratörsroll, länkar för nytt lösenord, driftstatus, backuper och återställning
 - **Tvåstegsverifiering** (TOTP med reservkoder), krävs för administratörer
 - **Statistik** över vad som druckits
+- **Etikettfoton** per vin, med miniatyr i listan
 - **Prenumeration:** varje användare väljer under Konto om de vill ha mejl dagligen, varje vecka eller inte alls
 - **Backup** varje natt inuti tjänsten, extern kopia med rsync, `/api/health`
 - **Claude** för vinförslag och för att läsa in etiketter från foto finns inbyggt men är avstängt (`CLAUDE_ENABLED=false`)

@@ -5,5 +5,5 @@ import { openDb } from "../server/db.js";
 import { createBackup } from "../server/backups.js";
 
 const db = openDb(config.dbPath);
-const b = createBackup(db, config.backupDir, config.backupKeep);
+const b = createBackup(db, config.backupDir, config.backupKeep, new Date(), config.photosDir);
 console.log(`Backup: ${config.backupDir}/${b.name} (${b.wines} viner, ${(b.size / 1024).toFixed(0)} kB)`);

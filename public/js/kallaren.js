@@ -19,7 +19,7 @@ function fromApi(r) {
   const w = {
     id: "w" + r.id, dbId: r.id, raw: r, t: r.type, n: r.name, p: r.producer, g: r.grapes, v: r.vintage,
     c: r.country || "Okänt land", r: r.region, q: r.quantity, o: !!r.opened, s: r.style,
-    f: r.drink_from, u: r.drink_to,
+    f: r.drink_from, u: r.drink_to, photo: r.photo,
     tk: r.taste_kind ? { k: r.taste_kind, v: [r.taste1, r.taste2, r.taste3] } : null,
   };
   w.st = status(w);
@@ -108,9 +108,11 @@ function render() {
     const n = ws.reduce((a, w) => a + w.q, 0);
     return `<section class="country"><h2>${esc(l)}<small>${n} ${n === 1 ? "flaska" : "flaskor"}</small></h2><ol class="wines">` +
       ws.map(w => `<li class="wine" id="${w.id}" style="--c:${col(w.t)}"><span class="dot" aria-hidden="true"></span>
+        <div><div class="head">${w.photo ? `<button type="button" class="thumb" data-view="${w.dbId}" aria-label="Visa etiketten för ${esc(w.n)}">
+          <img src="${photoUrl(w, "thumb")}" alt="" loading="lazy" width="54" height="72"></button>` : ""}
         <div><div class="name">${esc(w.n)}</div>
         <div class="meta">${esc(w.p)}${w.r ? ", " + esc(w.r) : ""}${w.s ? ", " + esc(w.s) : ""}</div>
-        ${w.g ? `<div class="meta grape">${esc(w.g)}</div>` : ""}
+        ${w.g ? `<div class="meta grape">${esc(w.g)}</div>` : ""}</div></div>
         ${w.o ? `<div class="open">Öppnad</div>` : ""}${dials(w)}
         <div class="acts" data-id="${w.dbId}">
           <button type="button" data-act="drink">Drack en</button>
@@ -142,6 +144,8 @@ function replaceWine(row) {
 }
 
 $("list").onclick = async e => {
+  const v = e.target.closest("[data-view]");
+  if (v) return viewPhoto(WINES.find(x => x.dbId === Number(v.dataset.view)));
   const b = e.target.closest(".acts button"); if (!b) return;
   const id = Number(b.parentElement.dataset.id);
   const w = WINES.find(x => x.dbId === id); if (!w) return;
@@ -174,7 +178,45 @@ function syncTasteLabel() {
 form.elements.type.onchange = syncTasteLabel;
 
 let claudeOn = false;
+// ---------- label photo ----------
+const photoUrl = (w, size) => `/api/wines/${w.dbId}/photo?v=${encodeURIComponent(w.photo)}${size === "thumb" ? "&size=thumb" : ""}`;
+let pendingPhoto = null;   // { image, thumb } chosen in the dialog, uploaded on save
+let removePhoto = false;
+
+function viewPhoto(w) {
+  if (!w?.photo) return;
+  $("viewerImg").src = photoUrl(w, "full");
+  $("viewerImg").alt = `Etiketten på ${w.n}`;
+  $("viewerCap").textContent = `${w.n}${w.v ? " " + w.v : ""}`;
+  $("viewer").showModal();
+}
+$("viewerClose").onclick = () => $("viewer").close();
+$("viewer").onclick = e => { if (e.target === $("viewer")) $("viewer").close(); };
+
+function showPhotoPreview(src) {
+  $("photoPreview").classList.toggle("hidden", !src);
+  if (src) $("photoPreview").src = src;
+  $("photoBtn").textContent = src ? "Byt foto" : "Lägg till foto av etiketten";
+  $("photoRemove").classList.toggle("hidden", !src);
+}
+async function takePhoto(file) {
+  const [image, thumb] = await Promise.all([shrink(file, 1568, 0.85), shrink(file, 360, 0.8)]);
+  pendingPhoto = { image, thumb };
+  removePhoto = false;
+  showPhotoPreview(`data:image/jpeg;base64,${thumb}`);
+  return image;
+}
+$("photoBtn").onclick = () => $("photoFile").click();
+$("photoFile").onchange = async e => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (!file) return;
+  try { await takePhoto(file); } catch (err) { $("formErr").textContent = err.message; }
+};
+$("photoRemove").onclick = () => { pendingPhoto = null; removePhoto = true; showPhotoPreview(null); };
+
 async function openDialog(w) {
+  pendingPhoto = null; removePhoto = false;
+  showPhotoPreview(w?.photo ? photoUrl(w, "thumb") : null);
   $("scan").classList.toggle("hidden", !claudeOn || !!w);
   $("scanMsg").textContent = "Claude fyller i uppgifterna. Kontrollera dem innan du sparar.";
   editing = w || null;
@@ -193,7 +235,7 @@ async function openDialog(w) {
   if (w) {
     try {
       const h = await api(`/api/wines/${w.dbId}/history`);
-      const L = { added: "Lades in", drank: "Drack en flaska", opened: "Öppnades", closed: "Markerades som inte öppnad", edited: "Ändrades" };
+      const L = { added: "Lades in", drank: "Drack en flaska", opened: "Öppnades", closed: "Markerades som inte öppnad", edited: "Ändrades", photo: "Nytt foto" };
       $("hist").innerHTML = h.map(e => `<li>${esc(e.created_at.slice(0, 10))} · ${esc(L[e.kind] || e.kind)}${e.user ? ` av ${esc(e.user)}` : ""}${e.kind === "drank" && e.detail ? `: ${esc(e.detail)}` : ""}</li>`).join("");
       $("histWrap").classList.toggle("hidden", !h.length);
     } catch { /* history is optional */ }
@@ -216,9 +258,11 @@ form.onsubmit = async e => {
   if (!body.name) { $("formErr").textContent = "Vinet behöver ett namn."; form.elements.name.focus(); return; }
   $("saveBtn").disabled = true;
   try {
-    const row = editing
+    let row = editing
       ? await api(`/api/wines/${editing.dbId}`, { method: "PATCH", body })
       : await api("/api/wines", { method: "POST", body });
+    if (pendingPhoto) row = await api(`/api/wines/${row.id}/photo`, { method: "PUT", body: pendingPhoto });
+    else if (removePhoto && editing?.photo) row = await api(`/api/wines/${row.id}/photo`, { method: "DELETE" });
     dlg.close();
     replaceWine(row);
     toast(editing ? "Sparat." : `${row.name} ligger nu i källaren.`);
@@ -380,16 +424,17 @@ btn.onclick = local; inp.onkeydown = e => { if (e.key === "Enter") local(); };
 
 // ---------- Claude (only when the server has it switched on) ----------
 // ---------- label photo -> form (Claude) ----------
-// Shrinks the photo to at most 1568 px on the long side (what the model uses anyway) as JPEG.
-function shrink(file) {
+// Shrinks a photo to at most maxEdge px on the long side as JPEG (base64). 1568 px is what
+// Claude reads anyway and is plenty for viewing a label; 360 px is the list thumbnail.
+function shrink(file, maxEdge = 1568, quality = 0.85) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const k = Math.min(1, 1568 / Math.max(img.width, img.height));
+      const k = Math.min(1, maxEdge / Math.max(img.width, img.height));
       const c = Object.assign(document.createElement("canvas"), { width: Math.round(img.width * k), height: Math.round(img.height * k) });
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(img.src);
-      resolve(c.toDataURL("image/jpeg", 0.85).split(",")[1]);
+      resolve(c.toDataURL("image/jpeg", quality).split(",")[1]);
     };
     img.onerror = () => reject(new Error("Bilden gick inte att läsa."));
     img.src = URL.createObjectURL(file);
@@ -401,7 +446,8 @@ $("scanFile").onchange = async e => {
   if (!file) return;
   $("scanMsg").textContent = "Claude läser etiketten…";
   try {
-    const r = await api("/api/claude/label", { method: "POST", body: { image: await shrink(file), media_type: "image/jpeg" } });
+    // The same picture becomes the wine's label photo.
+    const r = await api("/api/claude/label", { method: "POST", body: { image: await takePhoto(file), media_type: "image/jpeg" } });
     for (const f of FIELDS) if (f !== "quantity" && r[f] != null && r[f] !== "") form.elements[f].value = r[f];
     syncTasteLabel();
     $("scanMsg").textContent = "Klart. Kontrollera uppgifterna, särskilt årgång och drickfönster, innan du sparar.";

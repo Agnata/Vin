@@ -111,6 +111,8 @@ const MIGRATIONS = [
      drink_from, drink_to, taste_kind, taste1, taste2, taste3, note, created_at, updated_at FROM wines;
    DROP TABLE wines;
    ALTER TABLE wines_new RENAME TO wines;`,
+  // 5: label photo per wine (file id in DATA_DIR/photos)
+  `ALTER TABLE wines ADD COLUMN photo TEXT;`,
 ];
 
 // Runs fn inside a transaction; rolls back if it throws.
