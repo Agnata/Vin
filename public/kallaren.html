@@ -13,14 +13,11 @@
 </head>
 <body>
 <div class="wrap">
-<nav class="topbar" aria-label="Huvudmeny">
-  <a class="brand" href="/">vin.parnes.com</a>
-  <span class="who"><span id="who"></span><button type="button" class="linkbtn" id="logout">Logga ut</button></span>
-</nav>
+<nav class="topbar" id="nav" aria-label="Huvudmeny"></nav>
 <header style="padding-top:36px">
   <h1>Vinkällaren</h1>
   <p class="lede" id="lede">Hämtar källaren…</p>
-  <div class="toolbar"><button type="button" class="btn" id="addBtn">Lägg till vin</button></div>
+  <div class="toolbar"><button type="button" class="btn" id="addBtn">Lägg till vin</button><a class="btn ghost small" href="/api/wines/export.csv" download>Exportera till Excel</a></div>
   <div class="rack" id="rack" aria-label="Varje cirkel är en flaska"></div>
   <ul class="legend" id="legend"></ul>
 </header>

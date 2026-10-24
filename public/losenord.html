@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<title>Välj lösenord · Vinkällaren</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="login">
+  <a href="/" style="font-style:italic;color:var(--muted);text-decoration:none">← vin.parnes.com</a>
+  <h1 id="h">Välj lösenord</h1>
+  <p class="lede" id="lede">Kontrollerar länken…</p>
+  <form id="form" class="hidden" novalidate>
+    <input type="email" id="email" autocomplete="username" class="hidden" aria-hidden="true" tabindex="-1">
+    <label class="f">Nytt lösenord (minst 10 tecken)<input id="password" type="password" autocomplete="new-password" minlength="10" required></label>
+    <label class="f">Upprepa lösenordet<input id="password2" type="password" autocomplete="new-password" required></label>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn" id="submit" type="submit">Spara och logga in</button>
+  </form>
+</main>
+<script src="/js/losenord.js" type="module"></script>
+</body>
+</html>

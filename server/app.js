@@ -5,14 +5,25 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { config as defaultConfig } from "./config.js";
 import { openDb } from "./db.js";
-import { createAuth, requireUser, sameOriginJson } from "./auth.js";
+import { createAuth, requireUser, requireAdmin, sameOriginJson } from "./auth.js";
+import { createMailer } from "./mailer.js";
 import { winesRouter } from "./routes/wines.js";
+import { accountRouter } from "./routes/account.js";
+import { adminRouter } from "./routes/admin.js";
 import { claudeRouter } from "./routes/claude.js";
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 const page = name => path.join(PUBLIC, name);
 
-export function createApp(config = defaultConfig, db = openDb(config.dbPath)) {
+const escHtml = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// Small server-rendered page for flows that must work without JavaScript (unsubscribe).
+const simplePage = (title, body) => `<!doctype html><html lang="sv"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>${escHtml(title)} · Vinkällaren</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/css/style.css"></head>
+<body><main class="login"><a href="/" style="font-style:italic;color:var(--muted);text-decoration:none">← vin.parnes.com</a>
+<h1 style="font-size:clamp(40px,10vw,60px)">${escHtml(title)}</h1>${body}</main></body></html>`;
+
+export function createApp(config = defaultConfig, db = openDb(config.dbPath), mailer = createMailer(config.mail)) {
   const app = express();
   const auth = createAuth(db, config);
 
@@ -55,13 +66,34 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath)) {
   });
   app.post("/api/logout", (req, res) => { auth.endSession(req, res); res.status(204).end(); });
   app.get("/api/me", (req, res) => res.json({ user: req.user, claude: config.claude.enabled }));
+  app.get("/losenord", (_req, res) => res.sendFile(page("losenord.html")));
+  app.use("/api", accountRouter(db, auth, mailer, config));
+
+  // Unsubscribe from e-mail digests via the secret link in every digest. GET shows a confirm button;
+  // POST (the button, or a mail client's one-click List-Unsubscribe) performs it.
+  const byUnsub = db.prepare("SELECT id, name FROM users WHERE unsubscribe_token = ?");
+  app.get("/avregistrera", (req, res) => {
+    const user = req.query.t ? byUnsub.get(String(req.query.t)) : null;
+    if (!user) return res.status(404).send(simplePage("Ogiltig länk", `<p class="lede">Länken fungerar inte längre. Logga in och ändra under <a href="/konto">Konto</a>.</p>`));
+    res.send(simplePage("Avsluta prenumerationen", `<p class="lede">Vill du sluta få uppdateringar från Vinkällaren via e-post, ${escHtml(user.name)}?</p>
+      <form method="post" action="/avregistrera?t=${encodeURIComponent(req.query.t)}"><button class="btn" type="submit">Ja, avsluta</button></form>`));
+  });
+  app.post("/avregistrera", express.urlencoded({ extended: false, limit: "1kb" }), (req, res) => {
+    const user = req.query.t ? byUnsub.get(String(req.query.t)) : null;
+    if (!user) return res.status(404).send(simplePage("Ogiltig länk", `<p class="lede">Länken fungerar inte längre.</p>`));
+    db.prepare("UPDATE users SET digest = 'off' WHERE id = ?").run(user.id);
+    res.send(simplePage("Klart", `<p class="lede">Du får inga fler uppdateringar via e-post. Du kan slå på dem igen under <a href="/konto">Konto</a>.</p>`));
+  });
 
   // ---- signed in ----
   app.get("/kallaren", requireUser, (_req, res) => res.sendFile(page("kallaren.html")));
+  app.get("/konto", requireUser, (_req, res) => res.sendFile(page("konto.html")));
+  app.get("/admin", requireAdmin, (_req, res) => res.sendFile(page("admin.html")));
+  app.use("/api/admin", requireAdmin, adminRouter(db, auth, mailer, config));
   app.use("/api/wines", requireUser, winesRouter(db));
   if (config.claude.enabled) app.use("/api/claude", requireUser, claudeRouter(db, config));
 
-  app.use(express.static(PUBLIC, { index: false, maxAge: config.production ? "1h" : 0 }));
+  app.use(express.static(PUBLIC, { index: false, extensions: [], maxAge: config.production ? "1h" : 0 }));
   app.use("/api", (_req, res) => res.status(404).json({ error: "Finns inte." }));
   app.use((_req, res) => res.status(404).sendFile(page("404.html")));
   app.use((err, _req, res, _next) => {

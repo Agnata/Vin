@@ -1,0 +1,10 @@
+# /etc/systemd/system/vinkallaren-digest.service
+[Unit]
+Description=E-postutskick från Vinkällaren
+
+[Service]
+Type=oneshot
+User=vinkallaren
+WorkingDirectory=/opt/vinkallaren
+EnvironmentFile=/etc/vinkallaren.env
+ExecStart=/usr/bin/node scripts/send-digests.js

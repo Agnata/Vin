@@ -21,6 +21,14 @@
     <label class="f">Lösenord<input id="password" type="password" autocomplete="current-password" required></label>
     <p class="err" id="err" role="alert"></p>
     <button class="btn" id="submit" type="submit">Logga in</button>
+    <button type="button" class="linkbtn" id="forgotLink" style="align-self:flex-start">Glömt lösenord?</button>
+  </form>
+  <form id="forgot" class="hidden" novalidate>
+    <p style="margin:0">Skriv din e-postadress så skickar vi en länk där du kan välja ett nytt lösenord.</p>
+    <label class="f">E-post<input id="fEmail" type="email" autocomplete="username" required></label>
+    <p class="err" id="fMsg" role="status"></p>
+    <button class="btn" id="fSubmit" type="submit">Skicka länk</button>
+    <button type="button" class="linkbtn" id="backLink" style="align-self:flex-start">Tillbaka till inloggningen</button>
   </form>
 </main>
 <script src="/js/login.js" type="module"></script>

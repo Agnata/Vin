@@ -68,6 +68,19 @@ export function winesRouter(db) {
 
   r.get("/", (_req, res) => res.json(q.list.all()));
 
+  // Whole cellar as CSV (semicolon-separated with BOM, so Excel opens it with å, ä, ö intact).
+  r.get("/export.csv", (_req, res) => {
+    const cols = ["id", "type", "name", "producer", "grapes", "vintage", "country", "region", "style", "quantity", "opened", "drink_from", "drink_to", "note"];
+    const cell = v => {
+      const s = v == null ? "" : String(v);
+      return /[";\n\r]/.test(s) || /^[=+\-@]/.test(s) ? `"${s.replace(/^([=+\-@])/, "'$1").replace(/"/g, '""')}"` : s;
+    };
+    const rows = db.prepare("SELECT * FROM wines WHERE quantity > 0 ORDER BY country, type, name").all();
+    const csv = "﻿" + [cols.join(";"), ...rows.map(w => cols.map(c => cell(w[c])).join(";"))].join("\r\n") + "\r\n";
+    res.set({ "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename="vinkallaren-${new Date().toISOString().slice(0, 10)}.csv"` });
+    res.send(csv);
+  });
+
   r.post("/", (req, res) => {
     const [fields, err] = validateWine(req.body);
     if (err) return res.status(400).json({ error: err });

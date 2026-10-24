@@ -50,10 +50,33 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS events_wine ON events(wine_id);
 `;
 
+// Changes to existing databases, applied in order. Index + 1 = PRAGMA user_version.
+const MIGRATIONS = [
+  // 1: admin role, e-mail digests, password links
+  `ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0;
+   ALTER TABLE users ADD COLUMN digest TEXT NOT NULL DEFAULT 'off' CHECK (digest IN ('off','daily','weekly'));
+   ALTER TABLE users ADD COLUMN digest_sent_at TEXT;
+   ALTER TABLE users ADD COLUMN unsubscribe_token TEXT;
+   ALTER TABLE users ADD COLUMN last_login_at TEXT;
+   CREATE TABLE password_tokens (
+     token_hash TEXT PRIMARY KEY,
+     user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     purpose    TEXT NOT NULL CHECK (purpose IN ('invite','reset')),
+     expires_at TEXT NOT NULL
+   );`,
+];
+
 export function openDb(path) {
   const db = new Database(path);
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
   db.exec(SCHEMA);
+  const version = db.pragma("user_version", { simple: true });
+  for (let v = version; v < MIGRATIONS.length; v++) {
+    db.transaction(() => {
+      db.exec(MIGRATIONS[v]);
+      db.pragma(`user_version = ${v + 1}`);
+    })();
+  }
   return db;
 }

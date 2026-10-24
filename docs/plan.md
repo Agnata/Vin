@@ -4,7 +4,9 @@
 
 | Fråga | Beslut |
 |---|---|
-| Användare | Minst två, en gemensam källare. Skapas med `npm run add-user`. |
+| Användare | Minst två, en gemensam källare. Första administratören skapas med `npm run add-user -- … --admin`, övriga bjuds in från Admin. |
+| Admin | Administratörer kan bjuda in, redigera, ta bort och befordra användare och skicka länkar för nytt lösenord. Det finns alltid minst en administratör. |
+| E-post | Prenumeration per användare: av, dagligen eller varje vecka. SMTP (extern tjänst eller lokal postfix). Utan e-post visas länkarna för administratören i stället. |
 | Publikt | En framsida som beskriver källaren och visar totaler (flaskor, länder, producenter). Enskilda viner kräver inloggning. Totalerna stängs av med `PUBLIC_STATS=false`. |
 | Adress | https://vin.parnes.com |
 | Claude | Inbyggt men avstängt (`CLAUDE_ENABLED=false`). |
@@ -19,6 +21,10 @@
 4. **Framsida:** publik beskrivning med hyllan av flaskor och totaler.
 5. **Drift:** Apache-vhost, systemd-tjänst, backup-timer, env-exempel, installationssteg i README.
 6. **Claude:** `/api/claude/pair` med strukturerat JSON-svar, bara aktivt när det är påslaget.
+7. **Admin:** sidan `/admin` med inbjudningar via engångslänk (7 dagar), redigering, administratörsroll, borttagning och återställningslänkar (2 timmar).
+8. **Konto:** sidan `/konto` för namn, lösenord och prenumeration. "Glömt lösenord?" på inloggningen.
+9. **Prenumeration:** dagliga och veckovisa sammanfattningar via `vinkallaren-digest.timer`, avregistrering med ett klick (även `List-Unsubscribe`).
+10. **Export:** hela källaren som CSV som öppnas direkt i Excel.
 
 ## Att göra
 
@@ -30,4 +36,5 @@
   - *Principium*: saknar druva.
 - **Backup utanför servern** (rclone/rsync till annan maskin).
 - **Automatisk driftsättning** via GitHub Actions och SSH, om manuell `git pull` blir jobbigt.
-- **Senare:** statistik över vad som druckits, export till CSV, byta lösenord i gränssnittet, Claude-förslag på drickfönster för nya viner.
+- **E-post på servern:** välj SMTP-tjänst och lägg in SPF/DKIM för `parnes.com`.
+- **Senare:** statistik över vad som druckits, Claude-förslag på drickfönster för nya viner.

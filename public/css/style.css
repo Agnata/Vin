@@ -181,3 +181,33 @@ fieldset legend{font-size:15px;color:var(--muted);padding:0 6px}
 .cap.static{cursor:default}
 .wine>div{min-width:0}
 .wine .name{overflow-wrap:anywhere}
+.topbar .who a{color:var(--muted);text-decoration:none}
+.topbar .who a[aria-current="page"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.topbar .who a:hover{color:var(--ink)}
+@media (max-width:480px){.topbar{flex-wrap:wrap}.topbar .who{gap:12px}}
+
+/* ---------- account and admin ---------- */
+.page{padding:36px 0 80px}
+.page h1{font-size:clamp(48px,12vw,80px)}
+.panel{margin-top:40px;padding-top:18px;border-top:1px solid var(--ink)}
+.panel h2{font-weight:400;font-size:30px;margin:0 0 4px}
+.panel .sub{color:var(--muted);font-style:italic;margin:0 0 16px;font-size:17px}
+.stack{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.stack .btn{align-self:flex-start}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choices label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--rule);border-radius:10px;cursor:pointer;background:var(--paper)}
+.choices label:has(input:checked){border-color:var(--ink)}
+.choices input{margin-top:6px}
+.choices small{display:block;color:var(--muted);font-size:15px}
+.note{font-size:15px;color:var(--muted);font-style:italic}
+.users{list-style:none;margin:0;padding:0}
+.user{display:grid;grid-template-columns:1fr auto;gap:4px 14px;padding:14px 0;border-top:1px solid var(--rule)}
+.user .nm{font-size:20px;font-weight:500}
+.user .meta{font-size:15px;color:var(--muted)}
+.user .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.badge{font-size:13px;border:1px solid var(--rule);border-radius:999px;padding:0 9px;color:var(--muted)}
+.badge.admin{border-color:var(--rott);color:var(--rott)}
+.user .acts{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;justify-content:flex-end}
+@media (max-width:560px){.user{grid-template-columns:1fr}.user .acts{justify-content:flex-start}}
+.linkbox{display:flex;gap:8px;margin-top:10px}
+.linkbox input{flex:1;min-width:0;font:inherit;font-size:14px;padding:6px 9px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);color:var(--ink)}

@@ -1,4 +1,4 @@
-import { TYPES, ORDER, col, esc, dial, api } from "./common.js";
+import { TYPES, ORDER, col, esc, dial, api, renderNav, toast } from "./common.js";
 
 const $ = id => document.getElementById(id);
 const YEAR = new Date().getFullYear();
@@ -25,15 +25,6 @@ function fromApi(r) {
   w.st = status(w);
   tagWine(w);
   return w;
-}
-
-let toastTimer;
-function toast(msg) {
-  const t = $("toast");
-  t.textContent = msg;
-  t.classList.add("on");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("on"), 2600);
 }
 
 // ---------- header, rack and filters ----------
@@ -402,10 +393,9 @@ function enableClaude() {
 }
 
 // ---------- start ----------
-$("logout").onclick = async () => { await api("/api/logout", { method: "POST", body: {} }).catch(() => {}); location.href = "/"; };
 try {
   const [me, rows] = await Promise.all([api("/api/me"), api("/api/wines")]);
-  $("who").textContent = me.user?.name || "";
+  renderNav(me.user, "/kallaren");
   if (me.claude) enableClaude();
   WINES = rows.map(fromApi);
   rebuild();

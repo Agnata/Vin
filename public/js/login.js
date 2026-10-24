@@ -18,3 +18,27 @@ $("form").addEventListener("submit", async e => {
     $("submit").disabled = false;
   }
 });
+
+// ---------- forgot password ----------
+function showForgot(on) {
+  $("form").classList.toggle("hidden", on);
+  $("forgot").classList.toggle("hidden", !on);
+  if (on) { $("fEmail").value = $("email").value; $("fEmail").focus(); } else $("email").focus();
+}
+$("forgotLink").onclick = () => showForgot(true);
+$("backLink").onclick = () => showForgot(false);
+if (location.hash === "#glomt") showForgot(true);
+
+$("forgot").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("fSubmit").disabled = true;
+  try {
+    const r = await api("/api/password/forgot", { method: "POST", body: { email: $("fEmail").value } });
+    $("fMsg").style.color = "var(--muted)";
+    $("fMsg").textContent = r.mail
+      ? "Om adressen finns hos oss har vi skickat en länk. Kolla din inkorg, och skräpposten."
+      : "E-post är inte inställd på servern än. Be en administratör om en länk för nytt lösenord.";
+  } catch (err) {
+    $("fMsg").textContent = err.message;
+  } finally { $("fSubmit").disabled = false; }
+});
