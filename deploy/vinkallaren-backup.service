@@ -1,0 +1,10 @@
+# /etc/systemd/system/vinkallaren-backup.service
+[Unit]
+Description=Backup av Vinkällarens databas
+
+[Service]
+Type=oneshot
+User=vinkallaren
+WorkingDirectory=/opt/vinkallaren
+EnvironmentFile=/etc/vinkallaren.env
+ExecStart=/usr/bin/node scripts/backup.js /var/backups/vinkallaren

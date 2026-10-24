@@ -1,0 +1,10 @@
+# /etc/systemd/system/vinkallaren-backup.timer
+[Unit]
+Description=Nattlig backup av Vinkällaren
+
+[Timer]
+OnCalendar=*-*-* 03:17
+Persistent=true
+
+[Install]
+WantedBy=timers.target
