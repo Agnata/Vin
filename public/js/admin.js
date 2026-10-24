@@ -111,3 +111,33 @@ $("delBtn").onclick = async () => {
 };
 
 await load();
+
+// ---------- operations ----------
+const fmtTime = iso => iso ? new Date(iso).toLocaleString("sv-SE", { dateStyle: "medium", timeStyle: "short" }) : "aldrig";
+const CHECKS = { database: "Databas", backup: "Backup", offsite: "Extern kopia", disk: "Diskutrymme" };
+
+async function loadSystem() {
+  const s = await api("/api/admin/system");
+  const c = s.health.checks;
+  const detail = {
+    database: c.database.ok ? "Svarar" : c.database.error,
+    backup: c.backup.last ? `Senast ${fmtTime(c.backup.last)}` : "Ingen backup än",
+    offsite: c.offsite.status === "off" ? "Inte inställd (BACKUP_OFFSITE_TARGET)" : `Senast ${fmtTime(c.offsite.last)}${c.offsite.error ? `. ${c.offsite.error}` : ""}`,
+    disk: c.disk.freeMB != null ? `${(c.disk.freeMB / 1024).toFixed(1)} GB ledigt` : c.disk.error,
+  };
+  $("checks").innerHTML = Object.entries(CHECKS).map(([k, label]) =>
+    `<li class="${c[k].status === "off" ? "off" : c[k].ok ? "" : "bad"}"><b>${label}</b><span>${esc(detail[k] || "")}</span></li>`).join("") +
+    `<li class="${s.mail ? "" : "off"}"><b>E-post</b><span>${s.mail ? "SMTP inställd" : "Inte inställd (SMTP_HOST)"}</span></li>`;
+  $("backups").innerHTML = (s.backupError ? `<li style="color:var(--rott)">Senaste automatiska backup misslyckades: ${esc(s.backupError)}</li>` : "") +
+    (s.backups.length ? s.backups.slice(0, 10).map(b => `<li><span>${fmtTime(b.created)} · ${b.wines} viner · ${(b.size / 1024).toFixed(0)} kB</span>
+      <a href="/api/admin/backups/${encodeURIComponent(b.name)}/download" download>Ladda ned</a></li>`).join("")
+      : "<li>Inga backuper än.</li>");
+}
+
+$("backupBtn").onclick = async () => {
+  $("backupBtn").disabled = true;
+  try { await api("/api/admin/backups", { method: "POST", body: {} }); toast("Backupen är klar."); await loadSystem(); }
+  catch (err) { toast(err.message); }
+  finally { $("backupBtn").disabled = false; }
+};
+await loadSystem();

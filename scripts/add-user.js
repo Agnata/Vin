@@ -21,7 +21,14 @@ function askHidden(prompt) {
   });
 }
 
-const password = process.env.VK_PASSWORD || await askHidden("Lösenord (minst 10 tecken): ");
+let password = process.env.VK_PASSWORD;
+if (!password) {
+  password = await askHidden("Lösenord (minst 12 tecken): ");
+  if (await askHidden("Upprepa lösenordet: ") !== password) {
+    console.error("Lösenorden är inte likadana.");
+    process.exit(1);
+  }
+}
 if (passwordProblem(password)) {
   console.error(passwordProblem(password));
   process.exit(1);

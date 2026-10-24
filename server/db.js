@@ -1,4 +1,4 @@
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS users (
@@ -64,19 +64,37 @@ const MIGRATIONS = [
      purpose    TEXT NOT NULL CHECK (purpose IN ('invite','reset')),
      expires_at TEXT NOT NULL
    );`,
+  // 2: small key/value store for scheduler state (last digest run etc.)
+  `CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`,
 ];
 
+// Runs fn inside a transaction; rolls back if it throws.
+export function transaction(db, fn) {
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    const result = fn();
+    db.exec("COMMIT");
+    return result;
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
+  }
+}
+
+export const getMeta = (db, key) => db.prepare("SELECT value FROM meta WHERE key = ?").get(key)?.value ?? null;
+export const setMeta = (db, key, value) =>
+  db.prepare("INSERT INTO meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(key, String(value));
+export const schemaVersion = db => db.prepare("PRAGMA user_version").get().user_version;
+
 export function openDb(path) {
-  const db = new Database(path);
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
+  const db = new DatabaseSync(path);
+  db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000;");
   db.exec(SCHEMA);
-  const version = db.pragma("user_version", { simple: true });
-  for (let v = version; v < MIGRATIONS.length; v++) {
-    db.transaction(() => {
+  for (let v = schemaVersion(db); v < MIGRATIONS.length; v++) {
+    transaction(db, () => {
       db.exec(MIGRATIONS[v]);
-      db.pragma(`user_version = ${v + 1}`);
-    })();
+      db.exec(`PRAGMA user_version = ${v + 1}`);
+    });
   }
   return db;
 }

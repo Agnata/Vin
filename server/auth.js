@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { transaction } from "./db.js";
 
 const COOKIE = "vk_sess";
 const SCRYPT = { N: 2 ** 15, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
@@ -49,7 +50,7 @@ export function createAuth(db, config) {
   const sqlTime = d => d.toISOString().replace("T", " ").slice(0, 19);
 
   const cookieOpts = maxAge =>
-    [`Path=/`, `HttpOnly`, `SameSite=Lax`, `Max-Age=${maxAge}`, config.production ? "Secure" : ""].filter(Boolean).join("; ");
+    [`Path=/`, `HttpOnly`, `SameSite=Lax`, `Max-Age=${maxAge}`, config.cookieSecure ? "Secure" : ""].filter(Boolean).join("; ");
 
   return {
     login(email, password) {
@@ -89,11 +90,11 @@ export function createAuth(db, config) {
     usePasswordToken(token, password) {
       const found = this.findPasswordToken(token);
       if (!found) return null;
-      db.transaction(() => {
+      transaction(db, () => {
         q.setPassword.run(hashPassword(password), found.id);
         q.clearTokens.run(found.id);
         db.prepare("DELETE FROM sessions WHERE user_id = ?").run(found.id);
-      })();
+      });
       return found;
     },
     // Attaches req.user when a valid session cookie is present.
@@ -117,7 +118,7 @@ export function requireAdmin(req, res, next) {
   res.redirect(req.user ? "/kallaren" : `/login?next=${encodeURIComponent(req.originalUrl)}`);
 }
 
-export const MIN_PASSWORD = 10;
+export const MIN_PASSWORD = 12;
 export function passwordProblem(pw) {
   if (typeof pw !== "string" || pw.length < MIN_PASSWORD) return `Lösenordet måste vara minst ${MIN_PASSWORD} tecken.`;
   if (pw.length > 200) return "Lösenordet är för långt.";

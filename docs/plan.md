@@ -10,8 +10,8 @@
 | Publikt | En framsida som beskriver källaren och visar totaler (flaskor, länder, producenter). Enskilda viner kräver inloggning. Totalerna stängs av med `PUBLIC_STATS=false`. |
 | Adress | https://vin.parnes.com |
 | Claude | Inbyggt men avstängt (`CLAUDE_ENABLED=false`). |
-| Server | Ubuntu, Apache 2 som reverse proxy med Let's Encrypt, Node under systemd. |
-| Lagring | SQLite-fil i `/var/lib/vinkallaren`, nattlig backup med systemd-timer. |
+| Server | Samma server och upplägg som LB3: Apache med Let's Encrypt framför Node 24 under systemd, rootägd kod i `/opt/vinkallaren/app`, `install.sh` med `--check`. Se `docs/drift.md`. |
+| Lagring | SQLite (`node:sqlite`) i `/var/lib/vinkallaren`, backup inuti tjänsten varje natt, extern kopia med rsync. |
 
 ## Klart
 
@@ -19,7 +19,7 @@
 2. **Inloggning:** scrypt-hashade lösenord, sessionscookie (`HttpOnly`, `SameSite=Lax`, `Secure` i produktion), rate limit på inloggningen, skydd mot CSRF genom att skrivningar kräver JSON från samma ursprung, `helmet` med CSP.
 3. **Redigering:** lägga till, ändra och ta bort viner, "Drack en", "Öppnad", historik per vin. Drickfönster och smakklockor uppskattas när de lämnas tomma.
 4. **Framsida:** publik beskrivning med hyllan av flaskor och totaler.
-5. **Drift:** Apache-vhost, systemd-tjänst, backup-timer, env-exempel, installationssteg i README.
+5. **Drift:** `deploy/install.sh` efter LB3:s modell, systemd-tjänst med sandbox, Apache-include, `/api/health`, backup i tjänsten, offsite-timer. Dokumenterat i `docs/drift.md`.
 6. **Claude:** `/api/claude/pair` med strukturerat JSON-svar, bara aktivt när det är påslaget.
 7. **Admin:** sidan `/admin` med inbjudningar via engångslänk (7 dagar), redigering, administratörsroll, borttagning och återställningslänkar (2 timmar).
 8. **Konto:** sidan `/konto` för namn, lösenord och prenumeration. "Glömt lösenord?" på inloggningen.
@@ -34,7 +34,7 @@
   - *Crane Lake Merlot*: druvorna anges som malbec och cabernet sauvignon eller zinfandel.
   - *Brancaria Tre*: troligen Brancaia, som den andra posten.
   - *Principium*: saknar druva.
-- **Backup utanför servern** (rclone/rsync till annan maskin).
-- **Automatisk driftsättning** via GitHub Actions och SSH, om manuell `git pull` blir jobbigt.
+- **Verifiera på servern** enligt avsnitt 15 i `docs/drift.md`, och välj mål för extern backup.
+- **Återställning av backup från Admin** (finns i LB3; här görs den manuellt än så länge).
 - **E-post på servern:** välj SMTP-tjänst och lägg in SPF/DKIM för `parnes.com`.
 - **Senare:** statistik över vad som druckits, Claude-förslag på drickfönster för nya viner.

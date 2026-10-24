@@ -1,11 +1,21 @@
 // All settings come from environment variables (see deploy/vinkallaren.env.example).
+import path from "node:path";
+
 const env = process.env;
+const dbPath = env.DB_PATH || "./vin.db";
+const dataDir = path.dirname(path.resolve(dbPath));
 
 export const config = {
   port: Number(env.PORT || 3000),
   host: env.HOST || "127.0.0.1",
-  dbPath: env.DB_PATH || "./vin.db",
+  dbPath,
+  dataDir,
+  backupDir: env.BACKUP_DIR || path.join(dataDir, "backups"),
+  backupKeep: Number(env.BACKUP_KEEP || 30),
+  // rsync target for deploy/vinkallaren-backup-offsite.sh; empty = off.
+  offsiteTarget: env.BACKUP_OFFSITE_TARGET || "",
   production: env.NODE_ENV === "production",
+  cookieSecure: env.COOKIE_SECURE ? env.COOKIE_SECURE === "true" : env.NODE_ENV === "production",
   // Public origin, used to reject cross-site writes. Empty = accept same host only.
   origin: env.PUBLIC_ORIGIN || "",
   sessionDays: Number(env.SESSION_DAYS || 30),

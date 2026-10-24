@@ -1,20 +1,9 @@
-// Writes a consistent copy of the database and keeps the newest KEEP copies.
-// Usage: npm run backup -- /var/backups/vinkallaren
-import fs from "node:fs";
-import path from "node:path";
+// Takes a backup right away (the service also does this every night by itself).
+// Usage: npm run backup
 import { config } from "../server/config.js";
 import { openDb } from "../server/db.js";
+import { createBackup } from "../server/backups.js";
 
-const dir = process.argv[2] || process.env.BACKUP_DIR || "./backups";
-const keep = Number(process.env.BACKUP_KEEP || 30);
-fs.mkdirSync(dir, { recursive: true });
-
-const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
-const file = path.join(dir, `vin-${stamp}.db`);
 const db = openDb(config.dbPath);
-await db.backup(file);
-db.close();
-
-const old = fs.readdirSync(dir).filter(f => /^vin-.*\.db$/.test(f)).sort().slice(0, -keep);
-for (const f of old) fs.unlinkSync(path.join(dir, f));
-console.log(`Backup: ${file}${old.length ? ` (tog bort ${old.length} gamla)` : ""}`);
+const b = createBackup(db, config.backupDir, config.backupKeep);
+console.log(`Backup: ${config.backupDir}/${b.name} (${b.wines} viner, ${(b.size / 1024).toFixed(0)} kB)`);

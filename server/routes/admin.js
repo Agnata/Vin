@@ -2,6 +2,9 @@ import { Router } from "express";
 import crypto from "node:crypto";
 import { hashPassword } from "../auth.js";
 import { inviteMail, resetMail } from "../mail-templates.js";
+import { listBackups, createBackup, backupFile, offsiteStatus } from "../backups.js";
+import { health } from "../health.js";
+import { getMeta } from "../db.js";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -95,6 +98,31 @@ export function adminRouter(db, auth, mailer, config) {
     if (req.target.is_admin && q.admins.get().n <= 1) return res.status(400).json({ error: "Det måste finnas minst en administratör." });
     db.prepare("DELETE FROM users WHERE id = ?").run(req.target.id);
     res.status(204).end();
+  });
+
+  // ---- operations: health and backups ----
+  r.get("/system", (_req, res) => {
+    res.json({
+      health: health(db, config),
+      backups: listBackups(config.backupDir).slice(0, 30),
+      backupError: getMeta(db, "backup_error") || null,
+      offsite: config.offsiteTarget ? offsiteStatus(config.backupDir) || {} : null,
+      mail: mailer.enabled,
+    });
+  });
+
+  r.post("/backups", (_req, res) => {
+    try {
+      res.status(201).json(createBackup(db, config.backupDir, config.backupKeep));
+    } catch (err) {
+      res.status(500).json({ error: `Backupen misslyckades: ${err.message}` });
+    }
+  });
+
+  r.get("/backups/:name/download", (req, res) => {
+    const file = backupFile(config.backupDir, req.params.name);
+    if (!file) return res.status(404).json({ error: "Backupen finns inte." });
+    res.download(file, `vinkallaren-${req.params.name}.db`);
   });
 
   return r;

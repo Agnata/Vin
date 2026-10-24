@@ -23,6 +23,14 @@
     <p class="note hidden" id="noMail">E-post är inte inställd på servern. Inbjudnings- och återställningslänkar visas här i stället, så att du kan skicka dem själv.</p>
     <ul class="users" id="users"></ul>
   </section>
+
+  <section class="panel" aria-labelledby="opsH">
+    <div class="toolbar" style="margin:0 0 10px"><h2 id="opsH">Drift</h2><button type="button" class="btn ghost" id="backupBtn">Ta backup nu</button></div>
+    <p class="sub">Backup tas automatiskt varje natt efter kl. 03 och de 30 senaste sparas. Samma kontroller finns på <a href="/api/health">/api/health</a>.</p>
+    <ul class="checks" id="checks"></ul>
+    <h3 class="minor">Backuper</h3>
+    <ul class="hist" id="backups"></ul>
+  </section>
 </main>
 </div>
 

@@ -211,3 +211,12 @@ fieldset legend{font-size:15px;color:var(--muted);padding:0 6px}
 @media (max-width:560px){.user{grid-template-columns:1fr}.user .acts{justify-content:flex-start}}
 .linkbox{display:flex;gap:8px;margin-top:10px}
 .linkbox input{flex:1;min-width:0;font:inherit;font-size:14px;padding:6px 9px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);color:var(--ink)}
+.checks{list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.checks li{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--paper)}
+.checks b{display:flex;align-items:center;gap:8px;font-weight:500}
+.checks b::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--ok,#4f7a4a)}
+.checks li.bad b::before{background:var(--rott)}
+.checks li.off b::before{background:var(--rule)}
+.checks span{display:block;font-size:14px;color:var(--muted);font-style:italic;overflow-wrap:anywhere}
+h3.minor{font-weight:500;font-size:17px;margin:6px 0 0}
+#backups li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}

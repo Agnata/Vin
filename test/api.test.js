@@ -5,22 +5,26 @@ import { openDb } from "../server/db.js";
 import { hashPassword } from "../server/auth.js";
 import { createMailer } from "../server/mailer.js";
 import { sendDigests } from "../server/digest.js";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "vk-test-"));
 const config = { dbPath: ":memory:", production: false, origin: "", sessionDays: 1, publicStats: true, baseUrl: "https://vin.test",
-  mail: {}, claude: { enabled: false } };
+  dataDir, backupDir: path.join(dataDir, "backups"), backupKeep: 2, offsiteTarget: "", mail: {}, claude: { enabled: false } };
 let server, base, db, mailer, cookie = "";
 
 before(async () => {
   db = openDb(":memory:");
   mailer = createMailer({});
   console.log = () => {}; // the unconfigured mailer logs every message
-  db.prepare("INSERT INTO users (email, name, password_hash, is_admin) VALUES (?, ?, ?, 1)").run("a@example.se", "Anna", hashPassword("hemligt-losen"));
+  db.prepare("INSERT INTO users (email, name, password_hash, is_admin) VALUES (?, ?, ?, 1)").run("a@example.se", "Anna", hashPassword("hemligt-losenord"));
   db.prepare("INSERT INTO wines (type, name, vintage, country, quantity) VALUES ('rott', 'Testvin', '2020', 'Italien', 2)").run();
   server = createApp(config, db, mailer).listen(0);
   await new Promise(r => server.once("listening", r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
-after(() => server.close());
+after(() => { server.close(); fs.rmSync(dataDir, { recursive: true, force: true }); });
 
 const call = (path, { method = "GET", body, headers = {} } = {}) => fetch(base + path, {
   method, redirect: "manual",
@@ -43,7 +47,7 @@ test("wrong password is rejected", async () => {
 });
 
 test("login, list, add, drink, edit, delete", async () => {
-  const r = await call("/api/login", { method: "POST", body: { email: "A@example.se", password: "hemligt-losen" } });
+  const r = await call("/api/login", { method: "POST", body: { email: "A@example.se", password: "hemligt-losenord" } });
   assert.equal(r.status, 200);
   cookie = r.headers.get("set-cookie").split(";")[0];
   assert.equal((await (await call("/api/me")).json()).user.name, "Anna");
@@ -144,7 +148,7 @@ test("account: change name, password, subscription", async () => {
   assert.deepEqual([a.name, a.digest], ["Anna A", "daily"]);
   assert.equal((await call("/api/account", { method: "PATCH", body: { digest: "hourly" } })).status, 400);
   assert.equal((await call("/api/account/password", { method: "POST", body: { current: "fel", password: "nytt-losenord-1" } })).status, 400);
-  assert.equal((await call("/api/account/password", { method: "POST", body: { current: "hemligt-losen", password: "nytt-losenord-1" } })).status, 200);
+  assert.equal((await call("/api/account/password", { method: "POST", body: { current: "hemligt-losenord", password: "nytt-losenord-1" } })).status, 200);
   assert.equal((await call("/api/me")).status, 200, "current session survives a password change");
 });
 
@@ -177,6 +181,59 @@ test("weekly digest goes out on Mondays with drink-soon reminders", async () => 
   assert.equal((await sendDigests(db, mailer, config, tuesday)).sent, 0);
   assert.equal((await sendDigests(db, mailer, config, monday)).sent, 1);
   assert.match(mailer.sent.at(-1).text, /Bör drickas snart:[\s\S]*Gammalt vitt 2015/);
+});
+
+test("health, backups and admin system view", async () => {
+  let h = await call("/api/health");
+  assert.equal(h.status, 503, "no backup yet");
+  assert.equal((await h.json()).checks.backup.ok, false);
+
+  for (let i = 0; i < 3; i++) {
+    const r = await call("/api/admin/backups", { method: "POST", body: {} });
+    assert.equal(r.status, 201);
+    await new Promise(res => setTimeout(res, 1100)); // names have one-second resolution
+  }
+  const sys = await (await call("/api/admin/system")).json();
+  assert.equal(sys.backups.length, 2, "pruned to backupKeep");
+  assert.equal(sys.offsite, null);
+  assert.ok(!fs.readdirSync(config.backupDir).some(n => n.endsWith(".partial")));
+
+  h = await call("/api/health");
+  const body = await h.json();
+  assert.equal(h.status, 200, JSON.stringify(body));
+  assert.deepEqual(body.checks.offsite, { ok: true, status: "off" });
+
+  const dl = await call(`/api/admin/backups/${sys.backups[0].name}/download`);
+  assert.equal(dl.status, 200);
+  const bytes = Buffer.from(await dl.arrayBuffer());
+  assert.equal(bytes.subarray(0, 15).toString(), "SQLite format 3");
+  assert.equal((await call("/api/admin/backups/..%2Fetc/download")).status, 404);
+});
+
+test("offsite status feeds health", async () => {
+  const cfg = { ...config, offsiteTarget: "backup@nas:/srv/vin" };
+  const { health } = await import("../server/health.js");
+  assert.equal(health(db, cfg).checks.offsite.ok, false);
+  fs.writeFileSync(path.join(config.backupDir, "offsite.json"), JSON.stringify({ ok: true, lastSuccess: new Date().toISOString() }));
+  assert.equal(health(db, cfg).checks.offsite.ok, true);
+});
+
+test("scheduler: backup at night, digest in the morning, Swedish time", async () => {
+  const { startScheduler } = await import("../server/scheduler.js");
+  const { getMeta } = await import("../server/db.js");
+  const cfg = { ...config, backupDir: path.join(dataDir, "sched") };
+  const s = startScheduler(db, cfg, mailer);
+  await s.tick(new Date("2026-11-02T00:30:00Z")); // 01:30 in Stockholm: first backup ever -> runs
+  assert.equal(fs.readdirSync(cfg.backupDir).length, 1);
+  await s.tick(new Date("2026-11-02T01:30:00Z")); // 02:30: same day, already done
+  assert.equal(fs.readdirSync(cfg.backupDir).length, 1);
+  await s.tick(new Date("2026-11-03T01:30:00Z")); // next day 02:30: before 03:00
+  assert.equal(fs.readdirSync(cfg.backupDir).length, 1);
+  await s.tick(new Date("2026-11-03T02:05:00Z")); // 03:05
+  assert.equal(fs.readdirSync(cfg.backupDir).length, 2);
+  assert.notEqual(getMeta(db, "digest_date"), "2026-11-03");
+  await s.tick(new Date("2026-11-03T06:05:00Z")); // 07:05 -> digests run once
+  assert.equal(getMeta(db, "digest_date"), "2026-11-03");
 });
 
 test("logout ends the session", async () => {

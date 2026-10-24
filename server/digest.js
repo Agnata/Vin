@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { digestMail } from "./mail-templates.js";
+import { stockholm } from "./clock.js";
 
 export function unsubscribeToken(db, user) {
   if (user.unsubscribe_token) return user.unsubscribe_token;
@@ -11,8 +12,8 @@ export function unsubscribeToken(db, user) {
 // Sends due digests. Daily subscribers get one when something happened since the last one;
 // weekly subscribers get one on Mondays if anything happened or a wine should be drunk soon.
 export async function sendDigests(db, mailer, config, now = new Date()) {
-  const isMonday = now.getDay() === 1;
-  const year = now.getFullYear();
+  const isMonday = stockholm(now).weekday === 1;
+  const year = Number(stockholm(now).date.slice(0, 4));
   const users = db.prepare("SELECT * FROM users WHERE digest != 'off'").all();
   const eventsSince = db.prepare(`
     SELECT e.kind, e.detail, e.created_at, u.name AS user, COALESCE(w.name, e.detail) AS name, w.type, w.vintage

@@ -1,4 +1,4 @@
-// Sends e-mail digests to subscribers. Run once a day (see deploy/vinkallaren-digest.timer).
+// Sends due e-mail digests right away (the service also does this every morning by itself).
 import { config } from "../server/config.js";
 import { openDb } from "../server/db.js";
 import { createMailer } from "../server/mailer.js";

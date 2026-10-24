@@ -1,24 +1,25 @@
-# /etc/systemd/system/vinkallaren.service
+# Mall. deploy/install.sh ersätter @…@ och installerar till /etc/systemd/system/vinkallaren.service.
 [Unit]
-Description=Vinkällaren (Node)
+Description=Vinkällaren (@PUBLIC_ORIGIN@)
 After=network.target
 
 [Service]
 Type=simple
-User=vinkallaren
-Group=vinkallaren
-WorkingDirectory=/opt/vinkallaren
-EnvironmentFile=/etc/vinkallaren.env
-ExecStart=/usr/bin/node server/app.js
+User=@SERVICE_USER@
+Group=@SERVICE_GROUP@
+WorkingDirectory=@APP_DIR@
+EnvironmentFile=@ENV_FILE@
+ExecStart=@NODE_BIN@ --disable-warning=ExperimentalWarning @APP_DIR@/server/app.js
 Restart=on-failure
-RestartSec=3
-
-# Härdning: appen får bara skriva i sin datakatalog.
+RestartSec=5
+StateDirectory=@STATE_DIR_NAME@
+StateDirectoryMode=0750
+UMask=0077
 NoNewPrivileges=true
+PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-PrivateTmp=true
-ReadWritePaths=/var/lib/vinkallaren /var/backups/vinkallaren
+ReadWritePaths=@DATA_DIR@
 
 [Install]
 WantedBy=multi-user.target

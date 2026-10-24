@@ -11,6 +11,8 @@ import { winesRouter } from "./routes/wines.js";
 import { accountRouter } from "./routes/account.js";
 import { adminRouter } from "./routes/admin.js";
 import { claudeRouter } from "./routes/claude.js";
+import { health } from "./health.js";
+import { startScheduler } from "./scheduler.js";
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 const page = name => path.join(PUBLIC, name);
@@ -42,12 +44,22 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
     },
   }));
   app.use(express.json({ limit: "50kb" }));
+  // Signed-in pages and the API are never cached by browsers or proxies.
+  app.use(["/api", "/kallaren", "/konto", "/admin", "/login", "/losenord"], (_req, res, next) => {
+    res.set("Cache-Control", "no-store");
+    next();
+  });
   app.use(auth.middleware);
   app.use("/api", sameOriginJson(config));
 
   // ---- public ----
   app.get("/", (_req, res) => res.sendFile(page("index.html")));
   app.get("/login", (req, res) => (req.user ? res.redirect("/kallaren") : res.sendFile(page("login.html"))));
+
+  app.get("/api/health", (_req, res) => {
+    const h = health(db, config);
+    res.status(h.ok ? 200 : 503).json(h);
+  });
 
   app.get("/api/public", (_req, res) => {
     if (!config.publicStats) return res.json({});
@@ -106,7 +118,10 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const app = createApp();
+  const db = openDb(defaultConfig.dbPath);
+  const mailer = createMailer(defaultConfig.mail);
+  const app = createApp(defaultConfig, db, mailer);
+  if (process.env.SCHEDULER !== "false") startScheduler(db, defaultConfig, mailer);
   app.listen(defaultConfig.port, defaultConfig.host, () =>
     console.log(`Vinkällaren lyssnar på http://${defaultConfig.host}:${defaultConfig.port}` +
       (defaultConfig.claude.enabled ? " (Claude på)" : "")));
