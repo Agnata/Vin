@@ -19,6 +19,7 @@ function render(links = {}) {
       <div class="meta">${esc(u.email)}</div>
       <div class="badges">
         ${u.is_admin ? '<span class="badge admin">Administratör</span>' : ""}
+        ${u.totp_enabled ? '<span class="badge">Tvåstegsverifiering</span>' : ""}
         ${u.last_login_at ? `<span class="badge">Senast inloggad ${date(u.last_login_at)}</span>` : `<span class="badge">${u.invited ? "Inbjuden, har inte loggat in" : "Har inte loggat in"}</span>`}
         ${DIGEST[u.digest] ? `<span class="badge">${DIGEST[u.digest]}</span>` : ""}
       </div>
@@ -70,6 +71,7 @@ function openDialog(u) {
   $("saveBtn").textContent = u ? "Spara" : "Skicka inbjudan";
   $("dlgNote").classList.toggle("hidden", !!u);
   $("delBtn").classList.toggle("hidden", !u || u.id === me.id);
+  $("reset2faBtn").classList.toggle("hidden", !u || u.id === me.id || !u.totp_enabled);
   if (u) {
     form.elements.name.value = u.name;
     form.elements.email.value = u.email;
@@ -102,6 +104,14 @@ form.onsubmit = async e => {
   finally { $("saveBtn").disabled = false; }
 };
 
+$("reset2faBtn").onclick = async () => {
+  if (!editing || !confirm(`Stänga av tvåstegsverifiering för ${editing.name}? Gör det bara om personen har tappat bort telefonen och reservkoderna. Personen loggas ut och kan slå på den igen under Konto.`)) return;
+  try {
+    await api(`/api/admin/users/${editing.id}/reset-2fa`, { method: "POST", body: {} });
+    dlg.close(); toast(`Tvåstegsverifiering avstängd för ${editing.name}.`); await load();
+  } catch (err) { $("formErr").textContent = err.message; }
+};
+
 $("delBtn").onclick = async () => {
   if (!editing || !confirm(`Ta bort ${editing.name}? Personen kan inte längre logga in. Historiken i källaren finns kvar.`)) return;
   try {
@@ -130,9 +140,21 @@ async function loadSystem() {
     `<li class="${s.mail ? "" : "off"}"><b>E-post</b><span>${s.mail ? "SMTP inställd" : "Inte inställd (SMTP_HOST)"}</span></li>`;
   $("backups").innerHTML = (s.backupError ? `<li style="color:var(--rott)">Senaste automatiska backup misslyckades: ${esc(s.backupError)}</li>` : "") +
     (s.backups.length ? s.backups.slice(0, 10).map(b => `<li><span>${fmtTime(b.created)} · ${b.wines} viner · ${(b.size / 1024).toFixed(0)} kB</span>
-      <a href="/api/admin/backups/${encodeURIComponent(b.name)}/download" download>Ladda ned</a></li>`).join("")
+      <span class="row-acts"><a href="/api/admin/backups/${encodeURIComponent(b.name)}/download" download>Ladda ned</a>
+      <button type="button" class="linkbtn" data-restore="${esc(b.name)}" data-when="${esc(fmtTime(b.created))}">Återställ</button></span></li>`).join("")
       : "<li>Inga backuper än.</li>");
 }
+
+$("backups").onclick = async e => {
+  const b = e.target.closest("[data-restore]"); if (!b) return;
+  const answer = prompt(`Återställa källaren till ${b.dataset.when}?\n\nViner och historik ersätts med backupens innehåll. Användarkonton påverkas inte. En räddningskopia av nuläget sparas först.\n\nSkriv ÅTERSTÄLL för att fortsätta.`);
+  if (answer === null) return;
+  try {
+    const r = await api(`/api/admin/backups/${encodeURIComponent(b.dataset.restore)}/restore`, { method: "POST", body: { confirm: answer.trim().toUpperCase() } });
+    toast(`Återställt: ${r.wines} viner. Räddningskopian ligger överst i listan.`);
+    await loadSystem();
+  } catch (err) { toast(err.message); }
+};
 
 $("backupBtn").onclick = async () => {
   $("backupBtn").disabled = true;

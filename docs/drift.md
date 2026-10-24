@@ -92,7 +92,7 @@ BACKUP_OFFSITE_TARGET=
 | `PUBLIC_STATS` | `true` | Totaler på den publika framsidan |
 | `SESSION_DAYS` | `30` | Sessionslängd |
 | `BACKUP_KEEP` | `30` | Antal lokala backuper |
-| `CLAUDE_ENABLED`, `ANTHROPIC_API_KEY`, `CLAUDE_MODEL` | `false`, tomt, `claude-opus-5-5` | Vinförslag via Claude |
+| `CLAUDE_ENABLED`, `ANTHROPIC_API_KEY`, `CLAUDE_MODEL` | `false`, tomt, `claude-opus-5-5` | Vinförslag och etikettfoto via Claude |
 
 Använd SMTP, som i LB3, och inte `/usr/sbin/sendmail`. Tjänstens sandbox (`NoNewPrivileges`, `ProtectSystem=strict`) hindrar skrivning till Postfix-kön.
 
@@ -264,6 +264,20 @@ sudo runuser -u vinkallaren -- /usr/local/bin/node --disable-warning=Experimenta
   -e "import {DatabaseSync} from 'node:sqlite'; new DatabaseSync('/var/lib/vinkallaren/vin.db').exec('DELETE FROM sessions')"
 ```
 
+**Tvåstegsverifiering:**
+- Alla kan slå på TOTP under Konto. Administratörer **måste** ha det påslaget för att komma åt Admin.
+- Det fungerar med Google Authenticator, Microsoft Authenticator, 1Password och liknande appar.
+- Vid påslagning får användaren 10 reservkoder. Varje kod fungerar en gång, och koderna lagras bara som hash.
+- En länk för nytt lösenord kringgår aldrig tvåstegsverifieringen: användaren loggar in med lösenord och kod efteråt.
+- Har någon tappat både telefon och reservkoder kan en annan administratör stänga av tvåsteg för personen på sidan Admin.
+
+Är det den enda administratören, eller är alla administratörer utelåsta:
+
+```bash
+cd /opt/vinkallaren/app && sudo runuser -u vinkallaren -- env DB_PATH=/var/lib/vinkallaren/vin.db \
+  /usr/local/bin/node --disable-warning=ExperimentalWarning scripts/reset-2fa.js namn@exempel.se
+```
+
 **Användare:** administratörer hanterar dem på sidan Admin. Ett nytt lösenord från kommandoraden, som också loggar ut användaren:
 
 ```bash
@@ -288,8 +302,17 @@ Sidan Admin, under "Drift", visar:
 - hälsokontrollerna
 - de senaste backuperna, med nedladdning
 - knappen "Ta backup nu"
+- knappen **Återställ** för varje backup
 
-**Återställning** görs manuellt (avsnitt 13). Det finns ingen återställning från webbläsaren än.
+**Återställning från Admin:**
+1. Administratören bekräftar genom att skriva ÅTERSTÄLL.
+2. Kontrollsumman mot `manifest.json` kontrolleras.
+3. Backupen får inte komma från en nyare schemaversion än den som körs.
+4. En räddningskopia av nuläget sparas.
+5. **Viner och historik** ersätts i en transaktion. Användarkonton, sessioner, tvåsteg och prenumerationer rörs inte, så ingen blir utelåst.
+6. Händelsen loggas i journalen och som en händelse i historiken.
+
+Hela databasen, inklusive konton, återställs manuellt (avsnitt 13).
 
 ## 10. Extern backup med rsync och systemd-timer
 
@@ -342,6 +365,8 @@ Utan SMTP visar sidan Admin inbjudnings- och återställningslänkarna så att a
 ## 12. Health endpoint och felsökning
 
 Publik kontroll: `https://vin.parnes.com/api/health`. Den svarar 200 när allt är godkänt och 503 annars.
+
+Lägg in den i samma övervakning som LB3:s `/api/catalog/health`, om ni har någon, så att ett 503 eller uteblivet svar larmar. Det kan till exempel vara Uptime Kuma, Healthchecks eller UptimeRobot.
 
 | Kontroll | Godkänd när |
 |---|---|
@@ -412,9 +437,9 @@ En databasåterställning återställer inte miljöfilen, TLS eller den installe
 | Port | 3103 | 3104 |
 | Apache | Include i befintlig vhost, statisk DocumentRoot och proxy för `/admin` och `/api/catalog` | Egen vhost, allt proxas till Node |
 | Frontend | Vite-bygge, publiceras till DocumentRoot | Statiska filer som Node serverar, inget bygge |
-| Admin-inloggning | Ett konto via `ADMIN_PASSWORD_HASH`, med TOTP | Flera användare i databasen, administratörsroll, inbjudningar |
+| Admin-inloggning | Ett konto via `ADMIN_PASSWORD_HASH`, med TOTP | Flera användare i databasen, administratörsroll, inbjudningar. TOTP med reservkoder krävs för administratörer. |
 | Sessioner | `admin-sessions.json` | Tabellen `sessions` i databasen. Lösenordsbyte loggar ut andra sessioner. |
-| Backup | Databas, bilder, tar.gz och återställning i Admin | Databas och manifest. Nedladdning i Admin, återställning manuellt. |
+| Backup | Databas, bilder, tar.gz och återställning i Admin | Databas och manifest. Nedladdning och återställning av viner och historik i Admin. Hela databasen återställs manuellt. |
 | Offsite | 04.30 | 04.45 |
 | HTTP-ramverk | Eget | Express |
 
@@ -429,4 +454,5 @@ En databasåterställning återställer inte miljöfilen, TLS eller den installe
 - [ ] Vilken SMTP som ska användas (samma som LB3?), samt SPF och DKIM för `parnes.com`.
 - [ ] Mål för extern backup (samma NAS som LB3, egen underkatalog) och SSH-nyckel för `vinkallaren`.
 - [ ] Efter ett dygn: att `/api/health` svarar 200 och att `offsite.json` visar en lyckad kopia.
-- [ ] En provåterställning av en backup till en temporär katalog.
+- [ ] En provåterställning av en backup, från Admin och manuellt till en temporär katalog.
+- [ ] Att den första administratören har slagit på tvåstegsverifiering och sparat sina reservkoder.

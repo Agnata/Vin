@@ -2,17 +2,17 @@ import { Router } from "express";
 import crypto from "node:crypto";
 import { hashPassword } from "../auth.js";
 import { inviteMail, resetMail } from "../mail-templates.js";
-import { listBackups, createBackup, backupFile, offsiteStatus } from "../backups.js";
+import { listBackups, createBackup, backupFile, offsiteStatus, restoreBackup } from "../backups.js";
 import { health } from "../health.js";
 import { getMeta } from "../db.js";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // User administration. Mounted behind requireAdmin.
-export function adminRouter(db, auth, mailer, config) {
+export function adminRouter(db, auth, mailer, config, twoFactor) {
   const r = Router();
   const q = {
-    list: db.prepare(`SELECT id, email, name, is_admin, digest, created_at, last_login_at,
+    list: db.prepare(`SELECT id, email, name, is_admin, digest, created_at, last_login_at, totp_enabled,
                       EXISTS (SELECT 1 FROM password_tokens t WHERE t.user_id = users.id AND t.purpose = 'invite'
                               AND t.expires_at > datetime('now')) AS invited
                       FROM users ORDER BY name COLLATE NOCASE`),
@@ -93,6 +93,14 @@ export function adminRouter(db, auth, mailer, config) {
     res.json({ purpose, ...(await sendLink(req.target, purpose, req.user.name)) });
   });
 
+  // For a user who lost their phone and recovery codes. They can turn it on again under Konto.
+  r.post("/users/:id/reset-2fa", load, (req, res) => {
+    if (req.target.id === req.user.id) return res.status(400).json({ error: "Stäng av din egen tvåstegsverifiering under Konto." });
+    twoFactor.disable(req.target.id);
+    db.prepare("DELETE FROM sessions WHERE user_id = ?").run(req.target.id);
+    res.json(publicUser(req.target.id));
+  });
+
   r.delete("/users/:id", load, (req, res) => {
     if (req.target.id === req.user.id) return res.status(400).json({ error: "Du kan inte ta bort dig själv." });
     if (req.target.is_admin && q.admins.get().n <= 1) return res.status(400).json({ error: "Det måste finnas minst en administratör." });
@@ -116,6 +124,18 @@ export function adminRouter(db, auth, mailer, config) {
       res.status(201).json(createBackup(db, config.backupDir, config.backupKeep));
     } catch (err) {
       res.status(500).json({ error: `Backupen misslyckades: ${err.message}` });
+    }
+  });
+
+  r.post("/backups/:name/restore", (req, res) => {
+    if (req.body?.confirm !== "ÅTERSTÄLL") return res.status(400).json({ error: "Bekräfta genom att skriva ÅTERSTÄLL." });
+    try {
+      const r = restoreBackup(db, config.backupDir, req.params.name, config.backupKeep);
+      db.prepare("INSERT INTO events (wine_id, user_id, kind, detail) VALUES (0, ?, 'restored', ?)").run(req.user.id, req.params.name);
+      console.log(`Återställde ${r.restored} (räddningskopia ${r.rescue}) på begäran av ${req.user.email}`);
+      res.json(r);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
   });
 

@@ -12,6 +12,7 @@
     "dev": "node --watch server/app.js",
     "seed": "node scripts/seed.js",
     "add-user": "node scripts/add-user.js",
+    "reset-2fa": "node scripts/reset-2fa.js",
     "backup": "node scripts/backup.js",
     "send-digests": "node scripts/send-digests.js",
     "test": "node --test test/*.test.js"
@@ -22,6 +23,7 @@
     "express-rate-limit": "^8.7.1",
     "helmet": "^8.3.0",
     "nodemailer": "^10.2.1",
+    "qrcode": "^1.5.4",
     "zod": "^4.6.7"
   }
 }

@@ -47,6 +47,11 @@
 <dialog id="dlg" aria-labelledby="dlgH">
   <form id="wineForm" method="dialog" novalidate>
     <h2 id="dlgH">Lägg till vin</h2>
+    <div class="label-scan hidden" id="scan">
+      <button type="button" class="btn ghost small" id="scanBtn">Fotografera etiketten</button>
+      <input type="file" id="scanFile" accept="image/*" capture="environment" class="visually-hidden" tabindex="-1" aria-hidden="true">
+      <span class="note" id="scanMsg">Claude fyller i uppgifterna. Kontrollera dem innan du sparar.</span>
+    </div>
     <div class="grid">
       <label class="f full">Namn<input name="name" required maxlength="200"></label>
       <label class="f">Vintyp<select name="type"><option value="rott">Rött</option><option value="vitt">Vitt</option><option value="rose">Rosé</option><option value="bubbel">Mousserande</option><option value="orange">Orange</option></select></label>
@@ -55,6 +60,7 @@
       <label class="f">Druvor<input name="grapes" maxlength="200"></label>
       <label class="f">Land<input name="country" list="countries" maxlength="200"></label>
       <label class="f">Region<input name="region" maxlength="200"></label>
+      <label class="f">Stil<input name="style" maxlength="200" placeholder="t.ex. Riserva, Brut"></label>
       <label class="f">Antal flaskor<input name="quantity" type="number" min="0" max="999" value="1"></label>
       <label class="check" style="align-self:end;padding-bottom:9px"><input name="opened" type="checkbox"> Öppnad</label>
       <fieldset class="full">

@@ -25,16 +25,20 @@
 8. **Konto:** sidan `/konto` för namn, lösenord och prenumeration. "Glömt lösenord?" på inloggningen.
 9. **Prenumeration:** dagliga och veckovisa sammanfattningar via `vinkallaren-digest.timer`, avregistrering med ett klick (även `List-Unsubscribe`).
 10. **Export:** hela källaren som CSV som öppnas direkt i Excel.
+11. **Drift som LB3:** `install.sh`, backup i tjänsten, offsite, `/api/health`, driftpanel i Admin.
+12. **Tvåstegsverifiering (TOTP)** med reservkoder; krävs för administratörer.
+13. **Återställning av backup från Admin** (viner och historik, med räddningskopia).
+14. **Statistik:** druckna flaskor per månad, vintyp, land, person och andel inom drickfönstret.
+15. **Etikettfoto:** Claude läser etiketten och fyller i "Lägg till vin" (kräver `CLAUDE_ENABLED=true`).
+16. **Data:** rättat Brancaia Tre, Manchuela och Crane Lake Merlot i seed-filen.
 
 ## Att göra
 
-- **Rätta data** i källaren (går nu via "Redigera"):
-  - *Le Volte dell'Ornellaia, 2022* och *Catena Paraje Altamira Malbec 2022*: årgången i namnet skiljer sig från fältet (2021).
-  - *Fundamentalista Manchuela*: regionen står som Rioja.
-  - *Crane Lake Merlot*: druvorna anges som malbec och cabernet sauvignon eller zinfandel.
-  - *Brancaria Tre*: troligen Brancaia, som den andra posten.
+- **Kontrollera mot flaskorna:**
+  - *Le Volte dell'Ornellaia, 2022*: årgångsfältet säger 2021, och det finns redan en 2022:a.
+  - *Catena Paraje Altamira Malbec 2022*: årgångsfältet säger 2021.
   - *Principium*: saknar druva.
+- **Säkerhetsgenomgång** (görs sist, före lansering).
 - **Verifiera på servern** enligt avsnitt 15 i `docs/drift.md`, och välj mål för extern backup.
-- **Återställning av backup från Admin** (finns i LB3; här görs den manuellt än så länge).
 - **E-post på servern:** välj SMTP-tjänst och lägg in SPF/DKIM för `parnes.com`.
-- **Senare:** statistik över vad som druckits, Claude-förslag på drickfönster för nya viner.
+- **Övervakning:** lägg in `/api/health` i samma övervakning som LB3.

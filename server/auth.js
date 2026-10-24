@@ -35,7 +35,7 @@ export function createAuth(db, config) {
   const q = {
     userByEmail: db.prepare("SELECT * FROM users WHERE email = ?"),
     insertSession: db.prepare("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)"),
-    sessionUser: db.prepare(`SELECT u.id, u.email, u.name, u.is_admin FROM sessions s JOIN users u ON u.id = s.user_id
+    sessionUser: db.prepare(`SELECT u.id, u.email, u.name, u.is_admin, u.totp_enabled FROM sessions s JOIN users u ON u.id = s.user_id
                              WHERE s.token_hash = ? AND s.expires_at > datetime('now')`),
     deleteSession: db.prepare("DELETE FROM sessions WHERE token_hash = ?"),
     purge: db.prepare("DELETE FROM sessions WHERE expires_at <= datetime('now')"),
@@ -46,6 +46,11 @@ export function createAuth(db, config) {
     findToken: db.prepare(`SELECT t.purpose, u.id, u.name, u.email FROM password_tokens t JOIN users u ON u.id = t.user_id
                            WHERE t.token_hash = ? AND t.expires_at > datetime('now')`),
     setPassword: db.prepare("UPDATE users SET password_hash = ? WHERE id = ?"),
+    insertChallenge: db.prepare("INSERT INTO login_challenges (token_hash, user_id, expires_at) VALUES (?, ?, ?)"),
+    purgeChallenges: db.prepare("DELETE FROM login_challenges WHERE expires_at <= datetime('now') OR user_id = ?"),
+    findChallenge: db.prepare("SELECT * FROM login_challenges WHERE token_hash = ? AND expires_at > datetime('now')"),
+    bumpChallenge: db.prepare("UPDATE login_challenges SET attempts = attempts + 1 WHERE token_hash = ?"),
+    dropChallenge: db.prepare("DELETE FROM login_challenges WHERE token_hash = ?"),
   };
   const sqlTime = d => d.toISOString().replace("T", " ").slice(0, 19);
 
@@ -70,6 +75,28 @@ export function createAuth(db, config) {
       const token = readCookie(req, COOKIE);
       if (token) q.deleteSession.run(sha256(token));
       res.setHeader("Set-Cookie", `${COOKIE}=; ${cookieOpts(0)}`);
+    },
+    // After a correct password for a user with two-step verification: a short-lived ticket
+    // (5 minutes, 5 attempts) that must be completed with a code before a session is created.
+    createChallenge(userId) {
+      q.purgeChallenges.run(userId);
+      const token = crypto.randomBytes(32).toString("base64url");
+      q.insertChallenge.run(sha256(token), userId, sqlTime(new Date(Date.now() + 5 * 60e3)));
+      return token;
+    },
+    // Returns { userId } when the code is right, { error } otherwise.
+    completeChallenge(token, code, twoFactor) {
+      const hash = sha256(String(token || ""));
+      const c = q.findChallenge.get(hash);
+      if (!c || c.attempts >= 5) {
+        if (c) q.dropChallenge.run(hash);
+        return { error: "Inloggningen har gått ut. Börja om med e-post och lösenord.", expired: true };
+      }
+      q.bumpChallenge.run(hash);
+      const how = twoFactor.check(c.user_id, code);
+      if (!how) return { error: "Fel kod. Försök igen." };
+      q.dropChallenge.run(hash);
+      return { userId: c.user_id, how };
     },
     // Signs out the user everywhere except the current browser.
     endOtherSessions(req, userId) {
@@ -112,9 +139,15 @@ export function requireUser(req, res, next) {
   res.redirect(`/login?next=${encodeURIComponent(req.originalUrl)}`);
 }
 
+// Administrators must have two-step verification turned on before they can use admin functions.
 export function requireAdmin(req, res, next) {
-  if (req.user?.is_admin) return next();
-  if (req.originalUrl.startsWith("/api/")) return res.status(req.user ? 403 : 401).json({ error: "Kräver administratör." });
+  if (req.user?.is_admin && req.user.totp_enabled) return next();
+  const api = req.originalUrl.startsWith("/api/");
+  if (req.user?.is_admin) {
+    return api ? res.status(403).json({ error: "Slå på tvåstegsverifiering under Konto för att använda Admin.", code: "totp_required" })
+      : res.redirect("/konto?krav=tvasteg#tvasteg");
+  }
+  if (api) return res.status(req.user ? 403 : 401).json({ error: "Kräver administratör." });
   res.redirect(req.user ? "/kallaren" : `/login?next=${encodeURIComponent(req.originalUrl)}`);
 }
 

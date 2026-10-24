@@ -23,6 +23,13 @@
     <button class="btn" id="submit" type="submit">Logga in</button>
     <button type="button" class="linkbtn" id="forgotLink" style="align-self:flex-start">Glömt lösenord?</button>
   </form>
+  <form id="totp" class="hidden" novalidate>
+    <p style="margin:0">Skriv koden från appen i telefonen. Har du inte telefonen kan du använda en reservkod.</p>
+    <label class="f">Kod<input id="code" autocomplete="one-time-code" inputmode="numeric" maxlength="12" required></label>
+    <p class="err" id="totpErr" role="alert"></p>
+    <button class="btn" id="totpSubmit" type="submit">Logga in</button>
+    <button type="button" class="linkbtn" id="totpBack" style="align-self:flex-start">Börja om</button>
+  </form>
   <form id="forgot" class="hidden" novalidate>
     <p style="margin:0">Skriv din e-postadress så skickar vi en länk där du kan välja ett nytt lösenord.</p>
     <label class="f">E-post<input id="fEmail" type="email" autocomplete="username" required></label>

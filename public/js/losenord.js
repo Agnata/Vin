@@ -23,8 +23,9 @@ $("form").onsubmit = async e => {
   if ($("password").value !== $("password2").value) { $("err").textContent = "Lösenorden är inte likadana."; return; }
   $("submit").disabled = true;
   try {
-    await api("/api/password/set", { method: "POST", body: { token, password: $("password").value } });
-    location.href = "/kallaren";
+    const r = await api("/api/password/set", { method: "POST", body: { token, password: $("password").value } });
+    // Accounts with two-step verification sign in again with password + code.
+    location.href = r.login ? "/login?next=%2Fkallaren" : "/kallaren";
   } catch (err) {
     $("err").textContent = err.message;
     $("submit").disabled = false;

@@ -13,6 +13,8 @@ import { adminRouter } from "./routes/admin.js";
 import { claudeRouter } from "./routes/claude.js";
 import { health } from "./health.js";
 import { startScheduler } from "./scheduler.js";
+import { createTwoFactor } from "./twofactor.js";
+import { statsRouter } from "./routes/stats.js";
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 const page = name => path.join(PUBLIC, name);
@@ -28,6 +30,9 @@ const simplePage = (title, body) => `<!doctype html><html lang="sv"><head><meta 
 export function createApp(config = defaultConfig, db = openDb(config.dbPath), mailer = createMailer(config.mail)) {
   const app = express();
   const auth = createAuth(db, config);
+  const twoFactor = createTwoFactor(db);
+  const loginLimiter = rateLimit({ windowMs: 15 * 60e3, limit: config.loginLimit ?? 10, standardHeaders: "draft-8", legacyHeaders: false,
+    message: { error: "För många försök. Vänta en kvart och försök igen." } });
 
   // Apache runs on the same machine and sets X-Forwarded-For/-Proto.
   app.set("trust proxy", "loopback");
@@ -38,14 +43,16 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
         "default-src": ["'self'"],
         "style-src": ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
         "font-src": ["https://fonts.gstatic.com"],
-        "img-src": ["'self'", "data:"],
+        "img-src": ["'self'", "data:", "blob:"],
         "upgrade-insecure-requests": config.production ? [] : null,
       },
     },
   }));
+  // Label photos are the only large request bodies; everything else stays small.
+  app.use("/api/claude/label", express.json({ limit: "8mb" }));
   app.use(express.json({ limit: "50kb" }));
   // Signed-in pages and the API are never cached by browsers or proxies.
-  app.use(["/api", "/kallaren", "/konto", "/admin", "/login", "/losenord"], (_req, res, next) => {
+  app.use(["/api", "/kallaren", "/konto", "/statistik", "/admin", "/login", "/losenord"], (_req, res, next) => {
     res.set("Cache-Control", "no-store");
     next();
   });
@@ -69,17 +76,24 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
     res.json({ ...s, types: Object.fromEntries(types.map(t => [t.type, t.n])) });
   });
 
-  app.post("/api/login", rateLimit({ windowMs: 15 * 60e3, limit: 10, standardHeaders: "draft-8", legacyHeaders: false,
-    message: { error: "För många försök. Vänta en kvart och försök igen." } }), (req, res) => {
+  app.post("/api/login", loginLimiter, (req, res) => {
     const user = auth.login(req.body?.email, req.body?.password);
     if (!user) return res.status(401).json({ error: "Fel e-post eller lösenord." });
+    if (user.totp_enabled) return res.json({ totp_required: true, ticket: auth.createChallenge(user.id) });
     auth.startSession(res, user.id);
     res.json({ id: user.id, name: user.name, email: user.email });
+  });
+  // Second step: a code from the authenticator app, or a recovery code.
+  app.post("/api/login/totp", loginLimiter, (req, res) => {
+    const r = auth.completeChallenge(req.body?.ticket, req.body?.code, twoFactor);
+    if (r.error) return res.status(r.expired ? 410 : 401).json({ error: r.error });
+    auth.startSession(res, r.userId);
+    res.json({ ok: true, recoveryLeft: r.how === "recovery" ? twoFactor.status(r.userId).recoveryLeft : undefined });
   });
   app.post("/api/logout", (req, res) => { auth.endSession(req, res); res.status(204).end(); });
   app.get("/api/me", (req, res) => res.json({ user: req.user, claude: config.claude.enabled }));
   app.get("/losenord", (_req, res) => res.sendFile(page("losenord.html")));
-  app.use("/api", accountRouter(db, auth, mailer, config));
+  app.use("/api", accountRouter(db, auth, mailer, config, twoFactor));
 
   // Unsubscribe from e-mail digests via the secret link in every digest. GET shows a confirm button;
   // POST (the button, or a mail client's one-click List-Unsubscribe) performs it.
@@ -100,8 +114,10 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
   // ---- signed in ----
   app.get("/kallaren", requireUser, (_req, res) => res.sendFile(page("kallaren.html")));
   app.get("/konto", requireUser, (_req, res) => res.sendFile(page("konto.html")));
+  app.get("/statistik", requireUser, (_req, res) => res.sendFile(page("statistik.html")));
+  app.use("/api/stats", requireUser, statsRouter(db));
   app.get("/admin", requireAdmin, (_req, res) => res.sendFile(page("admin.html")));
-  app.use("/api/admin", requireAdmin, adminRouter(db, auth, mailer, config));
+  app.use("/api/admin", requireAdmin, adminRouter(db, auth, mailer, config, twoFactor));
   app.use("/api/wines", requireUser, winesRouter(db));
   if (config.claude.enabled) app.use("/api/claude", requireUser, claudeRouter(db, config));
 

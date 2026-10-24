@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<title>Statistik · Vinkällaren</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<body>
+<div class="wrap">
+<nav class="topbar" id="nav" aria-label="Huvudmeny"></nav>
+<main class="page">
+  <h1>Statistik</h1>
+  <p class="lede" id="lede">Hämtar…</p>
+
+  <section class="panel" aria-label="Sammanfattning">
+    <div class="hero-stat"><b id="heroN">–</b><span>flaskor druckna de senaste tolv månaderna</span></div>
+    <div class="stats" id="tiles" style="margin-top:22px"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="monthH">
+    <h2 id="monthH">Druckna flaskor per månad</h2>
+    <p class="sub">De senaste tolv månaderna. Peka på en stapel för detaljer.</p>
+    <div class="chart" id="monthChart"></div>
+    <details class="tbl"><summary>Visa som tabell</summary><table id="monthTable"></table></details>
+  </section>
+
+  <section class="panel" aria-labelledby="typeH">
+    <h2 id="typeH">Vad vi dricker</h2>
+    <p class="sub">Druckna flaskor de senaste tolv månaderna.</p>
+    <div class="bargroups">
+      <div><h3 class="minor">Vintyp</h3><ul class="hbars" id="byType"></ul></div>
+      <div><h3 class="minor">Land</h3><ul class="hbars" id="byCountry"></ul></div>
+      <div><h3 class="minor">Vem öppnade</h3><ul class="hbars" id="byUser"></ul></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="winH">
+    <h2 id="winH">Drack vi i tid?</h2>
+    <p class="sub">Druckna flaskor jämfört med vinets uppskattade drickfönster.</p>
+    <div class="stats" id="window"></div>
+  </section>
+</main>
+</div>
+<div class="chart-tip" id="tip" role="status" aria-live="polite"></div>
+<script src="/js/statistik.js" type="module"></script>
+</body>
+</html>

@@ -164,7 +164,7 @@ $("list").onclick = async e => {
 // ---------- add / edit dialog ----------
 const dlg = $("dlg"), form = $("wineForm");
 let editing = null;
-const FIELDS = ["name", "type", "vintage", "producer", "grapes", "country", "region", "quantity", "drink_from", "drink_to", "taste1", "taste2", "taste3", "note"];
+const FIELDS = ["name", "type", "vintage", "producer", "grapes", "country", "region", "style", "quantity", "drink_from", "drink_to", "taste1", "taste2", "taste3", "note"];
 const NUMS = new Set(["quantity", "drink_from", "drink_to", "taste1", "taste2", "taste3"]);
 
 function syncTasteLabel() {
@@ -173,7 +173,10 @@ function syncTasteLabel() {
 }
 form.elements.type.onchange = syncTasteLabel;
 
+let claudeOn = false;
 async function openDialog(w) {
+  $("scan").classList.toggle("hidden", !claudeOn || !!w);
+  $("scanMsg").textContent = "Claude fyller i uppgifterna. Kontrollera dem innan du sparar.";
   editing = w || null;
   form.reset();
   $("formErr").textContent = "";
@@ -375,7 +378,38 @@ function local() {
 btn.onclick = local; inp.onkeydown = e => { if (e.key === "Enter") local(); };
 
 // ---------- Claude (only when the server has it switched on) ----------
+// ---------- label photo -> form (Claude) ----------
+// Shrinks the photo to at most 1568 px on the long side (what the model uses anyway) as JPEG.
+function shrink(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1568 / Math.max(img.width, img.height));
+      const c = Object.assign(document.createElement("canvas"), { width: Math.round(img.width * k), height: Math.round(img.height * k) });
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      resolve(c.toDataURL("image/jpeg", 0.85).split(",")[1]);
+    };
+    img.onerror = () => reject(new Error("Bilden gick inte att läsa."));
+    img.src = URL.createObjectURL(file);
+  });
+}
+$("scanBtn").onclick = () => $("scanFile").click();
+$("scanFile").onchange = async e => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (!file) return;
+  $("scanMsg").textContent = "Claude läser etiketten…";
+  try {
+    const r = await api("/api/claude/label", { method: "POST", body: { image: await shrink(file), media_type: "image/jpeg" } });
+    for (const f of FIELDS) if (f !== "quantity" && r[f] != null && r[f] !== "") form.elements[f].value = r[f];
+    syncTasteLabel();
+    $("scanMsg").textContent = "Klart. Kontrollera uppgifterna, särskilt årgång och drickfönster, innan du sparar.";
+    form.elements.name.focus();
+  } catch (err) { $("scanMsg").textContent = err.message; }
+};
+
 function enableClaude() {
+  claudeOn = true;
   $("askNote").classList.add("on");
   const cb = $("claudeBtn");
   cb.onclick = async () => {

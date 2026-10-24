@@ -220,3 +220,44 @@ fieldset legend{font-size:15px;color:var(--muted);padding:0 6px}
 .checks span{display:block;font-size:14px;color:var(--muted);font-style:italic;overflow-wrap:anywhere}
 h3.minor{font-weight:500;font-size:17px;margin:6px 0 0}
 #backups li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.notice{margin:24px 0 0;padding:12px 14px;border:1px solid var(--rott);border-radius:10px;color:var(--rott);background:var(--paper)}
+.qr{width:200px;max-width:100%;background:#fff;padding:8px;border-radius:8px}
+.qr svg{display:block;width:100%;height:auto}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;overflow-wrap:anywhere}
+pre.codes{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;line-height:1.7;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;columns:2;margin:0}
+#backups .row-acts{display:flex;gap:14px;align-items:baseline}
+
+/* ---------- statistics ---------- */
+:root{--chart:#6B1A2A;--grid:#C9C8BF}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--chart:#C25468;--grid:#2C2F2B}}
+:root[data-theme="dark"]{--chart:#C25468;--grid:#2C2F2B}
+.hero-stat b{display:block;font-weight:300;font-size:clamp(64px,16vw,104px);line-height:1;font-variant-numeric:oldstyle-nums}
+.hero-stat span{font-style:italic;color:var(--muted)}
+.chart{position:relative;margin-top:8px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid{stroke:var(--grid);stroke-width:1}
+.chart .col{fill:var(--chart)}
+.chart .hit{fill:transparent;cursor:default}
+.chart .hit:hover+.col,.chart .col.on{opacity:.8}
+.chart text{font:13px "Newsreader",Georgia,serif;fill:var(--muted)}
+.chart text.val{fill:var(--ink);font-weight:500}
+.chart-tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--bg);font-size:15px;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .1s;white-space:nowrap}
+.chart-tip.on{opacity:1}
+.bargroups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 34px}
+.hbars{list-style:none;margin:8px 0 0;padding:0}
+.hbars li{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:6px 0}
+.hbars .lbl{display:flex;justify-content:space-between;gap:8px;font-size:16px}
+.hbars .lbl span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}
+.hbars .track{height:12px}
+.hbars .bar{height:12px;background:var(--chart);border-radius:0 4px 4px 0;min-width:2px}
+.hbars .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:7px}
+.hbars .empty,.chart .empty{color:var(--muted);font-style:italic}
+details.tbl{margin-top:10px;font-size:15px}
+details.tbl summary{cursor:pointer;color:var(--muted)}
+details.tbl table{border-collapse:collapse;margin-top:8px;width:100%;max-width:420px}
+details.tbl th,details.tbl td{text-align:left;padding:4px 10px 4px 0;border-bottom:1px solid var(--rule);font-weight:400}
+details.tbl td:not(:first-child),details.tbl th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.label-scan{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:-4px 0 16px;padding:10px 12px;border:1px dashed var(--rule);border-radius:10px}
+.label-scan .note{flex:1;min-width:180px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.panel .stats{border-top:0;padding-top:0}

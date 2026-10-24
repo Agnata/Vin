@@ -77,3 +77,43 @@ export function verifyBackup(dir, name) {
 export function offsiteStatus(dir) {
   try { return JSON.parse(fs.readFileSync(path.join(dir, "offsite.json"), "utf8")); } catch { return null; }
 }
+
+// Restores the cellar (wines and their history) from a backup. Accounts, sessions and settings
+// are left alone so nobody is locked out. A rescue backup of the current state is taken first.
+export function restoreBackup(db, dir, name, keep = 30) {
+  const backup = listBackups(dir).find(b => b.name === name);
+  const file = backupFile(dir, name);
+  if (!backup || !file) throw new Error("Backupen finns inte.");
+  if (sha256File(file) !== backup.sha256) throw new Error("Kontrollsumman stämmer inte. Backupen kan vara skadad.");
+  if (backup.schema > schemaVersion(db)) throw new Error("Backupen kommer från en nyare version av appen.");
+
+  let rescue;
+  for (let i = 0; !rescue; i++) {
+    try { rescue = createBackup(db, dir, keep + 1, new Date(Date.now() + i * 1000)); }
+    catch (err) { if (i >= 5 || !/finns redan/.test(err.message)) throw err; }
+  }
+
+  db.prepare("ATTACH DATABASE ? AS src").run(file);
+  try {
+    const cols = (schema, table) => db.prepare(`SELECT name FROM ${schema}.pragma_table_info('${table}')`).all().map(r => r.name);
+    const common = table => { const src = new Set(cols("src", table)); return cols("main", table).filter(c => src.has(c)); };
+    const wineCols = common("wines").join(", ");
+    const eventCols = common("events");
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      db.exec("DELETE FROM main.events; DELETE FROM main.wines;");
+      db.exec(`INSERT INTO main.wines (${wineCols}) SELECT ${wineCols} FROM src.wines`);
+      // History may name users that no longer exist; keep the event without the name.
+      const sel = eventCols.map(c => c === "user_id" ? "CASE WHEN user_id IN (SELECT id FROM main.users) THEN user_id END" : c).join(", ");
+      db.exec(`INSERT INTO main.events (${eventCols.join(", ")}) SELECT ${sel} FROM src.events`);
+      db.exec("COMMIT");
+    } catch (err) {
+      db.exec("ROLLBACK");
+      throw err;
+    }
+  } finally {
+    db.exec("DETACH DATABASE src");
+  }
+  const wines = db.prepare("SELECT COUNT(*) AS n FROM wines").get().n;
+  return { restored: name, rescue: rescue.name, wines };
+}

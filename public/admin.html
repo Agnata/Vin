@@ -26,7 +26,7 @@
 
   <section class="panel" aria-labelledby="opsH">
     <div class="toolbar" style="margin:0 0 10px"><h2 id="opsH">Drift</h2><button type="button" class="btn ghost" id="backupBtn">Ta backup nu</button></div>
-    <p class="sub">Backup tas automatiskt varje natt efter kl. 03 och de 30 senaste sparas. Samma kontroller finns på <a href="/api/health">/api/health</a>.</p>
+    <p class="sub">Backup tas automatiskt varje natt efter kl. 03 och de 30 senaste sparas. Återställning ersätter viner och historik men rör inte användarkontona. Samma kontroller finns på <a href="/api/health">/api/health</a>.</p>
     <ul class="checks" id="checks"></ul>
     <h3 class="minor">Backuper</h3>
     <ul class="hist" id="backups"></ul>
@@ -40,12 +40,13 @@
     <div class="stack" style="max-width:none">
       <label class="f">Namn<input name="name" maxlength="100" required autocomplete="off"></label>
       <label class="f">E-post<input name="email" type="email" maxlength="200" required autocomplete="off"></label>
-      <label class="check"><input name="is_admin" type="checkbox"> Administratör (kan hantera användare)</label>
+      <label class="check"><input name="is_admin" type="checkbox"> Administratör (kan hantera användare, kräver tvåstegsverifiering)</label>
       <p class="note" id="dlgNote">En inbjudan med en länk för att välja lösenord skickas till adressen. Länken gäller i 7 dagar.</p>
     </div>
     <p class="err" id="formErr" role="alert"></p>
     <div class="dlg-actions">
       <button type="button" class="btn danger hidden" id="delBtn">Ta bort</button>
+      <button type="button" class="btn ghost hidden" id="reset2faBtn">Stäng av tvåsteg</button>
       <span class="spacer"></span>
       <button type="button" class="btn ghost" id="cancelBtn">Avbryt</button>
       <button type="submit" class="btn" id="saveBtn">Skicka inbjudan</button>

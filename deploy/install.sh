@@ -235,6 +235,7 @@ if [ "$has_admin" = 0 ] || [ "$CREATE_ADMIN" = yes ]; then
   read -r -p "   E-post: " admin_email
   read -r -p "   Namn: " admin_name
   (cd "$APP_DIR" && as_service scripts/add-user.js "$admin_email" "$admin_name" --admin)
+  echo "   Logga in och slå på tvåstegsverifiering under Konto; Admin kräver det."
 else
   ok "Det finns redan $has_admin administratör(er)"
 fi

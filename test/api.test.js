@@ -11,8 +11,8 @@ import path from "node:path";
 
 const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "vk-test-"));
 const config = { dbPath: ":memory:", production: false, origin: "", sessionDays: 1, publicStats: true, baseUrl: "https://vin.test",
-  dataDir, backupDir: path.join(dataDir, "backups"), backupKeep: 2, offsiteTarget: "", mail: {}, claude: { enabled: false } };
-let server, base, db, mailer, cookie = "";
+  dataDir, backupDir: path.join(dataDir, "backups"), backupKeep: 2, loginLimit: 1000, offsiteTarget: "", mail: {}, claude: { enabled: false } };
+let server, base, db, mailer, cookie = "", annaRecovery = [];
 
 before(async () => {
   db = openDb(":memory:");
@@ -96,6 +96,44 @@ test("CSV export", async () => {
 
 const lastLink = () => mailer.sent.at(-1).text.match(/https:\/\/vin\.test\/losenord\?t=(\S+)/)[1];
 
+test("two-step verification: required for admin, login with code or recovery code", async () => {
+  const { codeAt, currentStep } = await import("../server/totp.js");
+  const denied = await call("/api/admin/users");
+  assert.equal(denied.status, 403);
+  assert.equal((await denied.json()).code, "totp_required");
+  assert.match((await call("/admin")).headers.get("location"), /^\/konto/);
+
+  assert.equal((await call("/api/account/totp/setup", { method: "POST", body: { password: "fel" } })).status, 400);
+  const { secret, qr } = await (await call("/api/account/totp/setup", { method: "POST", body: { password: "hemligt-losenord" } })).json();
+  assert.match(qr, /^<svg/);
+  assert.equal((await call("/api/account/totp/confirm", { method: "POST", body: { code: "000000" } })).status, 400);
+  const confirmed = await (await call("/api/account/totp/confirm", { method: "POST", body: { code: codeAt(secret, currentStep()) } })).json();
+  assert.equal(confirmed.recoveryCodes.length, 10);
+  annaRecovery = confirmed.recoveryCodes;
+  assert.deepEqual(confirmed.totp, { enabled: true, recoveryLeft: 10 });
+  assert.equal((await call("/api/admin/users")).status, 200);
+
+  const login = async () => (await call("/api/login", { method: "POST", body: { email: "a@example.se", password: "hemligt-losenord" } })).json();
+  const step2 = (ticket, code) => call("/api/login/totp", { method: "POST", body: { ticket, code } });
+
+  let r = await login();
+  assert.equal(r.totp_required, true);
+  assert.equal((await step2(r.ticket, codeAt(secret, currentStep()))).status, 401, "code already used during setup");
+  const ok = await step2(r.ticket, confirmed.recoveryCodes[0].toUpperCase());
+  assert.equal(ok.status, 200);
+  assert.equal((await ok.json()).recoveryLeft, 9);
+
+  r = await login();
+  assert.equal((await step2(r.ticket, confirmed.recoveryCodes[0])).status, 401, "recovery code is single-use");
+  const viaApp = await step2(r.ticket, codeAt(secret, currentStep() + 1));
+  assert.equal(viaApp.status, 200);
+  cookie = viaApp.headers.get("set-cookie").split(";")[0];
+
+  r = await login();
+  for (let i = 0; i < 5; i++) await step2(r.ticket, "123456");
+  assert.equal((await step2(r.ticket, codeAt(secret, currentStep() + 1))).status, 410, "ticket dies after 5 attempts");
+});
+
 test("admin invites a user who sets a password and signs in", async () => {
   const r = await call("/api/admin/users", { method: "POST", body: { name: "Bertil", email: "b@example.se" } });
   assert.equal(r.status, 201);
@@ -140,7 +178,16 @@ test("forgot password sends a reset link without revealing accounts", async () =
   assert.equal(mailer.sent.length, before);
   assert.equal((await call("/api/password/forgot", { method: "POST", body: { email: "a@example.se" } })).status, 200);
   assert.match(mailer.sent.at(-1).subject, /lösenord/);
-  assert.equal((await (await call(`/api/password/token?t=${lastLink()}`)).json()).purpose, "reset");
+  const token = lastLink();
+  assert.equal((await (await call(`/api/password/token?t=${token}`)).json()).purpose, "reset");
+  const set = await call("/api/password/set", { method: "POST", body: { token, password: "hemligt-losenord" } });
+  assert.deepEqual(await set.json(), { ok: true, login: true }, "reset link does not bypass two-step verification");
+  assert.equal(set.headers.get("set-cookie"), null);
+  // The reset signed Anna out everywhere; sign in again (password + recovery code).
+  const { ticket } = await (await call("/api/login", { method: "POST", body: { email: "a@example.se", password: "hemligt-losenord" } })).json();
+  const again = await call("/api/login/totp", { method: "POST", body: { ticket, code: annaRecovery[5] } });
+  assert.equal(again.status, 200);
+  cookie = again.headers.get("set-cookie").split(";")[0];
 });
 
 test("account: change name, password, subscription", async () => {
@@ -208,6 +255,38 @@ test("health, backups and admin system view", async () => {
   const bytes = Buffer.from(await dl.arrayBuffer());
   assert.equal(bytes.subarray(0, 15).toString(), "SQLite format 3");
   assert.equal((await call("/api/admin/backups/..%2Fetc/download")).status, 404);
+});
+
+test("restore a backup from admin", async () => {
+  const before = await (await call("/api/wines")).json();
+  const b = await (await call("/api/admin/backups", { method: "POST", body: {} })).json();
+  await call("/api/wines", { method: "POST", body: { type: "rott", name: "Efter backupen" } });
+  assert.equal((await (await call("/api/wines")).json()).length, before.length + 1);
+
+  const restore = body => call(`/api/admin/backups/${b.name}/restore`, { method: "POST", body });
+  assert.equal((await restore({ confirm: "ja" })).status, 400);
+  await new Promise(res => setTimeout(res, 1100));
+  const r = await restore({ confirm: "ÅTERSTÄLL" });
+  assert.equal(r.status, 200);
+  const body = await r.json();
+  assert.equal(body.wines, b.wines);
+  assert.deepEqual((await (await call("/api/wines")).json()).map(w => w.name), before.map(w => w.name));
+  assert.equal((await call("/api/me")).status, 200, "accounts and sessions are untouched");
+  assert.ok((await (await call("/api/admin/system")).json()).backups.some(x => x.name === body.rescue), "rescue copy listed");
+
+  fs.appendFileSync(path.join(config.backupDir, b.name, "vin.db"), "x");
+  const bad = await restore({ confirm: "ÅTERSTÄLL" });
+  assert.equal(bad.status, 400);
+  assert.match((await bad.json()).error, /Kontrollsumman/);
+});
+
+test("statistics", async () => {
+  const s = await (await call("/api/stats")).json();
+  assert.equal(s.months.length, 12);
+  assert.ok(s.drank >= 1, "the drink in an earlier test is counted");
+  assert.equal(s.months.at(-1).drank, s.drank);
+  assert.ok(s.byUser.some(u => u.label.startsWith("Anna")));
+  assert.equal(Object.values(s.window).reduce((a, b) => a + b), s.drank);
 });
 
 test("offsite status feeds health", async () => {

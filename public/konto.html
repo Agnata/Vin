@@ -18,6 +18,45 @@
   <h1>Konto</h1>
   <p class="lede" id="lede"></p>
 
+  <p class="notice hidden" id="krav" role="alert">Administratörer behöver tvåstegsverifiering för att använda Admin. Slå på den nedan.</p>
+
+  <section class="panel" id="tvasteg" aria-labelledby="tfaH">
+    <h2 id="tfaH">Tvåstegsverifiering</h2>
+    <p class="sub">En kod från en app i telefonen, till exempel Google Authenticator, Microsoft Authenticator eller 1Password, utöver lösenordet. Krävs för administratörer.</p>
+    <p id="tfaStatus"></p>
+
+    <form id="tfaStart" class="stack hidden">
+      <label class="f">Ditt lösenord<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="tfaStartErr" role="alert"></p>
+      <button class="btn" type="submit">Slå på tvåstegsverifiering</button>
+    </form>
+
+    <form id="tfaConfirm" class="stack hidden">
+      <p style="margin:0">1. Skanna koden med appen, eller skriv in nyckeln.</p>
+      <div class="qr" id="tfaQr"></div>
+      <p class="note" style="margin:0">Nyckel: <code id="tfaSecret"></code></p>
+      <label class="f">2. Skriv koden som appen visar<input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="\d{6}" required></label>
+      <p class="err" id="tfaConfirmErr" role="alert"></p>
+      <button class="btn" type="submit">Bekräfta</button>
+    </form>
+
+    <div id="tfaCodes" class="hidden">
+      <p><strong style="font-weight:600">Spara reservkoderna.</strong> Varje kod kan användas en gång om du inte har telefonen. De visas bara nu.</p>
+      <pre class="codes" id="tfaCodeList"></pre>
+      <div class="dlg-actions" style="justify-content:flex-start"><button type="button" class="btn ghost small" id="tfaCopy">Kopiera</button><button type="button" class="btn ghost small" id="tfaDownload">Ladda ned</button><button type="button" class="btn small" id="tfaDone">Jag har sparat dem</button></div>
+    </div>
+
+    <form id="tfaManage" class="stack hidden">
+      <label class="f">Ditt lösenord<input name="password" type="password" autocomplete="current-password" required></label>
+      <label class="f">Kod från appen (behövs för att stänga av)<input name="code" autocomplete="one-time-code" maxlength="12"></label>
+      <p class="err" id="tfaManageErr" role="alert"></p>
+      <div class="dlg-actions" style="justify-content:flex-start;margin-top:0">
+        <button class="btn ghost" type="button" id="tfaNewCodes">Nya reservkoder</button>
+        <button class="btn danger" type="button" id="tfaOff">Stäng av</button>
+      </div>
+    </form>
+  </section>
+
   <section class="panel" aria-labelledby="mailH">
     <h2 id="mailH">Uppdateringar via e-post</h2>
     <p class="sub">Få en sammanfattning av vad som hänt i källaren: nya flaskor, vad som druckits och vad som bör drickas snart.</p>

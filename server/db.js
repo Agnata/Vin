@@ -66,6 +66,23 @@ const MIGRATIONS = [
    );`,
   // 2: small key/value store for scheduler state (last digest run etc.)
   `CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`,
+  // 3: two-step verification (TOTP) with recovery codes; pending logins waiting for a code
+  `ALTER TABLE users ADD COLUMN totp_secret TEXT;
+   ALTER TABLE users ADD COLUMN totp_pending TEXT;
+   ALTER TABLE users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0;
+   ALTER TABLE users ADD COLUMN totp_last_step INTEGER;
+   CREATE TABLE recovery_codes (
+     user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     code_hash TEXT NOT NULL,
+     used_at   TEXT,
+     PRIMARY KEY (user_id, code_hash)
+   );
+   CREATE TABLE login_challenges (
+     token_hash TEXT PRIMARY KEY,
+     user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     expires_at TEXT NOT NULL,
+     attempts   INTEGER NOT NULL DEFAULT 0
+   );`,
 ];
 
 // Runs fn inside a transaction; rolls back if it throws.
