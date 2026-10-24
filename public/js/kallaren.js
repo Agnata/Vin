@@ -258,6 +258,7 @@ function tagWine(w) {
   if (w.t === "rose") T.add("rose");
   if (w.t === "orange") T.add("orange");
   if (w.t === "bubbel") { T.add("bubbel"); if (/moscato|muscat/i.test(h)) T.add("sott"); }
+  if (w.t === "sott") T.add("sott");
   w.tags = T; w.h = [w.n, w.p, w.g, w.r, w.c, w.s].join(" ").toLowerCase();
 }
 const has = (w, re) => re.test(w.h);
@@ -284,14 +285,14 @@ const DISHES = [
     y: { lattrod: "Pinot noir och svamp delar jordiga toner.", fylligtvitt: "Krämigt vitt till risotto.", orange: "Orangevin har umami som passar svamp.", mellanrod: "Jordigt rött till mustiga svamprätter." } },
   { id: "asiatiskt", l: "Kryddig asiatisk mat", w: { aromatiskt: 3, friskvitt: 2, rose: 2, bubbel: 1 }, b: w => has(w, /riesling|gewürz|pinot gris/) ? 1 : 0,
     y: { aromatiskt: "Aromatiskt vitt med fruktighet som dämpar hettan.", friskvitt: "Friskt och fruktigt vitt som svalkar.", rose: "Fruktig rosé klarar kryddor bra.", bubbel: "Bubblor svalkar efter stark mat." } },
-  { id: "ost", l: "Ostbricka", w: { mellanrod: 2, bubbel: 2, orange: 2, aromatiskt: 1, fylligtvitt: 1, fylligrod: 1 }, b: w => has(w, /barbera|amarone|ripasso/) ? 1 : 0,
-    y: { mellanrod: "Fruktigt rött till lagrade hårdostar.", bubbel: "Bubblor passar till krämiga och vitmögelostar.", orange: "Orangevin klarar en blandad ostbricka.", aromatiskt: "Aromatiskt vitt till blåmögel och kryddiga ostar.", fylligtvitt: "Fylligt vitt till mjuka ostar.", fylligrod: "Kraftigt rött till riktigt lagrad ost." } },
+  { id: "ost", l: "Ostbricka", w: { mellanrod: 2, bubbel: 2, orange: 2, sott: 2, aromatiskt: 1, fylligtvitt: 1, fylligrod: 1 }, b: w => has(w, /barbera|amarone|ripasso|portvin|\bport\b|sauternes|tokaj/) ? 1 : 0,
+    y: { mellanrod: "Fruktigt rött till lagrade hårdostar.", bubbel: "Bubblor passar till krämiga och vitmögelostar.", orange: "Orangevin klarar en blandad ostbricka.", aromatiskt: "Aromatiskt vitt till blåmögel och kryddiga ostar.", fylligtvitt: "Fylligt vitt till mjuka ostar.", fylligrod: "Kraftigt rött till riktigt lagrad ost.", sott: "Sött vin till blåmögel och lagrad ost, som Sauternes till Roquefort." } },
   { id: "tapas", l: "Tapas och chark", w: { rose: 3, mellanrod: 2, bubbel: 2 }, b: w => w.c === "Spanien" ? 2 : w.c === "Italien" ? 1 : 0,
     y: { rose: "Torr rosé är lätt att para med många små rätter.", mellanrod: "Saftigt rött till chark och lufttorkad skinka.", bubbel: "Cava och andra bubblor till salta tilltugg." } },
   { id: "aperitif", l: "Aperitif", w: { bubbel: 3, friskvitt: 2, rose: 2 }, b: w => has(w, /champagne|crémant|cava/) ? 1 : 0,
     y: { bubbel: "Ett glas bubbel väcker aptiten.", friskvitt: "Ett lätt och friskt vitt att börja kvällen med.", rose: "En lätt rosé att mingla med." } },
-  { id: "dessert", l: "Dessert och choklad", w: { sott: 4 }, b: () => 0,
-    y: { sott: "Vinet bör vara sötare än desserten, och moscato är lätt och fruktig." } },
+  { id: "dessert", l: "Dessert och choklad", w: { sott: 4 }, b: w => w.t === "sott" ? 1 : 0,
+    y: { sott: "Vinet bör vara sötare än desserten. Sauternes och Tokaji till frukt och crème brûlée, portvin till choklad." } },
 ];
 const hash = s => { let x = 0; for (const ch of s) x = (x * 31 + ch.charCodeAt(0)) | 0; return x; };
 function suggest(d) {

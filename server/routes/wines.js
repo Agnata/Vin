@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { estimate } from "../estimate.js";
 
-const TYPES = ["rott", "vitt", "rose", "bubbel", "orange"];
+const TYPES = ["rott", "vitt", "rose", "bubbel", "sott", "orange"];
 const TEXT = ["name", "producer", "grapes", "vintage", "country", "region", "style", "note"];
 const INTS = ["drink_from", "drink_to", "taste1", "taste2", "taste3"];
 

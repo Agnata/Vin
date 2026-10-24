@@ -1,6 +1,6 @@
 :root{
   --bg:#DEDDD5; --paper:#E9E8E1; --ink:#1E211F; --muted:#5C605A; --rule:#BEBEB4;
-  --rott:#6B1A2A; --vitt:#CDB24E; --rose:#DC928E; --bubbel:#EFE6BF; --orange:#C46E27;
+  --rott:#6B1A2A; --vitt:#CDB24E; --rose:#DC928E; --bubbel:#EFE6BF; --sott:#8C4A2F; --orange:#C46E27;
   --focus:#6B1A2A;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -9,12 +9,12 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
-    --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+    --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --sott:#B87452; --orange:#D2813A; --focus:#E3A09C;
   }
 }
 :root[data-theme="dark"]{
   --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
-  --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+  --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --sott:#B87452; --orange:#D2813A; --focus:#E3A09C;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}

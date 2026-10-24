@@ -63,6 +63,12 @@ test("login, list, add, drink, edit, delete", async () => {
 
   assert.equal((await call("/api/wines", { method: "POST", body: { type: "blått", name: "x" } })).status, 400);
 
+  const sweet = await call("/api/wines", { method: "POST", body: { type: "sott", name: "Château Suduiraut", vintage: "2015" } });
+  assert.equal(sweet.status, 201, "sweet wines are a type of their own");
+  const s = await sweet.json();
+  assert.deepEqual([s.type, s.drink_from, s.drink_to, s.taste_kind], ["sott", 2018, 2040, "w"]);
+  assert.equal((await call(`/api/wines/${s.id}`, { method: "DELETE" })).status, 204);
+
   const drunk = await (await call(`/api/wines/${w.id}/drink`, { method: "POST", body: { note: "Gott" } })).json();
   assert.equal(drunk.quantity, 0);
   assert.equal((await (await call("/api/wines")).json()).length, 1, "empty wines are hidden");

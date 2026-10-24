@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 
-const TYPE_LABEL = { rott: "Rött", vitt: "Vitt", rose: "Rosé", bubbel: "Mousserande", orange: "Orange" };
+const TYPE_LABEL = { rott: "Rött", vitt: "Vitt", rose: "Rosé", bubbel: "Mousserande", sott: "Sött", orange: "Orange" };
 
 const Pairing = z.object({
   intro: z.string(),
@@ -12,7 +12,7 @@ const Pairing = z.object({
 
 const Label = z.object({
   found: z.boolean().describe("false om bilden inte visar en vinetikett"),
-  type: z.enum(["rott", "vitt", "rose", "bubbel", "orange"]),
+  type: z.enum(["rott", "vitt", "rose", "bubbel", "sott", "orange"]),
   name: z.string(),
   producer: z.string(),
   grapes: z.string(),
@@ -93,13 +93,13 @@ ${wines}`,
           content: [
             { type: "image", source: { type: "base64", media_type: mediaType, data: image } },
             { type: "text", text: `Läs etiketten och fyll i uppgifterna om vinet. Året är ${year}.
-- type: rott, vitt, rose, bubbel (allt mousserande) eller orange.
+- type: rott, vitt, rose, bubbel (allt mousserande), sott (dessertviner och starkviner som Sauternes, Tokaji Aszú, portvin, isvin, Pedro Ximénez) eller orange.
 - name: vinets namn som det står på etiketten, utan producent om det går. producer: producenten.
 - grapes: druvorna på svenska, t.ex. "Sangiovese och Merlot". Om de inte står på etiketten, ange de typiska för appellationen.
 - country och region på svenska, t.ex. Frankrike, Bourgogne; Italien, Toscana.
 - style: t.ex. Riserva, Grand Cru, Brut, Cava, eller tom sträng.
 - drink_from och drink_to: ditt uppskattade drickfönster (årtal) utifrån stil, druva, ursprung och årgång; null om årgång saknas.
-- taste1–taste3 på skalan 1–12: för rött och orange fyllighet, strävhet, fruktsyra; för vitt, rosé och mousserande fyllighet, sötma, fruktsyra.
+- taste1–taste3 på skalan 1–12: för rött och orange fyllighet, strävhet, fruktsyra; för vitt, rosé, mousserande och sött fyllighet, sötma, fruktsyra.
 - note: en kort mening om vinet, högst 20 ord.
 Gissa inte uppgifter som varken syns eller rimligen följer av etiketten; lämna dem tomma. Sätt found=false om bilden inte visar en vinetikett.` },
           ],

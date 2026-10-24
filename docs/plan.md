@@ -31,6 +31,7 @@
 14. **Statistik:** druckna flaskor per månad, vintyp, land, person och andel inom drickfönstret.
 15. **Etikettfoto:** Claude läser etiketten och fyller i "Lägg till vin" (kräver `CLAUDE_ENABLED=true`).
 16. **Data:** rättat Brancaia Tre, Manchuela och Crane Lake Merlot i seed-filen.
+17. **Sött:** egen vintyp och flik för dessertviner (Sauternes, Tokaji, portvin, isvin). Ingår i matmatchningen för dessert och ostbricka, i statistik, mejl och etikettfoto. Databasen migreras automatiskt (schema 4).
 
 ## Att göra
 
