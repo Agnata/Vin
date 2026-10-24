@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<title>Konto · Vinkällaren</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="topbar" id="nav" aria-label="Huvudmeny"></nav>
+<main class="page">
+  <h1>Konto</h1>
+  <p class="lede" id="lede"></p>
+
+  <p class="notice hidden" id="krav" role="alert">Administratörer behöver tvåstegsverifiering för att använda Admin. Slå på den nedan.</p>
+
+  <section class="panel" id="tvasteg" aria-labelledby="tfaH">
+    <h2 id="tfaH">Tvåstegsverifiering</h2>
+    <p class="sub">En kod från en app i telefonen, till exempel Google Authenticator, Microsoft Authenticator eller 1Password, utöver lösenordet. Krävs för administratörer.</p>
+    <p id="tfaStatus"></p>
+
+    <form id="tfaStart" class="stack hidden">
+      <label class="f">Ditt lösenord<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="tfaStartErr" role="alert"></p>
+      <button class="btn" type="submit">Slå på tvåstegsverifiering</button>
+    </form>
+
+    <form id="tfaConfirm" class="stack hidden">
+      <p style="margin:0">1. Skanna koden med appen, eller skriv in nyckeln.</p>
+      <div class="qr" id="tfaQr"></div>
+      <p class="note" style="margin:0">Nyckel: <code id="tfaSecret"></code></p>
+      <label class="f">2. Skriv koden som appen visar<input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="\d{6}" required></label>
+      <p class="err" id="tfaConfirmErr" role="alert"></p>
+      <button class="btn" type="submit">Bekräfta</button>
+    </form>
+
+    <div id="tfaCodes" class="hidden">
+      <p><strong style="font-weight:600">Spara reservkoderna.</strong> Varje kod kan användas en gång om du inte har telefonen. De visas bara nu.</p>
+      <pre class="codes" id="tfaCodeList"></pre>
+      <div class="dlg-actions" style="justify-content:flex-start"><button type="button" class="btn ghost small" id="tfaCopy">Kopiera</button><button type="button" class="btn ghost small" id="tfaDownload">Ladda ned</button><button type="button" class="btn small" id="tfaDone">Jag har sparat dem</button></div>
+    </div>
+
+    <form id="tfaManage" class="stack hidden">
+      <label class="f">Ditt lösenord<input name="password" type="password" autocomplete="current-password" required></label>
+      <label class="f">Kod från appen (behövs för att stänga av)<input name="code" autocomplete="one-time-code" maxlength="12"></label>
+      <p class="err" id="tfaManageErr" role="alert"></p>
+      <div class="dlg-actions" style="justify-content:flex-start;margin-top:0">
+        <button class="btn ghost" type="button" id="tfaNewCodes">Nya reservkoder</button>
+        <button class="btn danger" type="button" id="tfaOff">Stäng av</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="mailH">
+    <h2 id="mailH">Uppdateringar via e-post</h2>
+    <p class="sub">Få en sammanfattning av vad som hänt i källaren: nya flaskor, vad som druckits och vad som bör drickas snart.</p>
+    <form id="digestForm" class="stack">
+      <div class="choices" role="radiogroup" aria-labelledby="mailH">
+        <label><input type="radio" name="digest" value="off"><span>Inga mejl</span></label>
+        <label><input type="radio" name="digest" value="daily"><span>Dagligen<small>Ett mejl på morgonen när något har hänt dagen innan.</small></span></label>
+        <label><input type="radio" name="digest" value="weekly"><span>Varje vecka<small>Måndagar: veckans händelser och vilka viner som bör drickas snart.</small></span></label>
+      </div>
+      <p class="note hidden" id="noMail">E-post är inte inställd på servern än, så inga mejl skickas förrän en administratör har ordnat det.</p>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="nameH">
+    <h2 id="nameH">Namn</h2>
+    <form id="nameForm" class="stack">
+      <label class="f">Namn som visas för andra<input name="name" maxlength="100" required autocomplete="name"></label>
+      <button class="btn ghost" type="submit">Spara namn</button>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="pwH">
+    <h2 id="pwH">Byt lösenord</h2>
+    <form id="pwForm" class="stack">
+      <input type="text" name="username" autocomplete="username" class="hidden" aria-hidden="true" tabindex="-1">
+      <label class="f">Nuvarande lösenord<input name="current" type="password" autocomplete="current-password" required></label>
+      <label class="f">Nytt lösenord (minst 12 tecken)<input name="password" type="password" autocomplete="new-password" minlength="12" required></label>
+      <p class="err" id="pwErr" role="alert"></p>
+      <button class="btn ghost" type="submit">Byt lösenord</button>
+    </form>
+    <p class="note">När du byter lösenord loggas du ut på alla andra enheter.</p>
+  </section>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/js/konto.js" type="module"></script>
+</body>
+</html>

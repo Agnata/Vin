@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vinkällaren</title>
+<meta name="description" content="Vår gemensamma vinkällare: varje flaska, när den är redo att drickas och vad den passar till.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="home">
+<div class="wrap">
+  <nav class="topbar" aria-label="Huvudmeny">
+    <span class="brand">vin.parnes.com</span>
+    <a class="btn ghost small" id="navBtn" href="/login">Logga in</a>
+  </nav>
+
+  <header class="hero">
+    <p class="kicker">En privat vinkällare</p>
+    <h1>Vinkällaren</h1>
+    <p class="lede">Varje flaska vi har, när den är som bäst och vad den passar till på middagsbordet.</p>
+    <div class="cta">
+      <a class="btn" id="ctaBtn" href="/login">Logga in</a>
+      <a class="btn ghost" href="#om">Vad är det här?</a>
+    </div>
+    <div class="rack" id="rack" aria-hidden="true"></div>
+    <div class="stats hidden" id="stats"></div>
+  </header>
+
+  <main id="om">
+    <section class="features">
+      <article class="feature">
+        <div class="ill" aria-hidden="true">
+          <span class="cap static" style="--c:var(--rott)"></span><span class="cap static" style="--c:var(--rott)"></span><span class="cap static" style="--c:var(--vitt)"></span><span class="cap static" style="--c:var(--rose)"></span><span class="cap static" style="--c:var(--bubbel)"></span><span class="cap static" style="--c:var(--orange)"></span>
+        </div>
+        <h2>Hela källaren på ett ställe</h2>
+        <p>Varje cirkel är en flaska, färgad efter vintyp. Sök på namn, druva eller region och filtrera på land. Tryck på en flaska för att hitta den i listan.</p>
+      </article>
+      <article class="feature">
+        <div class="ill" aria-hidden="true"><span class="st snart" style="font-size:16px"><b>Drick snart</b> · bäst till 2026</span></div>
+        <h2>Drickfönster</h2>
+        <p>Varje vin har ett uppskattat fönster utifrån stil, druva, ursprung och årgång. Då ser vi direkt vad som är redo, vad som bör drickas snart och vad som ska få vila.</p>
+      </article>
+      <article class="feature">
+        <div class="ill" aria-hidden="true" id="dialIll"></div>
+        <h2>Smakklockor</h2>
+        <p>Fyllighet, strävhet eller sötma och fruktsyra på en skala från 1 till 12. Det gör det lätt att jämföra två flaskor innan man öppnar någon av dem.</p>
+      </article>
+      <article class="feature">
+        <div class="ill" aria-hidden="true"><span class="btn small ghost" style="pointer-events:none">Lax</span><span class="btn small ghost" style="pointer-events:none">Vilt</span><span class="btn small ghost" style="pointer-events:none">Ostbricka</span></div>
+        <h2>Vad blir det till middag? <span class="tag" id="claudeTag">med Claude</span></h2>
+        <p>Skriv vad ni ska äta eller välj en rätt, så föreslår källaren några flaskor som passar och berättar varför.</p>
+      </article>
+      <article class="feature">
+        <div class="ill" aria-hidden="true"><span class="btn small ghost" style="pointer-events:none">Drack en</span><span class="btn small ghost" style="pointer-events:none">Öppnad</span></div>
+        <h2>Alltid uppdaterad</h2>
+        <p>Lägg in nya flaskor när de kommer hem och markera när en dricks eller öppnas. Källaren delas mellan oss, och den som vill får en sammanfattning via e-post.</p>
+      </article>
+      <article class="feature">
+        <div class="ill" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <h2>Bara för oss</h2>
+        <p>Själva listan visas bara för den som är inloggad. Den här sidan beskriver källaren, men visar inga enskilda flaskor.</p>
+      </article>
+    </section>
+
+    <p class="quote">”Livet är för kort för att dricka dåligt vin, och för kort för att glömma de goda flaskorna längst in i hyllan.”<small>Därför finns Vinkällaren.</small></p>
+  </main>
+
+  <footer>
+    <span>Vinkällaren · vin.parnes.com</span>
+    <a href="/login" id="footLink">Logga in</a>
+  </footer>
+</div>
+<script src="/js/home.js" type="module"></script>
+</body>
+</html>

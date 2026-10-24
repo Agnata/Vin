@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Källaren · Vinkällaren</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="topbar" id="nav" aria-label="Huvudmeny"></nav>
+<header style="padding-top:36px">
+  <h1>Vinkällaren</h1>
+  <p class="lede" id="lede">Hämtar källaren…</p>
+  <div class="toolbar"><button type="button" class="btn" id="addBtn">Lägg till vin</button><a class="btn ghost small" href="/api/wines/export.csv" download>Exportera till Excel</a></div>
+  <div class="rack" id="rack" aria-label="Varje cirkel är en flaska"></div>
+  <ul class="legend" id="legend"></ul>
+</header>
+<section class="pair" aria-labelledby="pairH">
+  <h2 id="pairH">Vad blir det till middag?</h2>
+  <p class="sub">Skriv vad ni ska äta, eller välj en rätt nedan.</p>
+  <div class="ask on" id="ask">
+    <input id="askIn" type="text" placeholder="Skriv en maträtt, t.ex. renskav med svamp" aria-label="Skriv en maträtt">
+    <button type="button" id="askBtn">Föreslå vin</button>
+  </div>
+  <p class="asknote" id="askNote"><button type="button" id="claudeBtn" class="linkbtn">Fråga Claude i stället</button> för en mer genomtänkt bedömning.</p>
+  <div class="dishes" id="dishes" role="group" aria-label="Maträtt"></div>
+  <div id="pairOut" aria-live="polite"></div>
+</section>
+<div class="controls">
+  <div class="types" id="types" role="group" aria-label="Vintyp"></div>
+  <div class="row2">
+    <input id="q" type="search" placeholder="Sök vin, druva eller region" aria-label="Sök">
+    <select id="land" aria-label="Land"></select>
+    <select id="fonster" aria-label="Drickfönster"><option value="">Alla drickfönster</option><option value="nu">Redo att drickas</option><option value="snart">Drick snart</option><option value="vanta">Kan vänta</option></select>
+  </div>
+</div>
+<main id="list"></main>
+<footer>Tryck på en flaska ovan för att hitta den i listan. Drickfönster och smakklockor är uppskattningar utifrån vinets stil, druva, ursprung och årgång. Skalan går från 1 till 12.</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgH">
+  <form id="wineForm" method="dialog" novalidate>
+    <h2 id="dlgH">Lägg till vin</h2>
+    <div class="label-scan hidden" id="scan">
+      <button type="button" class="btn ghost small" id="scanBtn">Fotografera etiketten</button>
+      <input type="file" id="scanFile" accept="image/*" capture="environment" class="visually-hidden" tabindex="-1" aria-hidden="true">
+      <span class="note" id="scanMsg">Claude fyller i uppgifterna. Kontrollera dem innan du sparar.</span>
+    </div>
+    <div class="grid">
+      <label class="f full">Namn<input name="name" required maxlength="200"></label>
+      <label class="f">Vintyp<select name="type"><option value="rott">Rött</option><option value="vitt">Vitt</option><option value="rose">Rosé</option><option value="bubbel">Mousserande</option><option value="orange">Orange</option></select></label>
+      <label class="f">Årgång<input name="vintage" inputmode="numeric" pattern="\d{4}" placeholder="t.ex. 2021" maxlength="4"></label>
+      <label class="f">Producent<input name="producer" maxlength="200"></label>
+      <label class="f">Druvor<input name="grapes" maxlength="200"></label>
+      <label class="f">Land<input name="country" list="countries" maxlength="200"></label>
+      <label class="f">Region<input name="region" maxlength="200"></label>
+      <label class="f">Stil<input name="style" maxlength="200" placeholder="t.ex. Riserva, Brut"></label>
+      <label class="f">Antal flaskor<input name="quantity" type="number" min="0" max="999" value="1"></label>
+      <label class="check" style="align-self:end;padding-bottom:9px"><input name="opened" type="checkbox"> Öppnad</label>
+      <fieldset class="full">
+        <legend>Drickfönster (lämna tomt för en uppskattning)</legend>
+        <div class="grid">
+          <label class="f">Bäst från<input name="drink_from" type="number" min="1900" max="2200"></label>
+          <label class="f">Bäst till<input name="drink_to" type="number" min="1900" max="2200"></label>
+        </div>
+      </fieldset>
+      <fieldset class="full">
+        <legend>Smakklockor 1–12 (lämna tomt för en uppskattning)</legend>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+          <label class="f">Fyllighet<input name="taste1" type="number" min="1" max="12"></label>
+          <label class="f" id="t2label">Strävhet<input name="taste2" type="number" min="1" max="12"></label>
+          <label class="f">Fruktsyra<input name="taste3" type="number" min="1" max="12"></label>
+        </div>
+      </fieldset>
+      <label class="f full">Anteckning<textarea name="note" maxlength="2000"></textarea></label>
+    </div>
+    <p class="err" id="formErr" role="alert"></p>
+    <div id="histWrap" class="hidden"><strong style="font-weight:500">Historik</strong><ul class="hist" id="hist"></ul></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn danger hidden" id="delBtn">Ta bort</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn ghost" id="cancelBtn">Avbryt</button>
+      <button type="submit" class="btn" id="saveBtn">Spara</button>
+    </div>
+  </form>
+</dialog>
+<datalist id="countries"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/js/kallaren.js" type="module"></script>
+</body>
+</html>

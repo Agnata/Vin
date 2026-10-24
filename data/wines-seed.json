@@ -1,0 +1,4072 @@
+[
+ {
+  "t": "rott",
+  "n": "Crane Lake Merlot",
+  "p": "Crane Lake",
+  "g": "Merlot",
+  "v": "2020",
+  "c": "USA",
+  "r": "Kalifornien, Napa Valley",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2022,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Fontaine",
+  "p": "Vignoble Rasse",
+  "g": "Cabernet Sauvignon/Cabernet Franc/Merlot/Mourvèdre/Marselan",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Provence - Alpes-Maritimes",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "La Umbra",
+  "p": "Domeniile Alexandrion Rhein 1892",
+  "g": "Pinot Noir",
+  "v": "2021",
+  "c": "Rumänien",
+  "r": "",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Poliziano Vino Nobile di Montepulciano Viti Nuove",
+  "p": "Poliziano",
+  "g": "Sangiovese",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Le temps des rêves Pinot Noir",
+  "p": "Maison Lisein",
+  "g": "Pinot Noir",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Vin de France",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Rosso di Montepulciano",
+  "p": "Poliziano",
+  "g": "Merlot och Sangiovese",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Rouge (Gaston Hochar)",
+  "p": "Chateau Musar",
+  "g": "Cabernet Sauvignon",
+  "v": "2017",
+  "c": "Libanon",
+  "r": "",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2042,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    9,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Weemala Shiraz",
+  "p": "Logan",
+  "g": "Shiraz/Syrah",
+  "v": "2022",
+  "c": "Australien",
+  "r": "Central Ranges",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    10,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Pinot Noir on Sandstone Soils",
+  "p": "Catherine Marshall",
+  "g": "Pinot Noir",
+  "v": "2020",
+  "c": "Sydafrika",
+  "r": "Elgin",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "11 Chianti Riserva",
+  "p": "Cecchi",
+  "g": "Sangiovese, Colorino del Valdarno och Canaiolo Nero",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Masi Campofiorin",
+  "p": "Masi",
+  "g": "Corvina, rondinella och molinara",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    5,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Catena Alamos Syrah",
+  "p": "Alamos",
+  "g": "Shiraz/Syrah",
+  "v": "2019",
+  "c": "Argentina",
+  "r": "Mendoza",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    10,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Estate wine Cabernet Sauvignon",
+  "p": "Kanonkop Estate",
+  "g": "Cabernet Sauvignon",
+  "v": "2019",
+  "c": "Sydafrika",
+  "r": "Stellenbosch",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2039,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    9,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Château Peychaud Bordeaux Superieur Rouge",
+  "p": "Comte Jacques de Pontac",
+  "g": "Merlot, Cabernet Sauvignon och Cabernet Franc",
+  "v": "2019",
+  "c": "Frankrike",
+  "r": "Bordeaux",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Casas del Bosque Pinot Noir Reserva",
+  "p": "Casas del Bosque",
+  "g": "Pinot Noir",
+  "v": "2016",
+  "c": "Chile",
+  "r": "Casablancadalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2017,
+  "u": 2021,
+  "tk": {
+   "k": "r",
+   "v": [
+    6,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Etna Rosso",
+  "p": "Tornatore",
+  "g": "Nerello Mascalese",
+  "v": "2018",
+  "c": "Italien",
+  "r": "Etna",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    6,
+    6,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Lat 42 Reserva",
+  "p": "La Rioja Alta",
+  "g": "Tempranillo",
+  "v": "2018",
+  "c": "Spanien",
+  "r": "Rioja",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Les Sorts Selecció",
+  "p": "Celler el Masroig",
+  "g": "Carignan, grenache och syrah",
+  "v": "2022",
+  "c": "Spanien",
+  "r": "Montsant",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Bordón Rioja Crianza",
+  "p": "Bodegas Franco-Españolas",
+  "g": "Tempranillo",
+  "v": "2013",
+  "c": "Spanien",
+  "r": "Rioja",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2015,
+  "u": 2021,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Protos 5°Ano",
+  "p": "Protos",
+  "g": "Tempranillo",
+  "v": "2018",
+  "c": "Spanien",
+  "r": "Ribera del Duero",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Los Frailes Dolomitas Monastrell",
+  "p": "Casa Los Frailes",
+  "g": "Monastrell",
+  "v": "2021",
+  "c": "Spanien",
+  "r": "Valencia",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2036,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Viatge al Priorat Celler Joan Simó",
+  "p": "Celler Joan Simó",
+  "g": "Cabernet Sauvignon, Grenache och Carignan",
+  "v": "2022",
+  "c": "Spanien",
+  "r": "Priorat",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2034,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Bikandi Ecologico Crianza",
+  "p": "Viña Olabarri",
+  "g": "Tempranillo",
+  "v": "2020",
+  "c": "Spanien",
+  "r": "Rioja",
+  "q": 2,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Jérôme Arnoux Tradition",
+  "p": "Jérôme Arnoux",
+  "g": "Pinot noir, Trousseau och Poulsard",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Jura",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    4,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Le Volte dell'Ornellaia",
+  "p": "Ornellaia",
+  "g": "Merlot, Sangiovese och Cabernet Sauvignon",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Domaine de Majas Rouge IGP Côte Catalanes",
+  "p": "Domaine de Majas",
+  "g": "Grenache och carignan",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Gassier Côtes du Rhône",
+  "p": "Domaine Gassier",
+  "g": "Shiraz/syrah, Grenache och Mourvèdre",
+  "v": "2020",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    6,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Château Blaignan Cru Bourgeois Médoc",
+  "p": "Château Blaignan",
+  "g": "Cabernet sauvignon och Merlot",
+  "v": "2016",
+  "c": "Frankrike",
+  "r": "Bordeaux",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    8,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Chateau Haut Bascla Bordeaux Rouge",
+  "p": "Chateau Haut Bascla",
+  "g": "Merlot och Cabernet sauvignon",
+  "v": "2018",
+  "c": "Frankrike",
+  "r": "Bordeaux",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Maison Francoise Côtes de Marmandais Abouriou Merlot",
+  "p": "Cave du Marmandais",
+  "g": "Abouriou och merlot",
+  "v": "2020",
+  "c": "Frankrike",
+  "r": "Marmande",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2026,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Caleta Montepulciano d'Abruzzo",
+  "p": "Cirelli La Collina Biologica SRL",
+  "g": "Montepulciano",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Abruzzo",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Langhe Nebbiolo",
+  "p": "Vignaia Bauducco",
+  "g": "Nebbiolo",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Langhe",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Chinon Cuisine de ma Mere",
+  "p": "Domaine Grosbois",
+  "g": "Cabernet Franc",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Loire",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    7,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Terasses",
+  "p": "Château Pesquié - Famille Chaudière",
+  "g": "Grenache och Syrah",
+  "v": "2016",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2018,
+  "u": 2026,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Gérard Bertrand Château L'Hospitalet La Réserve Rouge",
+  "p": "Gérard Bertrand",
+  "g": "Syrah, Mourvèdre och Grenache",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Enzo Bartoli Barbera d'Asti superiore",
+  "p": "Enzo Bartoli",
+  "g": "Barbera",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    4,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Côtes-du-Rhône-Villages Biologique",
+  "p": "Paul Jaboulet Aîné",
+  "g": "Shiraz/syrah, Grenache och Mourvèdre",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    6,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Le Paradou Grenache",
+  "p": "Chateau Pesquie",
+  "g": "Grenache",
+  "v": "2016",
+  "c": "Frankrike",
+  "r": "Languedoc",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2018,
+  "u": 2026,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    5,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Tre",
+  "p": "Brancaia",
+  "g": "Sangiovese, merlot och cabernet sauvignon",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Saint Cosme Côtes-du-Rhône",
+  "p": "Château de Saint Cosme",
+  "g": "Syrah",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Copertino Riserva",
+  "p": "Cantina Sociale Copertino",
+  "g": "Negroamaro",
+  "v": "2015",
+  "c": "Italien",
+  "r": "Apulien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2018,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "a Rina Etna Rosso",
+  "p": "Girolamo Russo",
+  "g": "Nerello Mascalese och Nerello Cappuccio",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    6,
+    6,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Chiara Condello",
+  "p": "Chiara Condello",
+  "g": "Sangiovese",
+  "v": "2018",
+  "c": "Italien",
+  "r": "Emilia-Romagna",
+  "q": 2,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Boira' Sangiovese",
+  "p": "Cantine Volpi",
+  "g": "Sangiovese",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Marche",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Terre di Mario",
+  "p": "Terre di Mario",
+  "g": "Montepulciano",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Abruzzo",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Le Volte dell'Ornellaia, 2022",
+  "p": "Ornellaia",
+  "g": "Merlot, Sangiovese och Cabernet Sauvignon",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Nanfré Valpolicella",
+  "p": "Tenuta Sant'Antonio",
+  "g": "Corvina och Rondinella",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    5,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Lunadoro Rosso di Montepulciano Organic",
+  "p": "Schenk Italia Spa",
+  "g": "Sangiovese",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Ti Amo Primitivo di Puglia",
+  "p": "Cinque Segni",
+  "g": "Primitivo",
+  "v": "2013",
+  "c": "Italien",
+  "r": "Apulien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2014,
+  "u": 2019,
+  "tk": {
+   "k": "r",
+   "v": [
+    10,
+    6,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Tsiakkas Mouklos",
+  "p": "Tsiakkas Winery",
+  "g": "Mavro",
+  "v": "2024",
+  "c": "Cypern",
+  "r": "Limassol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2026,
+  "u": 2034,
+  "tk": {
+   "k": "r",
+   "v": [
+    6,
+    5,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Galverno Langhe Rosso",
+  "p": "Cagliero",
+  "g": "Dolcetto och nebbiolo",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Montedidio Amor Lazio Syrah",
+  "p": "Montedidio",
+  "g": "Syrah",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Lazio",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2025,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Jorio Montepulciano d'Abruzzo",
+  "p": "Umani Ronchi",
+  "g": "Montepulciano",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Marche",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Langhe Rosso",
+  "p": "G.D. Vajra",
+  "g": "Barbera, dolcetto och nebbiolo",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    6,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Rocca Guicciarda Riserva",
+  "p": "Ricasoli",
+  "g": "Sangiovese, Merlot och Canaiolo",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    8,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Uvas de la Sierra 4 Monos",
+  "p": "4 Monos Viticultores",
+  "g": "Garnacha",
+  "v": "2022",
+  "c": "Spanien",
+  "r": "Madrid",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    5,
+    5
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Piccini Collezione Oro Chianti Organic",
+  "p": "Tenute Piccini",
+  "g": "Sangiovese",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Markus Molitor Haus Klosterberg Pinot Noir",
+  "p": "Weingut Markus Molitor",
+  "g": "Pinot Noir",
+  "v": "2022",
+  "c": "Tyskland",
+  "r": "Mosel",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Amarone Selezione Antonio Castagnedi",
+  "p": "Tenuta Sant' Antonio",
+  "g": "Corvina, Rondinella och Croatina och Oseleta",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2039,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Finca el Puig",
+  "p": "Gran Clos",
+  "g": "Grenache, syrah och carignan",
+  "v": "2022",
+  "c": "Spanien",
+  "r": "Katalonien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Irpinia Aglianico Tenuta Cavalier Pepe",
+  "p": "Tenuta Cavalier Pepe",
+  "g": "Aglianico",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Kampanien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2026,
+  "u": 2035,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    10,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Borgogno Barolo Classico",
+  "p": "Giacomo Borgogno & Figli",
+  "g": "Nebbiolo",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2028,
+  "u": 2046,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Paul Jaboulet Parallèle 45 Rouge",
+  "p": "Paul Jaboulet Ainé",
+  "g": "Grenache, syrah, marselan och carignan",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Cabernet Sauvignon ßasileia",
+  "p": "Zenon",
+  "g": "Cabernet Sauvignon",
+  "v": "2008",
+  "c": "Cypern",
+  "r": "Lemesos",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2009,
+  "u": 2014,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    9,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Les Grandes Coasses Beaujolais",
+  "p": "Paul Durdilly",
+  "g": "Gamay",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Beaujolais",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    4,
+    3,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Valpolicella Classico Organic",
+  "p": "SPERI Viticoltori S.S",
+  "g": "Corvina, rondinella och molinara",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    5,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Speri Ripasso",
+  "p": "Speri",
+  "g": "Corvina, rondinella och molinara",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2032,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    5,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Cinquantotto Barbaresco",
+  "p": "Cossetti Clemente & Figli Srl",
+  "g": "Nebbiolo",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2027,
+  "u": 2045,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Paracombe Shiraz",
+  "p": "Paracombe",
+  "g": "Shiraz/Syrah",
+  "v": "2017",
+  "c": "Australien",
+  "r": "Adelaide Hills",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2019,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    10,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Barolo Piccole Vigne",
+  "p": "Giacomo Grimaldi di Grimaldi Ferruccio",
+  "g": "Nebbiolo",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2026,
+  "u": 2044,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Nero D'Avola Sicilia Danese",
+  "p": "Danese Cantina",
+  "g": "Nero d'avola",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Tre",
+  "p": "Brancaia",
+  "g": "Sangiovese, Merlot och Cabernet Sauvignon",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    8,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Rioja Santiago Reserva",
+  "p": "Marques de la Concordia Family of Wines",
+  "g": "Tempranillo och Garnacha",
+  "v": "2019",
+  "c": "Spanien",
+  "r": "Rioja",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2034,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Fundamentalista Manchuela Finca Sandoval",
+  "p": "Finca Sandoval",
+  "g": "Carignan, grenache och syrah",
+  "v": "2023",
+  "c": "Spanien",
+  "r": "Manchuela",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Newton Johnson Walker Bay Pinot Noir",
+  "p": "Newton Johnson Vineyards",
+  "g": "Pinot noir",
+  "v": "2023",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2025,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Catena Paraje Altamira Malbec 2022",
+  "p": "Bodega Catena Zapata",
+  "g": "Malbec",
+  "v": "2021",
+  "c": "Argentina",
+  "r": "Mendoza",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Boira' Sangiovese",
+  "p": "Cantine Volpi",
+  "g": "Sangiovese",
+  "v": "2024",
+  "c": "Italien",
+  "r": "Marche",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Hacienda el Espino Garnacha Tintorera",
+  "p": "Hacienda el Espino",
+  "g": "Garnacha tintorera",
+  "v": "2023",
+  "c": "Spanien",
+  "r": "Almansa",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Montepulciano d'Abruzzo Umani Ronchi",
+  "p": "Umani Ronchi",
+  "g": "Montepulciano",
+  "v": "2024",
+  "c": "Italien",
+  "r": "Abruzzo",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    7,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Castello di Verduno",
+  "p": "Castello di Verduno",
+  "g": "Nebbiolo",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2028,
+  "u": 2046,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Gassier Cote du Rhone",
+  "p": "Domaine Gassier",
+  "g": "Grenache, Mourvèdre, Syrah",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    6,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Diego Contero Barolo",
+  "p": "Diego Contero",
+  "g": "Nebbiolo",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2028,
+  "u": 2046,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    11,
+    10
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Oenou Yi Maratheftiko",
+  "p": "Oenou Yi Winery",
+  "g": "Maratheftiko",
+  "v": "2020",
+  "c": "Cypern",
+  "r": "Limassol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2030,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    8,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Sainté mon amour",
+  "p": "lavinifacture",
+  "g": "Syrah, Mourvèdre, Grenache och Carignan",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    9,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Bourgogne Rouge",
+  "p": "Couvent des Jacobins",
+  "g": "Pinot Noir",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    5,
+    4,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Beaujolais Royal",
+  "p": "Beaujolais Royal",
+  "g": "Gamay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Beaujolais",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "r",
+   "v": [
+    4,
+    3,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Bourgogne Aligoté Clotilde Davenne",
+  "p": "Clotilde Davenne",
+  "g": "Aligoté",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    5,
+    1,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Villa Maria Cellar Selection Pinot Gris",
+  "p": "Villa Maria Estate",
+  "g": "Pinot Gris",
+  "v": "2023",
+  "c": "Nya Zeeland",
+  "r": "Marlborough",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    4,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mandrarossa Etna Bianco",
+  "p": "Cantine Settesoli",
+  "g": "Carricante",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Bourgogne Blanc Jurassique J M Brocard",
+  "p": "J M Brocard",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Koblevo Chardonnay",
+  "p": "JSC \"Koblevo\"",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Ukraina",
+  "r": "",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Soalheiro Granit",
+  "p": "Soalheiro",
+  "g": "Alvarinho",
+  "v": "2022",
+  "c": "Portugal",
+  "r": "Vinho Verde",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Porta 6 Branco",
+  "p": "Vidigal wines",
+  "g": "Fernão pires, Arinto och Alvarinho",
+  "v": "2023",
+  "c": "Portugal",
+  "r": "Lisboa",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Revelare Macabeo Blanco",
+  "p": "Cooperativa Nuestra Señora del Rosario",
+  "g": "Macabeo",
+  "v": "2021",
+  "c": "Spanien",
+  "r": "Murcia",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2025,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Sandstein Riesling trocken",
+  "p": "WG Gysler",
+  "g": "Riesling",
+  "v": "2023",
+  "c": "Tyskland",
+  "r": "Rheinhessen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2033,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    11
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Von Winning Deidesheimer Paradiesgarten Erste Lage Riesling Trocken",
+  "p": "Von Winning",
+  "g": "Riesling",
+  "v": "2022",
+  "c": "Tyskland",
+  "r": "Pfalz",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2032,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    11
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Wente Vineyards Coastal Selection Chardonnay",
+  "p": "Wente Family Estates",
+  "g": "Chardonnay och Gewürztraminer",
+  "v": "2023",
+  "c": "USA",
+  "r": "Kalifornien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    3,
+    6
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Torres Gran Viña Sol Chardonnay",
+  "p": "Miguel Torres",
+  "g": "Chardonnay och parellada",
+  "v": "2023",
+  "c": "Spanien",
+  "r": "Katalonien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mezzacorona Pinot Grigio Riserva",
+  "p": "Mezzacorona",
+  "g": "Pinot grigio",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Trentino-Alto Adige",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    5,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "La Nascosta Moscaminer",
+  "p": "Antonio Mastrojanni Societa Agricola Societa Semplice",
+  "g": "Moscato och Gewürztraminer",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Toscana",
+  "q": 2,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    7,
+    6
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mandrarossa Grillo",
+  "p": "Cantine Settesoli",
+  "g": "Grillo",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 2,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Danie de Wet Chardonnay Pinot Noir",
+  "p": "De Wetshof Estate",
+  "g": "Chardonnay och Pinot Noir",
+  "v": "2023",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Soalheiro ALLO",
+  "p": "Soalheiro",
+  "g": "Loureiro och Alvarinho",
+  "v": "2023",
+  "c": "Portugal",
+  "r": "Vinho Verde",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Côtes du Jura Chardonnay",
+  "p": "Maison Rijckaert",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Jura",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Muscadet Sèvre et Maine Dumnacus Vignerons",
+  "p": "Dumnacus Vignerons",
+  "g": "Melon de Bourgogne",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Loire",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    4,
+    1,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Viré Clesse Domaine André Bonhomme",
+  "p": "A Bonhomme",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2023,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Trimbach Riesling",
+  "p": "Trimbach",
+  "g": "Riesling",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Alsace",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2032,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    3,
+    11
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Blason de Bourgogne Mâcon-Villages Chardonnay",
+  "p": "Vignerons des Grandes Vignes",
+  "g": "Chardonnay",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Hubert Beck Grande Réserve Pinot Gris",
+  "p": "Hubert Beck",
+  "g": "Pinot Gris",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Alsace",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    4,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Bourgogne Chardonnay J M Brocard",
+  "p": "J M Brocard",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Furling Dry Furmint",
+  "p": "Patricius Borhaz Zrt.",
+  "g": "Furmint, Muscat Balc, Hárslevelű",
+  "v": "2024",
+  "c": "Ungern",
+  "r": "Tokaj",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Clotilde Davenne Bourgogne Blanc",
+  "p": "Clotilde Davenne",
+  "g": "Chardonnay",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "L Chardonnay",
+  "p": "Domaine Laroche",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Hofstudien Grüner Veltliner",
+  "p": "Weingut Geyerhof",
+  "g": "Grüner veltliner",
+  "v": "2022",
+  "c": "Österrike",
+  "r": "Kremstal DAC",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mandrarossa Bertolino Soprano Bianco",
+  "p": "Cantine Settesoli",
+  "g": "Grillo",
+  "v": "2019",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Inycon Chardonnay",
+  "p": "Cantine Settesoli",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Primo Bianco Mesa",
+  "p": "Mesa",
+  "g": "Vermentino",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Sardinien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Gérard Bertrand Héritage Chardonnay",
+  "p": "Gérard Bertrand",
+  "g": "Chardonnay",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mezzacorona Pinot Grigio Riserva",
+  "p": "Mezzacorona",
+  "g": "Pinot Grigio",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Trentino-Alto Adige",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2025,
+  "tk": {
+   "k": "w",
+   "v": [
+    5,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Vecchie Vigne Verdicchio Classico Superiore",
+  "p": "Umani Ronchi",
+  "g": "Verdicchio",
+  "v": "2020",
+  "c": "Italien",
+  "r": "Marche",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2021,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Mulderbosch Chardonnay",
+  "p": "Mulderbosch Vineyards",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Foot of Africa Chardonnay",
+  "p": "Kleine Zalze",
+  "g": "Chardonnay",
+  "v": "2024",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Buccia",
+  "p": "Iconic Wines",
+  "g": "Carricante",
+  "v": "2024",
+  "c": "Italien",
+  "r": "Sicilien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Jurtschitsch Riesling Platin",
+  "p": "Weingut Jurtschitsch",
+  "g": "Riesling",
+  "v": "2024",
+  "c": "Österrike",
+  "r": "Kamptal",
+  "q": 2,
+  "o": true,
+  "s": "",
+  "f": 2025,
+  "u": 2034,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    3,
+    11
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Chablis Vielles Vignes Sainte Claire",
+  "p": "J M Brocard",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": true,
+  "s": "",
+  "f": 2024,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Domäne Wachau",
+  "p": "Domäne Wachau",
+  "g": "Riesling",
+  "v": "2023",
+  "c": "Österrike",
+  "r": "Wachau",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2033,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    3,
+    11
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "La Désirée",
+  "p": "Les Frères Couillaud",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Loire",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Allegrini Lugana",
+  "p": "Allegrini",
+  "g": "Turbiana, Cortese",
+  "v": "2022",
+  "c": "Italien",
+  "r": "Lombardiet",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Maison de Chêne",
+  "p": "Globus Wine",
+  "g": "Chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Domaene Gobelsburg",
+  "p": "Schloss Gobelsburg",
+  "g": "Grüner veltliner",
+  "v": "2022",
+  "c": "Österrike",
+  "r": "Kamptal",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Laurent Miquel Solas Chardonnay",
+  "p": "Laurent Miquel/Cazal Viel",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Lomond",
+  "p": "Lomond Wine Estate",
+  "g": "Sauvignon Blanc, semillon",
+  "v": "2024",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Weingut Müller Kremstal Grüner Veltliner Vom Loess",
+  "p": "Weingut Müller",
+  "g": "Grüner veltliner",
+  "v": "2024",
+  "c": "Österrike",
+  "r": "Niederösterreich",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Soalheiro Terramatter",
+  "p": "Soalheiro",
+  "g": "Alvarinho",
+  "v": "2023",
+  "c": "Portugal",
+  "r": "Vinho Verde",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Stark-Condé Round Mountain Sauvignon Blanc",
+  "p": "Stark-Condé Wines",
+  "g": "Sauvignon Blanc",
+  "v": "2024",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Frammento Decugnano dei Barbi",
+  "p": "Decugnano dei Barbi",
+  "g": "Grechetto, Vermentino, Sauvignon Blanc, Procanico",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Umbrien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Warwick White Lady",
+  "p": "Warwick Estate",
+  "g": "Chardonnay",
+  "v": "2021",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Vlassides Grifos 2",
+  "p": "Vlassides Winery",
+  "g": "Xynesteri, Sauvignon Blanc",
+  "v": "2024",
+  "c": "Cypern",
+  "r": "Limassol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Tsiakkas Xynesteri",
+  "p": "Tsiakkas Winery",
+  "g": "Xynisteri, Malaga",
+  "v": "2024",
+  "c": "Cypern",
+  "r": "Limassol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    5,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Domaine de Bois Saint-Joseph",
+  "p": "Gérald Ruard",
+  "g": "Marsanne",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    9,
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Principium",
+  "p": "Vignoble Rasse",
+  "g": "",
+  "v": "2025",
+  "c": "Frankrike",
+  "r": "Provence - Alpes-Maritimes",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2026,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Idle Lane Chardonnay",
+  "p": "Mr. Riggs",
+  "g": "Chardonnay",
+  "v": "2023",
+  "c": "Australien",
+  "r": "Adelaide Hills",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Litoral Sauvignon Blanc",
+  "p": "Viña Ventolera",
+  "g": "Sauvignon Blanc",
+  "v": "2022",
+  "c": "Chile",
+  "r": "Leyda Valley",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Sauvignon Blanc",
+  "p": "Ingata",
+  "g": "Sauvignon Blanc",
+  "v": "2023",
+  "c": "Nya Zeeland",
+  "r": "Marlborough",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Gewürztraminer Réserve",
+  "p": "Gustave Lorentz",
+  "g": "Gewürztraminer",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Alsace",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2030,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    5,
+    6
+   ]
+  }
+ },
+ {
+  "t": "vitt",
+  "n": "Saint-Véran",
+  "p": "Château Fuissé",
+  "g": "Chardonnay",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Bourgogne/Mâconnais",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2032,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Les Fumées Blanches Rosé",
+  "p": "François Lurton",
+  "g": "Sauvignon gris",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Sydvästra Frankrike",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2025,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Les Lauzeraies Tavel",
+  "p": "Les Vignerons de Tavel",
+  "g": "Grenache, syrah, mourvèdre, carignan, cinsault, clairette, picpoul och bourboulenc.",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Rhônedalen",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Zambartas \"Garden of Cyprus\"",
+  "p": "Zambartas Wineries",
+  "g": "Lefkada, Cabernet Franc",
+  "v": "2024",
+  "c": "Cypern",
+  "r": "Limassol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Fontaine",
+  "p": "Vignoble Rasse",
+  "g": "Grenache/Malbec/Mourvèdre",
+  "v": "2025",
+  "c": "Frankrike",
+  "r": "Provence - Alpes-Maritimes",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Cuvée des Chevaliers",
+  "p": "Château Sainte Roseline",
+  "g": "Grenache/Sémillon/Mourvèdre/Cinsault/Rolle",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Côtes de Provence",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Les Hauts de Seignol",
+  "p": "Seignol",
+  "g": "Syrah/Grenache/Mourvèdre",
+  "v": "2025",
+  "c": "Frankrike",
+  "r": "Bandol",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Pinot Noir Rosé",
+  "p": "Vitis Nostra",
+  "g": "Pinot Noir",
+  "v": "2023",
+  "c": "Italien",
+  "r": "Lombardiet",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2025,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Bobal Rosé",
+  "p": "Peña Tejo",
+  "g": "Bobal",
+  "v": "",
+  "c": "Spanien",
+  "r": "Utiel-Requena",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rose",
+  "n": "Les Lauzeraies",
+  "p": "Les Lauzeraies",
+  "g": "Grenache, Cinsault, Syrah m.fl.",
+  "v": "2024",
+  "c": "Frankrike",
+  "r": "Tavel",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    8
+   ]
+  }
+ },
+ {
+  "t": "orange",
+  "n": "Comadellops Orange",
+  "p": "Costador Terroirs Mediterranis",
+  "g": "Xarel·lo, Sumoll Blanco, Viognier, Chenin Blanc, Pansa och Parellada",
+  "v": "2023",
+  "c": "Spanien",
+  "r": "Katalonien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2029,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    8
+   ]
+  }
+ },
+ {
+  "t": "orange",
+  "n": "Gérard Bertrand Orange Gold",
+  "p": "Gérard Bertrand",
+  "g": "Chardonnay, grenache blanc, viognier, marsanne, mauzac, muscat",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Languedoc-Roussillon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    8
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Palmer & Co Blanc de Blancs",
+  "p": "Palmer & Co",
+  "g": "Chardonnay",
+  "v": "2018",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2038,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Champagne Waris Hubert Lilyale Grand Cru Blanc de Blancs",
+  "p": "Champagne Waris Hubert",
+  "g": "Chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Beaumont des Crayères Fleur de Prestige",
+  "p": "Beaumont des Crayères",
+  "g": "Chardonnay, pinot noir och meunier",
+  "v": "2016",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2041,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Christian Senez Millésime Brut Champagne",
+  "p": "Christian Senez",
+  "g": "Chardonnay och pinot noir",
+  "v": "2006",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2014,
+  "u": 2031,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Charles Heidsieck Brut Réserve",
+  "p": "Charles Heidsieck",
+  "g": "Pinot noir, meunier och chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Pol Roger Blanc de Blancs",
+  "p": "Pol Roger",
+  "g": "Chardonnay",
+  "v": "2015",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2035,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "José Michel Cuvée Hommage",
+  "p": "José Michel & Fils",
+  "g": "Pinot Meunier, Pinot Noir och Chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Henriot Millésimé Brut",
+  "p": "Champagne Henriot",
+  "g": "Chardonnay och pinot noir",
+  "v": "2014",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2039,
+  "tk": {
+   "k": "w",
+   "v": [
+    8,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Charles Mignon Organic Brut",
+  "p": "Champagne Charles Mignon",
+  "g": "Pinot Meunier, Pinot Noir och Chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Jacques Copin",
+  "p": "Jacques Copin",
+  "g": "Chardonnay, Pinot noir",
+  "v": "2008",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2016,
+  "u": 2033,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Grande Réserve",
+  "p": "Charles Gouthière",
+  "g": "Pinot Noir",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Champagne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Pongrácz Brut",
+  "p": "Bergkelder",
+  "g": "Pinot Noir och Chardonnay",
+  "v": "",
+  "c": "Sydafrika",
+  "r": "Western Cape",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Vilarnau Brut Nature Organic",
+  "p": "Gonzalez Byass",
+  "g": "Macabeo, xarel-lo och parellada",
+  "v": "",
+  "c": "Spanien",
+  "r": "Katalonien",
+  "q": 1,
+  "o": false,
+  "s": "Cava",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    1,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Louis Bouillot Crémant de Bourgogne Brut Grand Millésimé",
+  "p": "Louis Bouillot",
+  "g": "Chardonnay, pinot noir, gamay och aligoté.",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 2,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    7,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Derbusco Cives Doppio Erre Di Franciacorta Brut",
+  "p": "Società Agricola Derbusco srl",
+  "g": "Chardonnay och pinot nero",
+  "v": "",
+  "c": "Italien",
+  "r": "Lombardiet",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Biasiotto Sui Lieviti Zero 15 Spumante Extra Brut",
+  "p": "Vina Biasiotto",
+  "g": "Glera",
+  "v": "2015",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2016,
+  "u": 2025,
+  "tk": {
+   "k": "w",
+   "v": [
+    5,
+    1,
+    8
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Louis Bouillot Crémant de Bourgogne Rosé Brut",
+  "p": "Louis Bouillot",
+  "g": "Pinot noir, gamay och chardonnay",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Vallebelbo Miravento Sparkling Pink Moscato",
+  "p": "Cantina Vallebelbo",
+  "g": "Muscat",
+  "v": "",
+  "c": "Italien",
+  "r": "Piemonte",
+  "q": 1,
+  "o": false,
+  "s": "Rosé",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    4,
+    9,
+    7
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Soalheiro Pet Nat Alvarinho",
+  "p": "Soalheiro",
+  "g": "Alvarinho",
+  "v": "2024",
+  "c": "Portugal",
+  "r": "Vinho Verde",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2026,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Cava 1+1=3 Blanc de Noirs Brut Nature Reserva Organic",
+  "p": "1+1=3 U Mes U Fan Tres S.L.",
+  "g": "Pinot Noir och Chardonnay",
+  "v": "",
+  "c": "Spanien",
+  "r": "Katalonien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    1,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Cave Mont Blanc Glacier Metodo Classico",
+  "p": "Cave Mont Blanc de Morgex et La Salle soc. Coop",
+  "g": "Prié Blanc",
+  "v": "2021",
+  "c": "Italien",
+  "r": "Valle d'Aosta",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2022,
+  "u": 2027,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Cava Aurèlia",
+  "p": "Castell d'Age",
+  "g": "Xarel-lo, Macabeu, Parellada och Chardonnay",
+  "v": "2019",
+  "c": "Spanien",
+  "r": "",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2020,
+  "u": 2029,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Langlois Crémant de Loire",
+  "p": "Langlois-Château",
+  "g": "Chenin Blanc, Chardonnay och Cabernet Franc",
+  "v": "",
+  "c": "Frankrike",
+  "r": "Loire",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Ferrari",
+  "p": "Ferrari",
+  "g": "Chardonnay",
+  "v": "",
+  "c": "Italien",
+  "r": "Trento",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    9
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Clotilde Davenne Crémant de Bourgogne Blanc de Blancs",
+  "p": "Clotilde Davenne",
+  "g": "Chardonnay",
+  "v": "2022",
+  "c": "Frankrike",
+  "r": "Bourgogne",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2023,
+  "u": 2028,
+  "tk": {
+   "k": "w",
+   "v": [
+    6,
+    2,
+    10
+   ]
+  }
+ },
+ {
+  "t": "bubbel",
+  "n": "Moscato",
+  "p": "Casalforte",
+  "g": "Moscato Bianco",
+  "v": "",
+  "c": "Italien",
+  "r": "Venetien",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": null,
+  "u": null,
+  "tk": {
+   "k": "w",
+   "v": [
+    4,
+    9,
+    7
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Les Tuffeaulières",
+  "p": "Couly-Dutheil",
+  "g": "Cabernet Franc",
+  "v": "2023",
+  "c": "Frankrike",
+  "r": "Loire, Chinon",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2025,
+  "u": 2033,
+  "tk": {
+   "k": "r",
+   "v": [
+    7,
+    7,
+    8
+   ]
+  }
+ },
+ {
+  "t": "rott",
+  "n": "Château Cardinal",
+  "p": "Famille Bertin",
+  "g": "Merlot m.fl.",
+  "v": "2021",
+  "c": "Frankrike",
+  "r": "Bordeaux, Montagne-Saint-Émilion",
+  "q": 1,
+  "o": false,
+  "s": "",
+  "f": 2024,
+  "u": 2031,
+  "tk": {
+   "k": "r",
+   "v": [
+    8,
+    6,
+    6
+   ]
+  }
+ }
+]

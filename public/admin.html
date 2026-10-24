@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<title>Admin · Vinkällaren</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="topbar" id="nav" aria-label="Huvudmeny"></nav>
+<main class="page">
+  <h1>Admin</h1>
+  <p class="lede">Bjud in och hantera dem som har tillgång till källaren.</p>
+
+  <section class="panel" aria-labelledby="usersH">
+    <div class="toolbar" style="margin:0 0 10px"><h2 id="usersH">Användare</h2><button type="button" class="btn" id="inviteBtn">Bjud in</button></div>
+    <p class="note hidden" id="noMail">E-post är inte inställd på servern. Inbjudnings- och återställningslänkar visas här i stället, så att du kan skicka dem själv.</p>
+    <ul class="users" id="users"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="opsH">
+    <div class="toolbar" style="margin:0 0 10px"><h2 id="opsH">Drift</h2><button type="button" class="btn ghost" id="backupBtn">Ta backup nu</button></div>
+    <p class="sub">Backup tas automatiskt varje natt efter kl. 03 och de 30 senaste sparas. Återställning ersätter viner och historik men rör inte användarkontona. Samma kontroller finns på <a href="/api/health">/api/health</a>.</p>
+    <ul class="checks" id="checks"></ul>
+    <h3 class="minor">Backuper</h3>
+    <ul class="hist" id="backups"></ul>
+  </section>
+</main>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgH">
+  <form id="userForm" method="dialog" novalidate>
+    <h2 id="dlgH">Bjud in</h2>
+    <div class="stack" style="max-width:none">
+      <label class="f">Namn<input name="name" maxlength="100" required autocomplete="off"></label>
+      <label class="f">E-post<input name="email" type="email" maxlength="200" required autocomplete="off"></label>
+      <label class="check"><input name="is_admin" type="checkbox"> Administratör (kan hantera användare, kräver tvåstegsverifiering)</label>
+      <p class="note" id="dlgNote">En inbjudan med en länk för att välja lösenord skickas till adressen. Länken gäller i 7 dagar.</p>
+    </div>
+    <p class="err" id="formErr" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn danger hidden" id="delBtn">Ta bort</button>
+      <button type="button" class="btn ghost hidden" id="reset2faBtn">Stäng av tvåsteg</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn ghost" id="cancelBtn">Avbryt</button>
+      <button type="submit" class="btn" id="saveBtn">Skicka inbjudan</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/js/admin.js" type="module"></script>
+</body>
+</html>
