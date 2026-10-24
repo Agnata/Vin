@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vinkällaren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#DEDDD5; --paper:#E9E8E1; --ink:#1E211F; --muted:#5C605A; --rule:#BEBEB4;
+  --rott:#6B1A2A; --vitt:#CDB24E; --rose:#DC928E; --bubbel:#EFE6BF; --orange:#C46E27;
+  --focus:#6B1A2A;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
+    --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#191B19; --paper:#212421; --ink:#E6E4DC; --muted:#9C9E96; --rule:#353830;
+  --rott:#A8384D; --vitt:#D8BE58; --rose:#E3A09C; --bubbel:#EDE2B2; --orange:#D2813A; --focus:#E3A09C;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;font-size:18px;line-height:1.5;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+header{padding:56px 0 20px}
+h1{font-weight:300;font-size:clamp(52px,14vw,104px);line-height:.92;letter-spacing:-.025em;margin:0}
+.lede{font-size:21px;font-style:italic;color:var(--muted);margin:14px 0 0;max-width:34ch}
+/* the rack */
+.rack{margin:36px 0 10px;display:flex;flex-wrap:wrap;gap:6px}
+.cap{width:22px;height:22px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:var(--c);position:relative;box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--c) 70%,#000 30%)}
+.cap::after{content:"";position:absolute;inset:7px;border-radius:50%;background:color-mix(in srgb,var(--c) 80%,#fff 20%)}
+.cap.dim{opacity:.18}
+.cap:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--muted);margin:14px 0 0;padding:0;list-style:none}
+.legend li{display:flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:50%;background:var(--c);display:inline-block}
+/* controls */
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);
+  padding:14px 0 12px;margin-top:28px;border-bottom:1px solid var(--rule)}
+.types{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}
+.types::-webkit-scrollbar{display:none}
+.types button{font:inherit;font-size:16px;background:none;border:1px solid transparent;color:var(--muted);
+  padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.types button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+.types button:focus-visible,.row2 input:focus-visible,.row2 select:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.row2 input,.row2 select{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);border-radius:8px;padding:8px 11px;min-width:0}
+.row2 input{flex:1 1 100%}
+.row2 select{flex:1 1 0}
+@media (min-width:640px){.row2 input{flex:1 1 0}.row2 select{flex:0 0 auto}}
+/* list */
+main{padding-bottom:80px}
+section.country{margin-top:44px}
+section.country h2{font-weight:400;font-size:34px;letter-spacing:-.01em;margin:0 0 4px;display:flex;align-items:baseline;gap:12px}
+section.country h2 small{font-size:16px;color:var(--muted);font-style:italic;font-weight:400}
+ol.wines{list-style:none;margin:0;padding:0}
+.wine{display:grid;grid-template-columns:12px 1fr auto;gap:0 14px;padding:16px 0;border-top:1px solid var(--rule);scroll-margin-top:140px}
+.wine:first-child{border-top-color:var(--ink)}
+.wine .dot{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:9px}
+.wine .name{font-size:20px;font-weight:500;line-height:1.25}
+.wine .meta{font-size:16px;color:var(--muted);margin-top:3px}
+.wine .grape{font-style:italic}
+.wine .yr{font-size:22px;font-weight:300;font-variant-numeric:oldstyle-nums;text-align:right;line-height:1.1}
+.wine .qty{display:block;font-size:14px;color:var(--muted);font-style:italic}
+.st{display:block;font-size:14px;font-style:italic;color:var(--muted);line-height:1.35;margin-top:2px}
+.st b{font-weight:600;font-style:normal}
+.st.snart b,.st.passerat b{color:var(--rott)}
+.dials{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:9px}
+.dial{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);line-height:1.15}
+.dial svg{width:30px;height:30px;flex:0 0 auto}
+.dial .tk{stroke:var(--rule);stroke-width:2.4;stroke-linecap:round}
+.dial .tk.on{stroke:var(--c)}
+.dial text{font:500 10px "Newsreader",Georgia,serif;fill:var(--ink)}
+.wine .open{font-size:14px;color:var(--muted);font-style:italic}
+.wine.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{background:color-mix(in srgb,var(--c) 28%,transparent)}100%{background:transparent}}
+.empty{margin-top:48px;color:var(--muted);font-style:italic}
+footer{color:var(--muted);font-size:15px;font-style:italic;padding:0 0 48px}
+/* pairing */
+.pair{margin-top:44px;padding-top:22px;border-top:1px solid var(--ink)}
+.pair h2{font-weight:400;font-size:34px;letter-spacing:-.01em;margin:0}
+.pair .sub{color:var(--muted);font-style:italic;margin:4px 0 16px;font-size:17px}
+.dishes{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.dishes button{font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--rule);color:var(--ink);
+  padding:6px 13px;border-radius:999px;cursor:pointer}
+.dishes button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dishes button:focus-visible,.ask button:focus-visible,.ask input:focus-visible,.pick:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.ask{display:none;gap:8px;margin-top:4px}
+.ask.on{display:flex}
+.ask input{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:8px 11px}
+.ask button{font:inherit;font-size:16px;background:var(--rott);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.ask button[disabled]{opacity:.55;cursor:default}
+.asknote{display:none;font-size:14px;color:var(--muted);font-style:italic;margin:6px 0 0}
+.asknote.on{display:block}
+.linkbtn{font:inherit;font-style:italic;color:var(--rott);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.linkbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+#pairOut{margin-top:18px}
+#pairOut .intro{font-style:italic;color:var(--muted);margin:0 0 6px}
+.pick{display:grid;grid-template-columns:12px 1fr auto;gap:0 14px;padding:12px 0;border-top:1px solid var(--rule);
+  width:100%;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;cursor:pointer}
+.pick .dot{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:8px}
+.pick .name{font-size:19px;font-weight:500;line-height:1.25}
+.pick .why{font-size:16px;color:var(--muted);margin-top:2px}
+.pick .yr{font-size:20px;font-weight:300;font-variant-numeric:oldstyle-nums}
+.pick .open{font-size:14px;font-style:italic;color:var(--rott)}
+@media (prefers-reduced-motion:reduce){.wine.flash{animation:none;outline:2px solid var(--c)}}
+@media (max-width:420px){.cap{width:18px;height:18px}.cap::after{inset:6px}.rack{gap:5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Vinkällaren</h1>
+  <p class="lede" id="lede"></p>
+  <div class="rack" id="rack" aria-label="Varje cirkel är en flaska"></div>
+  <ul class="legend" id="legend"></ul>
+</header>
+<section class="pair" aria-labelledby="pairH">
+  <h2 id="pairH">Vad blir det till middag?</h2>
+  <p class="sub">Skriv vad ni ska äta, eller välj en rätt nedan.</p>
+  <div class="ask on" id="ask">
+    <input id="askIn" type="text" placeholder="Skriv en maträtt, t.ex. renskav med svamp" aria-label="Skriv en maträtt">
+    <button type="button" id="askBtn">Föreslå vin</button>
+  </div>
+  <p class="asknote" id="askNote"><button type="button" id="claudeBtn" class="linkbtn">Fråga Claude i stället</button> för en mer genomtänkt bedömning. Frågan går via ditt eget Claude-konto.</p>
+  <div class="dishes" id="dishes" role="group" aria-label="Maträtt"></div>
+  <div id="pairOut" aria-live="polite"></div>
+</section>
+<div class="controls">
+  <div class="types" id="types" role="group" aria-label="Vintyp"></div>
+  <div class="row2">
+    <input id="q" type="search" placeholder="Sök vin, druva eller region" aria-label="Sök">
+    <select id="land" aria-label="Land"></select>
+    <select id="fonster" aria-label="Drickfönster"><option value="">Alla drickfönster</option><option value="nu">Redo att drickas</option><option value="snart">Drick snart</option><option value="vanta">Kan vänta</option></select>
+  </div>
+</div>
+<main id="list"></main>
+<footer>Tryck på en flaska ovan för att hitta den i listan. Drickfönster och smakklockor är uppskattningar utifrån vinets stil, druva, ursprung och årgång. Skalan går från 1 till 12.</footer>
+</div>
+<script>
+const WINES = [{"t": "rott", "n": "Crane Lake Merlot", "p": "Crane Lake", "g": "Malbec och cabernet sauvignon eller zinfandel", "v": "2020", "c": "USA", "r": "Kalifornien, Napa Valley", "q": 1, "o": true, "s": "", "f": 2022, "u": 2030, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Fontaine", "p": "Vignoble Rasse", "g": "Cabernet Sauvignon/Cabernet Franc/Merlot/Mourvèdre/Marselan", "v": "2021", "c": "Frankrike", "r": "Provence - Alpes-Maritimes", "q": 1, "o": false, "s": "", "f": 2023, "u": 2031, "tk": {"k": "r", "v": [8, 8, 7]}}, {"t": "rott", "n": "La Umbra", "p": "Domeniile Alexandrion Rhein 1892", "g": "Pinot Noir", "v": "2021", "c": "Rumänien", "r": "", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "Poliziano Vino Nobile di Montepulciano Viti Nuove", "p": "Poliziano", "g": "Sangiovese", "v": "2020", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2023, "u": 2032, "tk": {"k": "r", "v": [8, 8, 8]}}, {"t": "rott", "n": "Le temps des rêves Pinot Noir", "p": "Maison Lisein", "g": "Pinot Noir", "v": "", "c": "Frankrike", "r": "Vin de France", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "Rosso di Montepulciano", "p": "Poliziano", "g": "Merlot och Sangiovese", "v": "2023", "c": "Italien", "r": "Toscana", "q": 1, "o": true, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Rouge (Gaston Hochar)", "p": "Chateau Musar", "g": "Cabernet Sauvignon", "v": "2017", "c": "Libanon", "r": "", "q": 1, "o": true, "s": "", "f": 2024, "u": 2042, "tk": {"k": "r", "v": [9, 9, 7]}}, {"t": "rott", "n": "Weemala Shiraz", "p": "Logan", "g": "Shiraz/Syrah", "v": "2022", "c": "Australien", "r": "Central Ranges", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "r", "v": [10, 7, 6]}}, {"t": "rott", "n": "Pinot Noir on Sandstone Soils", "p": "Catherine Marshall", "g": "Pinot Noir", "v": "2020", "c": "Sydafrika", "r": "Elgin", "q": 1, "o": false, "s": "", "f": 2022, "u": 2028, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "11 Chianti Riserva", "p": "Cecchi", "g": "Sangiovese, Colorino del Valdarno och Canaiolo Nero", "v": "2019", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2022, "u": 2031, "tk": {"k": "r", "v": [8, 8, 9]}}, {"t": "rott", "n": "Masi Campofiorin", "p": "Masi", "g": "Corvina, rondinella och molinara", "v": "2021", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": 2023, "u": 2031, "tk": {"k": "r", "v": [7, 5, 8]}}, {"t": "rott", "n": "Catena Alamos Syrah", "p": "Alamos", "g": "Shiraz/Syrah", "v": "2019", "c": "Argentina", "r": "Mendoza", "q": 1, "o": false, "s": "", "f": 2021, "u": 2029, "tk": {"k": "r", "v": [10, 7, 6]}}, {"t": "rott", "n": "Estate wine Cabernet Sauvignon", "p": "Kanonkop Estate", "g": "Cabernet Sauvignon", "v": "2019", "c": "Sydafrika", "r": "Stellenbosch", "q": 1, "o": true, "s": "", "f": 2024, "u": 2039, "tk": {"k": "r", "v": [9, 9, 7]}}, {"t": "rott", "n": "Château Peychaud Bordeaux Superieur Rouge", "p": "Comte Jacques de Pontac", "g": "Merlot, Cabernet Sauvignon och Cabernet Franc", "v": "2019", "c": "Frankrike", "r": "Bordeaux", "q": 1, "o": false, "s": "", "f": 2022, "u": 2029, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Casas del Bosque Pinot Noir Reserva", "p": "Casas del Bosque", "g": "Pinot Noir", "v": "2016", "c": "Chile", "r": "Casablancadalen", "q": 1, "o": false, "s": "", "f": 2017, "u": 2021, "tk": {"k": "r", "v": [6, 4, 8]}}, {"t": "rott", "n": "Etna Rosso", "p": "Tornatore", "g": "Nerello Mascalese", "v": "2018", "c": "Italien", "r": "Etna", "q": 1, "o": false, "s": "", "f": 2020, "u": 2028, "tk": {"k": "r", "v": [6, 6, 8]}}, {"t": "rott", "n": "Lat 42 Reserva", "p": "La Rioja Alta", "g": "Tempranillo", "v": "2018", "c": "Spanien", "r": "Rioja", "q": 1, "o": false, "s": "", "f": 2021, "u": 2033, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Les Sorts Selecció", "p": "Celler el Masroig", "g": "Carignan, grenache och syrah", "v": "2022", "c": "Spanien", "r": "Montsant", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Bordón Rioja Crianza", "p": "Bodegas Franco-Españolas", "g": "Tempranillo", "v": "2013", "c": "Spanien", "r": "Rioja", "q": 1, "o": true, "s": "", "f": 2015, "u": 2021, "tk": {"k": "r", "v": [8, 7, 6]}}, {"t": "rott", "n": "Protos 5°Ano", "p": "Protos", "g": "Tempranillo", "v": "2018", "c": "Spanien", "r": "Ribera del Duero", "q": 1, "o": false, "s": "", "f": 2021, "u": 2033, "tk": {"k": "r", "v": [8, 7, 6]}}, {"t": "rott", "n": "Los Frailes Dolomitas Monastrell", "p": "Casa Los Frailes", "g": "Monastrell", "v": "2021", "c": "Spanien", "r": "Valencia", "q": 1, "o": false, "s": "", "f": 2025, "u": 2036, "tk": {"k": "r", "v": [9, 7, 5]}}, {"t": "rott", "n": "Viatge al Priorat Celler Joan Simó", "p": "Celler Joan Simó", "g": "Cabernet Sauvignon, Grenache och Carignan", "v": "2022", "c": "Spanien", "r": "Priorat", "q": 1, "o": false, "s": "", "f": 2025, "u": 2034, "tk": {"k": "r", "v": [8, 8, 6]}}, {"t": "rott", "n": "Bikandi Ecologico Crianza", "p": "Viña Olabarri", "g": "Tempranillo", "v": "2020", "c": "Spanien", "r": "Rioja", "q": 2, "o": false, "s": "", "f": 2022, "u": 2028, "tk": {"k": "r", "v": [8, 7, 6]}}, {"t": "rott", "n": "Jérôme Arnoux Tradition", "p": "Jérôme Arnoux", "g": "Pinot noir, Trousseau och Poulsard", "v": "2021", "c": "Frankrike", "r": "Jura", "q": 1, "o": false, "s": "", "f": 2023, "u": 2029, "tk": {"k": "r", "v": [4, 4, 8]}}, {"t": "rott", "n": "Le Volte dell'Ornellaia", "p": "Ornellaia", "g": "Merlot, Sangiovese och Cabernet Sauvignon", "v": "2022", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Domaine de Majas Rouge IGP Côte Catalanes", "p": "Domaine de Majas", "g": "Grenache och carignan", "v": "2022", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Gassier Côtes du Rhône", "p": "Domaine Gassier", "g": "Shiraz/syrah, Grenache och Mourvèdre", "v": "2020", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2022, "u": 2030, "tk": {"k": "r", "v": [9, 6, 5]}}, {"t": "rott", "n": "Château Blaignan Cru Bourgeois Médoc", "p": "Château Blaignan", "g": "Cabernet sauvignon och Merlot", "v": "2016", "c": "Frankrike", "r": "Bordeaux", "q": 1, "o": false, "s": "", "f": 2020, "u": 2031, "tk": {"k": "r", "v": [9, 8, 6]}}, {"t": "rott", "n": "Chateau Haut Bascla Bordeaux Rouge", "p": "Chateau Haut Bascla", "g": "Merlot och Cabernet sauvignon", "v": "2018", "c": "Frankrike", "r": "Bordeaux", "q": 1, "o": false, "s": "", "f": 2021, "u": 2028, "tk": {"k": "r", "v": [8, 7, 6]}}, {"t": "rott", "n": "Maison Francoise Côtes de Marmandais Abouriou Merlot", "p": "Cave du Marmandais", "g": "Abouriou och merlot", "v": "2020", "c": "Frankrike", "r": "Marmande", "q": 1, "o": false, "s": "", "f": 2021, "u": 2026, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Caleta Montepulciano d'Abruzzo", "p": "Cirelli La Collina Biologica SRL", "g": "Montepulciano", "v": "2022", "c": "Italien", "r": "Abruzzo", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Langhe Nebbiolo", "p": "Vignaia Bauducco", "g": "Nebbiolo", "v": "2021", "c": "Italien", "r": "Langhe", "q": 1, "o": false, "s": "", "f": 2023, "u": 2029, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Chinon Cuisine de ma Mere", "p": "Domaine Grosbois", "g": "Cabernet Franc", "v": "2022", "c": "Frankrike", "r": "Loire", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [7, 7, 8]}}, {"t": "rott", "n": "Terasses", "p": "Château Pesquié - Famille Chaudière", "g": "Grenache och Syrah", "v": "2016", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2018, "u": 2026, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Gérard Bertrand Château L'Hospitalet La Réserve Rouge", "p": "Gérard Bertrand", "g": "Syrah, Mourvèdre och Grenache", "v": "2022", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Enzo Bartoli Barbera d'Asti superiore", "p": "Enzo Bartoli", "g": "Barbera", "v": "2020", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2022, "u": 2030, "tk": {"k": "r", "v": [7, 4, 10]}}, {"t": "rott", "n": "Côtes-du-Rhône-Villages Biologique", "p": "Paul Jaboulet Aîné", "g": "Shiraz/syrah, Grenache och Mourvèdre", "v": "2021", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2023, "u": 2031, "tk": {"k": "r", "v": [9, 6, 5]}}, {"t": "rott", "n": "Le Paradou Grenache", "p": "Chateau Pesquie", "g": "Grenache", "v": "2016", "c": "Frankrike", "r": "Languedoc", "q": 1, "o": false, "s": "", "f": 2018, "u": 2026, "tk": {"k": "r", "v": [8, 5, 5]}}, {"t": "rott", "n": "Tre", "p": "Brancaia", "g": "Sangiovese, merlot och cabernet sauvignon", "v": "2021", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2023, "u": 2031, "tk": {"k": "r", "v": [8, 8, 8]}}, {"t": "rott", "n": "Saint Cosme Côtes-du-Rhône", "p": "Château de Saint Cosme", "g": "Syrah", "v": "2023", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Copertino Riserva", "p": "Cantina Sociale Copertino", "g": "Negroamaro", "v": "2015", "c": "Italien", "r": "Apulien", "q": 1, "o": false, "s": "", "f": 2018, "u": 2027, "tk": {"k": "r", "v": [9, 6, 6]}}, {"t": "rott", "n": "a Rina Etna Rosso", "p": "Girolamo Russo", "g": "Nerello Mascalese och Nerello Cappuccio", "v": "2022", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [6, 6, 8]}}, {"t": "rott", "n": "Chiara Condello", "p": "Chiara Condello", "g": "Sangiovese", "v": "2018", "c": "Italien", "r": "Emilia-Romagna", "q": 2, "o": false, "s": "", "f": 2021, "u": 2030, "tk": {"k": "r", "v": [7, 8, 9]}}, {"t": "rott", "n": "Boira' Sangiovese", "p": "Cantine Volpi", "g": "Sangiovese", "v": "2022", "c": "Italien", "r": "Marche", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "r", "v": [7, 8, 9]}}, {"t": "rott", "n": "Terre di Mario", "p": "Terre di Mario", "g": "Montepulciano", "v": "2023", "c": "Italien", "r": "Abruzzo", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Le Volte dell'Ornellaia, 2022", "p": "Ornellaia", "g": "Merlot, Sangiovese och Cabernet Sauvignon", "v": "2021", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2023, "u": 2031, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Nanfré Valpolicella", "p": "Tenuta Sant'Antonio", "g": "Corvina och Rondinella", "v": "2022", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [7, 5, 8]}}, {"t": "rott", "n": "Lunadoro Rosso di Montepulciano Organic", "p": "Schenk Italia Spa", "g": "Sangiovese", "v": "2023", "c": "Italien", "r": "Toscana", "q": 1, "o": true, "s": "", "f": 2024, "u": 2029, "tk": {"k": "r", "v": [8, 8, 8]}}, {"t": "rott", "n": "Ti Amo Primitivo di Puglia", "p": "Cinque Segni", "g": "Primitivo", "v": "2013", "c": "Italien", "r": "Apulien", "q": 1, "o": false, "s": "", "f": 2014, "u": 2019, "tk": {"k": "r", "v": [10, 6, 5]}}, {"t": "rott", "n": "Tsiakkas Mouklos", "p": "Tsiakkas Winery", "g": "Mavro", "v": "2024", "c": "Cypern", "r": "Limassol", "q": 1, "o": false, "s": "", "f": 2026, "u": 2034, "tk": {"k": "r", "v": [6, 5, 7]}}, {"t": "rott", "n": "Galverno Langhe Rosso", "p": "Cagliero", "g": "Dolcetto och nebbiolo", "v": "2019", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2021, "u": 2029, "tk": {"k": "r", "v": [7, 7, 7]}}, {"t": "rott", "n": "Montedidio Amor Lazio Syrah", "p": "Montedidio", "g": "Syrah", "v": "2019", "c": "Italien", "r": "Lazio", "q": 1, "o": false, "s": "", "f": 2020, "u": 2025, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Jorio Montepulciano d'Abruzzo", "p": "Umani Ronchi", "g": "Montepulciano", "v": "2019", "c": "Italien", "r": "Marche", "q": 1, "o": false, "s": "", "f": 2021, "u": 2029, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Langhe Rosso", "p": "G.D. Vajra", "g": "Barbera, dolcetto och nebbiolo", "v": "2023", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2025, "u": 2031, "tk": {"k": "r", "v": [7, 6, 9]}}, {"t": "rott", "n": "Rocca Guicciarda Riserva", "p": "Ricasoli", "g": "Sangiovese, Merlot och Canaiolo", "v": "2020", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2023, "u": 2032, "tk": {"k": "r", "v": [9, 8, 8]}}, {"t": "rott", "n": "Uvas de la Sierra 4 Monos", "p": "4 Monos Viticultores", "g": "Garnacha", "v": "2022", "c": "Spanien", "r": "Madrid", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [8, 5, 5]}}, {"t": "rott", "n": "Piccini Collezione Oro Chianti Organic", "p": "Tenute Piccini", "g": "Sangiovese", "v": "2021", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "r", "v": [7, 8, 9]}}, {"t": "rott", "n": "Markus Molitor Haus Klosterberg Pinot Noir", "p": "Weingut Markus Molitor", "g": "Pinot Noir", "v": "2022", "c": "Tyskland", "r": "Mosel", "q": 1, "o": false, "s": "", "f": 2024, "u": 2030, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "Amarone Selezione Antonio Castagnedi", "p": "Tenuta Sant' Antonio", "g": "Corvina, Rondinella och Croatina och Oseleta", "v": "2019", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2039, "tk": {"k": "r", "v": [8, 6, 8]}}, {"t": "rott", "n": "Finca el Puig", "p": "Gran Clos", "g": "Grenache, syrah och carignan", "v": "2022", "c": "Spanien", "r": "Katalonien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Irpinia Aglianico Tenuta Cavalier Pepe", "p": "Tenuta Cavalier Pepe", "g": "Aglianico", "v": "2023", "c": "Italien", "r": "Kampanien", "q": 1, "o": false, "s": "", "f": 2026, "u": 2035, "tk": {"k": "r", "v": [9, 10, 9]}}, {"t": "rott", "n": "Borgogno Barolo Classico", "p": "Giacomo Borgogno & Figli", "g": "Nebbiolo", "v": "2021", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2028, "u": 2046, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Paul Jaboulet Parallèle 45 Rouge", "p": "Paul Jaboulet Ainé", "g": "Grenache, syrah, marselan och carignan", "v": "2022", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Cabernet Sauvignon ßasileia", "p": "Zenon", "g": "Cabernet Sauvignon", "v": "2008", "c": "Cypern", "r": "Lemesos", "q": 1, "o": false, "s": "", "f": 2009, "u": 2014, "tk": {"k": "r", "v": [9, 9, 7]}}, {"t": "rott", "n": "Les Grandes Coasses Beaujolais", "p": "Paul Durdilly", "g": "Gamay", "v": "2022", "c": "Frankrike", "r": "Beaujolais", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "r", "v": [4, 3, 8]}}, {"t": "rott", "n": "Valpolicella Classico Organic", "p": "SPERI Viticoltori S.S", "g": "Corvina, rondinella och molinara", "v": "2020", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": 2022, "u": 2030, "tk": {"k": "r", "v": [7, 5, 8]}}, {"t": "rott", "n": "Speri Ripasso", "p": "Speri", "g": "Corvina, rondinella och molinara", "v": "2022", "c": "Italien", "r": "Venetien", "q": 1, "o": true, "s": "", "f": 2024, "u": 2032, "tk": {"k": "r", "v": [9, 5, 8]}}, {"t": "rott", "n": "Cinquantotto Barbaresco", "p": "Cossetti Clemente & Figli Srl", "g": "Nebbiolo", "v": "2020", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2027, "u": 2045, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Paracombe Shiraz", "p": "Paracombe", "g": "Shiraz/Syrah", "v": "2017", "c": "Australien", "r": "Adelaide Hills", "q": 1, "o": false, "s": "", "f": 2019, "u": 2027, "tk": {"k": "r", "v": [10, 7, 6]}}, {"t": "rott", "n": "Barolo Piccole Vigne", "p": "Giacomo Grimaldi di Grimaldi Ferruccio", "g": "Nebbiolo", "v": "2019", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2026, "u": 2044, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Nero D'Avola Sicilia Danese", "p": "Danese Cantina", "g": "Nero d'avola", "v": "2021", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Brancaria Tre", "p": "Brancaria", "g": "Sangiovese, Merlot och Cabernet Sauvignon", "v": "2023", "c": "Italien", "r": "Toscana", "q": 1, "o": false, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [8, 8, 8]}}, {"t": "rott", "n": "Rioja Santiago Reserva", "p": "Marques de la Concordia Family of Wines", "g": "Tempranillo och Garnacha", "v": "2019", "c": "Spanien", "r": "Rioja", "q": 1, "o": false, "s": "", "f": 2022, "u": 2034, "tk": {"k": "r", "v": [9, 6, 6]}}, {"t": "rott", "n": "Fundamentalista Manchuela Finca Sandoval", "p": "Finca Sandoval", "g": "Carignan, grenache och syrah", "v": "2023", "c": "Spanien", "r": "Rioja", "q": 1, "o": false, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Newton Johnson Walker Bay Pinot Noir", "p": "Newton Johnson Vineyards", "g": "Pinot noir", "v": "2023", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": true, "s": "", "f": 2025, "u": 2031, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "Catena Paraje Altamira Malbec 2022", "p": "Bodega Catena Zapata", "g": "Malbec", "v": "2021", "c": "Argentina", "r": "Mendoza", "q": 1, "o": false, "s": "", "f": 2024, "u": 2033, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Boira' Sangiovese", "p": "Cantine Volpi", "g": "Sangiovese", "v": "2024", "c": "Italien", "r": "Marche", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "r", "v": [7, 8, 9]}}, {"t": "rott", "n": "Hacienda el Espino Garnacha Tintorera", "p": "Hacienda el Espino", "g": "Garnacha tintorera", "v": "2023", "c": "Spanien", "r": "Almansa", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "r", "v": [8, 6, 6]}}, {"t": "rott", "n": "Montepulciano d'Abruzzo Umani Ronchi", "p": "Umani Ronchi", "g": "Montepulciano", "v": "2024", "c": "Italien", "r": "Abruzzo", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "r", "v": [8, 7, 7]}}, {"t": "rott", "n": "Castello di Verduno", "p": "Castello di Verduno", "g": "Nebbiolo", "v": "2021", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2028, "u": 2046, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Gassier Cote du Rhone", "p": "Domaine Gassier", "g": "Grenache, Mourvèdre, Syrah", "v": "2023", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": true, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [9, 6, 6]}}, {"t": "rott", "n": "Diego Contero Barolo", "p": "Diego Contero", "g": "Nebbiolo", "v": "2021", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "", "f": 2028, "u": 2046, "tk": {"k": "r", "v": [9, 11, 10]}}, {"t": "rott", "n": "Oenou Yi Maratheftiko", "p": "Oenou Yi Winery", "g": "Maratheftiko", "v": "2020", "c": "Cypern", "r": "Limassol", "q": 1, "o": false, "s": "", "f": 2022, "u": 2030, "tk": {"k": "r", "v": [9, 8, 7]}}, {"t": "rott", "n": "Sainté mon amour", "p": "lavinifacture", "g": "Syrah, Mourvèdre, Grenache och Carignan", "v": "2023", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [9, 7, 6]}}, {"t": "rott", "n": "Bourgogne Rouge", "p": "Couvent des Jacobins", "g": "Pinot Noir", "v": "2023", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2025, "u": 2031, "tk": {"k": "r", "v": [5, 4, 8]}}, {"t": "rott", "n": "Beaujolais Royal", "p": "Beaujolais Royal", "g": "Gamay", "v": "", "c": "Frankrike", "r": "Beaujolais", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "r", "v": [4, 3, 8]}}, {"t": "vitt", "n": "Bourgogne Aligoté Clotilde Davenne", "p": "Clotilde Davenne", "g": "Aligoté", "v": "2023", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [5, 1, 10]}}, {"t": "vitt", "n": "Villa Maria Cellar Selection Pinot Gris", "p": "Villa Maria Estate", "g": "Pinot Gris", "v": "2023", "c": "Nya Zeeland", "r": "Marlborough", "q": 1, "o": true, "s": "", "f": 2024, "u": 2029, "tk": {"k": "w", "v": [8, 4, 7]}}, {"t": "vitt", "n": "Mandrarossa Etna Bianco", "p": "Cantine Settesoli", "g": "Carricante", "v": "2022", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2023, "u": 2030, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Bourgogne Blanc Jurassique J M Brocard", "p": "J M Brocard", "g": "Chardonnay", "v": "2023", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2024, "u": 2031, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Koblevo Chardonnay", "p": "JSC \"Koblevo\"", "g": "Chardonnay", "v": "2022", "c": "Ukraina", "r": "", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Soalheiro Granit", "p": "Soalheiro", "g": "Alvarinho", "v": "2022", "c": "Portugal", "r": "Vinho Verde", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Porta 6 Branco", "p": "Vidigal wines", "g": "Fernão pires, Arinto och Alvarinho", "v": "2023", "c": "Portugal", "r": "Lisboa", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Revelare Macabeo Blanco", "p": "Cooperativa Nuestra Señora del Rosario", "g": "Macabeo", "v": "2021", "c": "Spanien", "r": "Murcia", "q": 1, "o": false, "s": "", "f": 2021, "u": 2025, "tk": {"k": "w", "v": [6, 2, 7]}}, {"t": "vitt", "n": "Sandstein Riesling trocken", "p": "WG Gysler", "g": "Riesling", "v": "2023", "c": "Tyskland", "r": "Rheinhessen", "q": 1, "o": false, "s": "", "f": 2024, "u": 2033, "tk": {"k": "w", "v": [6, 2, 11]}}, {"t": "vitt", "n": "Von Winning Deidesheimer Paradiesgarten Erste Lage Riesling Trocken", "p": "Von Winning", "g": "Riesling", "v": "2022", "c": "Tyskland", "r": "Pfalz", "q": 1, "o": false, "s": "", "f": 2023, "u": 2032, "tk": {"k": "w", "v": [6, 2, 11]}}, {"t": "vitt", "n": "Wente Vineyards Coastal Selection Chardonnay", "p": "Wente Family Estates", "g": "Chardonnay och Gewürztraminer", "v": "2023", "c": "USA", "r": "Kalifornien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "w", "v": [8, 3, 6]}}, {"t": "vitt", "n": "Torres Gran Viña Sol Chardonnay", "p": "Miguel Torres", "g": "Chardonnay och parellada", "v": "2023", "c": "Spanien", "r": "Katalonien", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Mezzacorona Pinot Grigio Riserva", "p": "Mezzacorona", "g": "Pinot grigio", "v": "2023", "c": "Italien", "r": "Trentino-Alto Adige", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [5, 2, 7]}}, {"t": "vitt", "n": "La Nascosta Moscaminer", "p": "Antonio Mastrojanni Societa Agricola Societa Semplice", "g": "Moscato och Gewürztraminer", "v": "2020", "c": "Italien", "r": "Toscana", "q": 2, "o": false, "s": "", "f": 2021, "u": 2026, "tk": {"k": "w", "v": [6, 7, 6]}}, {"t": "vitt", "n": "Mandrarossa Grillo", "p": "Cantine Settesoli", "g": "Grillo", "v": "2023", "c": "Italien", "r": "Sicilien", "q": 2, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Danie de Wet Chardonnay Pinot Noir", "p": "De Wetshof Estate", "g": "Chardonnay och Pinot Noir", "v": "2023", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Soalheiro ALLO", "p": "Soalheiro", "g": "Loureiro och Alvarinho", "v": "2023", "c": "Portugal", "r": "Vinho Verde", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Côtes du Jura Chardonnay", "p": "Maison Rijckaert", "g": "Chardonnay", "v": "2022", "c": "Frankrike", "r": "Jura", "q": 1, "o": false, "s": "", "f": 2023, "u": 2030, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Muscadet Sèvre et Maine Dumnacus Vignerons", "p": "Dumnacus Vignerons", "g": "Melon de Bourgogne", "v": "2022", "c": "Frankrike", "r": "Loire", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [4, 1, 10]}}, {"t": "vitt", "n": "Viré Clesse Domaine André Bonhomme", "p": "A Bonhomme", "g": "Chardonnay", "v": "2022", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": true, "s": "", "f": 2023, "u": 2030, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Trimbach Riesling", "p": "Trimbach", "g": "Riesling", "v": "2022", "c": "Frankrike", "r": "Alsace", "q": 1, "o": false, "s": "", "f": 2023, "u": 2032, "tk": {"k": "w", "v": [6, 3, 11]}}, {"t": "vitt", "n": "Blason de Bourgogne Mâcon-Villages Chardonnay", "p": "Vignerons des Grandes Vignes", "g": "Chardonnay", "v": "2021", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2022, "u": 2029, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Hubert Beck Grande Réserve Pinot Gris", "p": "Hubert Beck", "g": "Pinot Gris", "v": "2022", "c": "Frankrike", "r": "Alsace", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "w", "v": [8, 4, 7]}}, {"t": "vitt", "n": "Bourgogne Chardonnay J M Brocard", "p": "J M Brocard", "g": "Chardonnay", "v": "2022", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Furling Dry Furmint", "p": "Patricius Borhaz Zrt.", "g": "Furmint, Muscat Balc, Hárslevelű", "v": "2024", "c": "Ungern", "r": "Tokaj", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Clotilde Davenne Bourgogne Blanc", "p": "Clotilde Davenne", "g": "Chardonnay", "v": "2021", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "L Chardonnay", "p": "Domaine Laroche", "g": "Chardonnay", "v": "2023", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Hofstudien Grüner Veltliner", "p": "Weingut Geyerhof", "g": "Grüner veltliner", "v": "2022", "c": "Österrike", "r": "Kremstal DAC", "q": 1, "o": false, "s": "", "f": 2023, "u": 2029, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Mandrarossa Bertolino Soprano Bianco", "p": "Cantine Settesoli", "g": "Grillo", "v": "2019", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2020, "u": 2027, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Inycon Chardonnay", "p": "Cantine Settesoli", "g": "Chardonnay", "v": "2022", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Primo Bianco Mesa", "p": "Mesa", "g": "Vermentino", "v": "2022", "c": "Italien", "r": "Sardinien", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Gérard Bertrand Héritage Chardonnay", "p": "Gérard Bertrand", "g": "Chardonnay", "v": "2024", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Mezzacorona Pinot Grigio Riserva", "p": "Mezzacorona", "g": "Pinot Grigio", "v": "2021", "c": "Italien", "r": "Trentino-Alto Adige", "q": 1, "o": false, "s": "", "f": 2021, "u": 2025, "tk": {"k": "w", "v": [5, 2, 7]}}, {"t": "vitt", "n": "Vecchie Vigne Verdicchio Classico Superiore", "p": "Umani Ronchi", "g": "Verdicchio", "v": "2020", "c": "Italien", "r": "Marche", "q": 1, "o": false, "s": "", "f": 2021, "u": 2028, "tk": {"k": "w", "v": [7, 2, 9]}}, {"t": "vitt", "n": "Mulderbosch Chardonnay", "p": "Mulderbosch Vineyards", "g": "Chardonnay", "v": "2022", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2023, "u": 2030, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Foot of Africa Chardonnay", "p": "Kleine Zalze", "g": "Chardonnay", "v": "2024", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Buccia", "p": "Iconic Wines", "g": "Carricante", "v": "2024", "c": "Italien", "r": "Sicilien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Jurtschitsch Riesling Platin", "p": "Weingut Jurtschitsch", "g": "Riesling", "v": "2024", "c": "Österrike", "r": "Kamptal", "q": 2, "o": true, "s": "", "f": 2025, "u": 2034, "tk": {"k": "w", "v": [6, 3, 11]}}, {"t": "vitt", "n": "Chablis Vielles Vignes Sainte Claire", "p": "J M Brocard", "g": "Chardonnay", "v": "2023", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": true, "s": "", "f": 2024, "u": 2031, "tk": {"k": "w", "v": [8, 2, 8]}}, {"t": "vitt", "n": "Domäne Wachau", "p": "Domäne Wachau", "g": "Riesling", "v": "2023", "c": "Österrike", "r": "Wachau", "q": 1, "o": false, "s": "", "f": 2024, "u": 2033, "tk": {"k": "w", "v": [6, 3, 11]}}, {"t": "vitt", "n": "La Désirée", "p": "Les Frères Couillaud", "g": "Chardonnay", "v": "2023", "c": "Frankrike", "r": "Loire", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Allegrini Lugana", "p": "Allegrini", "g": "Turbiana, Cortese", "v": "2022", "c": "Italien", "r": "Lombardiet", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [7, 2, 8]}}, {"t": "vitt", "n": "Maison de Chêne", "p": "Globus Wine", "g": "Chardonnay", "v": "", "c": "Frankrike", "r": "", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Domaene Gobelsburg", "p": "Schloss Gobelsburg", "g": "Grüner veltliner", "v": "2022", "c": "Österrike", "r": "Kamptal", "q": 1, "o": false, "s": "", "f": 2023, "u": 2029, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Laurent Miquel Solas Chardonnay", "p": "Laurent Miquel/Cazal Viel", "g": "Chardonnay", "v": "2023", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Lomond", "p": "Lomond Wine Estate", "g": "Sauvignon Blanc, semillon", "v": "2024", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Weingut Müller Kremstal Grüner Veltliner Vom Loess", "p": "Weingut Müller", "g": "Grüner veltliner", "v": "2024", "c": "Österrike", "r": "Niederösterreich", "q": 1, "o": false, "s": "", "f": 2025, "u": 2031, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "vitt", "n": "Soalheiro Terramatter", "p": "Soalheiro", "g": "Alvarinho", "v": "2023", "c": "Portugal", "r": "Vinho Verde", "q": 1, "o": false, "s": "", "f": 2024, "u": 2031, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Stark-Condé Round Mountain Sauvignon Blanc", "p": "Stark-Condé Wines", "g": "Sauvignon Blanc", "v": "2024", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Frammento Decugnano dei Barbi", "p": "Decugnano dei Barbi", "g": "Grechetto, Vermentino, Sauvignon Blanc, Procanico", "v": "2023", "c": "Italien", "r": "Umbrien", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Warwick White Lady", "p": "Warwick Estate", "g": "Chardonnay", "v": "2021", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": 2022, "u": 2029, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Vlassides Grifos 2", "p": "Vlassides Winery", "g": "Xynesteri, Sauvignon Blanc", "v": "2024", "c": "Cypern", "r": "Limassol", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Tsiakkas Xynesteri", "p": "Tsiakkas Winery", "g": "Xynisteri, Malaga", "v": "2024", "c": "Cypern", "r": "Limassol", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [5, 2, 8]}}, {"t": "vitt", "n": "Domaine de Bois Saint-Joseph", "p": "Gérald Ruard", "g": "Marsanne", "v": "2024", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "w", "v": [9, 2, 5]}}, {"t": "vitt", "n": "Principium", "p": "Vignoble Rasse", "g": "", "v": "2025", "c": "Frankrike", "r": "Provence - Alpes-Maritimes", "q": 1, "o": false, "s": "", "f": 2026, "u": 2030, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "vitt", "n": "Idle Lane Chardonnay", "p": "Mr. Riggs", "g": "Chardonnay", "v": "2023", "c": "Australien", "r": "Adelaide Hills", "q": 1, "o": false, "s": "", "f": 2024, "u": 2031, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "vitt", "n": "Litoral Sauvignon Blanc", "p": "Viña Ventolera", "g": "Sauvignon Blanc", "v": "2022", "c": "Chile", "r": "Leyda Valley", "q": 1, "o": false, "s": "", "f": 2022, "u": 2026, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Sauvignon Blanc", "p": "Ingata", "g": "Sauvignon Blanc", "v": "2023", "c": "Nya Zeeland", "r": "Marlborough", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "vitt", "n": "Gewürztraminer Réserve", "p": "Gustave Lorentz", "g": "Gewürztraminer", "v": "2024", "c": "Frankrike", "r": "Alsace", "q": 1, "o": false, "s": "", "f": 2025, "u": 2030, "tk": {"k": "w", "v": [8, 5, 6]}}, {"t": "vitt", "n": "Saint-Véran", "p": "Château Fuissé", "g": "Chardonnay", "v": "2024", "c": "Frankrike", "r": "Bourgogne/Mâconnais", "q": 1, "o": false, "s": "", "f": 2025, "u": 2032, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "rose", "n": "Les Fumées Blanches Rosé", "p": "François Lurton", "g": "Sauvignon gris", "v": "2023", "c": "Frankrike", "r": "Sydvästra Frankrike", "q": 1, "o": false, "s": "", "f": 2023, "u": 2025, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Les Lauzeraies Tavel", "p": "Les Vignerons de Tavel", "g": "Grenache, syrah, mourvèdre, carignan, cinsault, clairette, picpoul och bourboulenc.", "v": "2023", "c": "Frankrike", "r": "Rhônedalen", "q": 1, "o": false, "s": "", "f": 2023, "u": 2027, "tk": {"k": "w", "v": [8, 2, 7]}}, {"t": "rose", "n": "Zambartas \"Garden of Cyprus\"", "p": "Zambartas Wineries", "g": "Lefkada, Cabernet Franc", "v": "2024", "c": "Cypern", "r": "Limassol", "q": 1, "o": false, "s": "", "f": 2024, "u": 2026, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Fontaine", "p": "Vignoble Rasse", "g": "Grenache/Malbec/Mourvèdre", "v": "2025", "c": "Frankrike", "r": "Provence - Alpes-Maritimes", "q": 1, "o": false, "s": "", "f": 2025, "u": 2027, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Cuvée des Chevaliers", "p": "Château Sainte Roseline", "g": "Grenache/Sémillon/Mourvèdre/Cinsault/Rolle", "v": "2024", "c": "Frankrike", "r": "Côtes de Provence", "q": 1, "o": false, "s": "", "f": 2024, "u": 2026, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Les Hauts de Seignol", "p": "Seignol", "g": "Syrah/Grenache/Mourvèdre", "v": "2025", "c": "Frankrike", "r": "Bandol", "q": 1, "o": false, "s": "", "f": 2025, "u": 2029, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Pinot Noir Rosé", "p": "Vitis Nostra", "g": "Pinot Noir", "v": "2023", "c": "Italien", "r": "Lombardiet", "q": 1, "o": false, "s": "", "f": 2023, "u": 2025, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Bobal Rosé", "p": "Peña Tejo", "g": "Bobal", "v": "", "c": "Spanien", "r": "Utiel-Requena", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "rose", "n": "Les Lauzeraies", "p": "Les Lauzeraies", "g": "Grenache, Cinsault, Syrah m.fl.", "v": "2024", "c": "Frankrike", "r": "Tavel", "q": 1, "o": false, "s": "", "f": 2024, "u": 2028, "tk": {"k": "w", "v": [6, 2, 8]}}, {"t": "orange", "n": "Comadellops Orange", "p": "Costador Terroirs Mediterranis", "g": "Xarel·lo, Sumoll Blanco, Viognier, Chenin Blanc, Pansa och Parellada", "v": "2023", "c": "Spanien", "r": "Katalonien", "q": 1, "o": false, "s": "", "f": 2024, "u": 2029, "tk": {"k": "r", "v": [8, 6, 8]}}, {"t": "orange", "n": "Gérard Bertrand Orange Gold", "p": "Gérard Bertrand", "g": "Chardonnay, grenache blanc, viognier, marsanne, mauzac, muscat", "v": "2021", "c": "Frankrike", "r": "Languedoc-Roussillon", "q": 1, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "r", "v": [8, 6, 8]}}, {"t": "bubbel", "n": "Palmer & Co Blanc de Blancs", "p": "Palmer & Co", "g": "Chardonnay", "v": "2018", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2023, "u": 2038, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "bubbel", "n": "Champagne Waris Hubert Lilyale Grand Cru Blanc de Blancs", "p": "Champagne Waris Hubert", "g": "Chardonnay", "v": "", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "bubbel", "n": "Beaumont des Crayères Fleur de Prestige", "p": "Beaumont des Crayères", "g": "Chardonnay, pinot noir och meunier", "v": "2016", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2024, "u": 2041, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Christian Senez Millésime Brut Champagne", "p": "Christian Senez", "g": "Chardonnay och pinot noir", "v": "2006", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2014, "u": 2031, "tk": {"k": "w", "v": [8, 2, 10]}}, {"t": "bubbel", "n": "Charles Heidsieck Brut Réserve", "p": "Charles Heidsieck", "g": "Pinot noir, meunier och chardonnay", "v": "", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Pol Roger Blanc de Blancs", "p": "Pol Roger", "g": "Chardonnay", "v": "2015", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2020, "u": 2035, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "bubbel", "n": "José Michel Cuvée Hommage", "p": "José Michel & Fils", "g": "Pinot Meunier, Pinot Noir och Chardonnay", "v": "", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Henriot Millésimé Brut", "p": "Champagne Henriot", "g": "Chardonnay och pinot noir", "v": "2014", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2022, "u": 2039, "tk": {"k": "w", "v": [8, 2, 10]}}, {"t": "bubbel", "n": "Charles Mignon Organic Brut", "p": "Champagne Charles Mignon", "g": "Pinot Meunier, Pinot Noir och Chardonnay", "v": "", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Jacques Copin", "p": "Jacques Copin", "g": "Chardonnay, Pinot noir", "v": "2008", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": 2016, "u": 2033, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Grande Réserve", "p": "Charles Gouthière", "g": "Pinot Noir", "v": "", "c": "Frankrike", "r": "Champagne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [7, 2, 10]}}, {"t": "bubbel", "n": "Pongrácz Brut", "p": "Bergkelder", "g": "Pinot Noir och Chardonnay", "v": "", "c": "Sydafrika", "r": "Western Cape", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Vilarnau Brut Nature Organic", "p": "Gonzalez Byass", "g": "Macabeo, xarel-lo och parellada", "v": "", "c": "Spanien", "r": "Katalonien", "q": 1, "o": false, "s": "Cava", "f": null, "u": null, "tk": {"k": "w", "v": [6, 1, 9]}}, {"t": "bubbel", "n": "Louis Bouillot Crémant de Bourgogne Brut Grand Millésimé", "p": "Louis Bouillot", "g": "Chardonnay, pinot noir, gamay och aligoté.", "v": "2021", "c": "Frankrike", "r": "Bourgogne", "q": 2, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "w", "v": [7, 2, 9]}}, {"t": "bubbel", "n": "Derbusco Cives Doppio Erre Di Franciacorta Brut", "p": "Società Agricola Derbusco srl", "g": "Chardonnay och pinot nero", "v": "", "c": "Italien", "r": "Lombardiet", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Biasiotto Sui Lieviti Zero 15 Spumante Extra Brut", "p": "Vina Biasiotto", "g": "Glera", "v": "2015", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": 2016, "u": 2025, "tk": {"k": "w", "v": [5, 1, 8]}}, {"t": "bubbel", "n": "Louis Bouillot Crémant de Bourgogne Rosé Brut", "p": "Louis Bouillot", "g": "Pinot noir, gamay och chardonnay", "v": "", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Vallebelbo Miravento Sparkling Pink Moscato", "p": "Cantina Vallebelbo", "g": "Muscat", "v": "", "c": "Italien", "r": "Piemonte", "q": 1, "o": false, "s": "Rosé", "f": null, "u": null, "tk": {"k": "w", "v": [4, 9, 7]}}, {"t": "bubbel", "n": "Soalheiro Pet Nat Alvarinho", "p": "Soalheiro", "g": "Alvarinho", "v": "2024", "c": "Portugal", "r": "Vinho Verde", "q": 1, "o": false, "s": "", "f": 2024, "u": 2026, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Cava 1+1=3 Blanc de Noirs Brut Nature Reserva Organic", "p": "1+1=3 U Mes U Fan Tres S.L.", "g": "Pinot Noir och Chardonnay", "v": "", "c": "Spanien", "r": "Katalonien", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 1, 9]}}, {"t": "bubbel", "n": "Cave Mont Blanc Glacier Metodo Classico", "p": "Cave Mont Blanc de Morgex et La Salle soc. Coop", "g": "Prié Blanc", "v": "2021", "c": "Italien", "r": "Valle d'Aosta", "q": 1, "o": false, "s": "", "f": 2022, "u": 2027, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Cava Aurèlia", "p": "Castell d'Age", "g": "Xarel-lo, Macabeu, Parellada och Chardonnay", "v": "2019", "c": "Spanien", "r": "", "q": 1, "o": false, "s": "", "f": 2020, "u": 2029, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Langlois Crémant de Loire", "p": "Langlois-Château", "g": "Chenin Blanc, Chardonnay och Cabernet Franc", "v": "", "c": "Frankrike", "r": "Loire", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Ferrari", "p": "Ferrari", "g": "Chardonnay", "v": "", "c": "Italien", "r": "Trento", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [6, 2, 9]}}, {"t": "bubbel", "n": "Clotilde Davenne Crémant de Bourgogne Blanc de Blancs", "p": "Clotilde Davenne", "g": "Chardonnay", "v": "2022", "c": "Frankrike", "r": "Bourgogne", "q": 1, "o": false, "s": "", "f": 2023, "u": 2028, "tk": {"k": "w", "v": [6, 2, 10]}}, {"t": "bubbel", "n": "Moscato", "p": "Casalforte", "g": "Moscato Bianco", "v": "", "c": "Italien", "r": "Venetien", "q": 1, "o": false, "s": "", "f": null, "u": null, "tk": {"k": "w", "v": [4, 9, 7]}}, {"t": "rott", "n": "Les Tuffeaulières", "p": "Couly-Dutheil", "g": "Cabernet Franc", "v": "2023", "c": "Frankrike", "r": "Loire, Chinon", "q": 1, "o": false, "s": "", "f": 2025, "u": 2033, "tk": {"k": "r", "v": [7, 7, 8]}}, {"t": "rott", "n": "Château Cardinal", "p": "Famille Bertin", "g": "Merlot m.fl.", "v": "2021", "c": "Frankrike", "r": "Bordeaux, Montagne-Saint-Émilion", "q": 1, "o": false, "s": "", "f": 2024, "u": 2031, "tk": {"k": "r", "v": [8, 6, 6]}}];
+const TYPES = {rott:"Rött",vitt:"Vitt",rose:"Rosé",bubbel:"Mousserande",orange:"Orange"};
+const ORDER = ["rott","vitt","rose","bubbel","orange"];
+const col = t => `var(--${t})`;
+WINES.forEach((w,i)=>w.id="w"+i);
+const YEAR=new Date().getFullYear();
+function status(w){
+  if(!w.f)return {k:"nu",l:"Drick nu",d:"ingen årgång"};
+  if(YEAR<w.f)return {k:"vanta",l:"Kan vänta",d:`bäst från ${w.f}`};
+  if(YEAR>w.u)return {k:"passerat",l:"Drick snarast",d:`bäst till ${w.u}`};
+  if(w.u-YEAR<=1)return {k:"snart",l:"Drick snart",d:`bäst till ${w.u}`};
+  return {k:"nu",l:"Drick nu",d:`bäst till ${w.u}`};
+}
+WINES.forEach(w=>w.st=status(w));
+const state={type:"alla",land:"",q:"",fon:""};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const bottles=WINES.reduce((a,w)=>a+w.q,0);
+const lands=[...new Set(WINES.map(w=>w.c))];
+const byLand={};WINES.forEach(w=>byLand[w.c]=(byLand[w.c]||0)+w.q);
+lands.sort((a,b)=>byLand[b]-byLand[a]||a.localeCompare(b,"sv"));
+const nb=k=>WINES.filter(w=>k.includes(w.st.k)).reduce((a,w)=>a+w.q,0);
+$("lede").textContent=`${bottles} flaskor från ${lands.length} länder, mest från ${lands[0]} och ${lands[1]}. ${nb(["nu","snart","passerat"])} är redo att drickas och ${nb(["vanta"])} behöver vila ett tag till.`;
+
+// rack
+const rack=$("rack");
+ORDER.forEach(t=>{
+  WINES.filter(w=>w.t===t).sort((a,b)=>lands.indexOf(a.c)-lands.indexOf(b.c)).forEach(w=>{
+    for(let k=0;k<w.q;k++){
+      const b=document.createElement("button");
+      b.className="cap";b.style.setProperty("--c",col(t));
+      b.dataset.id=w.id;b.title=w.n;
+      b.setAttribute("aria-label",`${w.n}${w.v?", "+w.v:""}`);
+      b.onclick=()=>go(w);
+      rack.appendChild(b);
+    }
+  });
+});
+$("legend").innerHTML=ORDER.map(t=>{
+  const n=WINES.filter(w=>w.t===t).reduce((a,w)=>a+w.q,0);
+  return n?`<li><i style="--c:${col(t)}"></i>${TYPES[t]} ${n}</li>`:"";
+}).join("");
+
+// controls
+$("types").innerHTML=[["alla","Alla"],...ORDER.map(t=>[t,TYPES[t]])]
+  .map(([k,l])=>`<button type="button" data-t="${k}" aria-pressed="${k==="alla"}">${l}</button>`).join("");
+$("types").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.type=b.dataset.t;
+  [...$("types").children].forEach(x=>x.setAttribute("aria-pressed",x===b));render();};
+$("land").innerHTML=`<option value="">Alla länder</option>`+lands.map(l=>`<option>${esc(l)}</option>`).join("");
+$("land").onchange=e=>{state.land=e.target.value;render();};
+$("fonster").onchange=e=>{state.fon=e.target.value;render();};
+$("q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render();};
+
+const DIAL_L={r:["Fyllighet","Strävhet","Fruktsyra"],w:["Fyllighet","Sötma","Fruktsyra"]};
+function dial(v,label){
+  let ticks="";
+  for(let i=0;i<12;i++){const a=(i+0.5)/12*2*Math.PI-Math.PI/2,c=Math.cos(a),s=Math.sin(a);
+    ticks+=`<line class="tk${i<v?" on":""}" x1="${(15+9*c).toFixed(2)}" y1="${(15+9*s).toFixed(2)}" x2="${(15+13*c).toFixed(2)}" y2="${(15+13*s).toFixed(2)}"/>`;}
+  return `<span class="dial"><svg viewBox="0 0 30 30" aria-hidden="true">${ticks}<text x="15" y="18.5" text-anchor="middle">${v}</text></svg><span>${label}</span></span>`;
+}
+function dials(w){if(!w.tk)return "";const L=DIAL_L[w.tk.k];
+  return `<div class="dials" role="img" aria-label="${L.map((l,i)=>l+" "+w.tk.v[i]+" av 12").join(", ")}">${w.tk.v.map((v,i)=>dial(v,L[i])).join("")}</div>`;}
+function match(w){
+  if(state.type!=="alla"&&w.t!==state.type)return false;
+  if(state.land&&w.c!==state.land)return false;
+  if(state.fon==="nu"&&w.st.k==="vanta")return false;
+  if(state.fon==="snart"&&!["snart","passerat"].includes(w.st.k))return false;
+  if(state.fon==="vanta"&&w.st.k!=="vanta")return false;
+  if(state.q){const h=[w.n,w.p,w.g,w.r,w.c,w.s,w.v].join(" ").toLowerCase();
+    if(!state.q.split(/\s+/).every(x=>h.includes(x)))return false;}
+  return true;
+}
+function render(){
+  const hits=WINES.filter(match);const ids=new Set(hits.map(w=>w.id));
+  rack.querySelectorAll(".cap").forEach(c=>c.classList.toggle("dim",!ids.has(c.dataset.id)));
+  if(!hits.length){$("list").innerHTML=`<p class="empty">Inget vin matchar. Prova ett annat sökord eller välj Alla.</p>`;return;}
+  $("list").innerHTML=lands.filter(l=>hits.some(w=>w.c===l)).map(l=>{
+    const ws=hits.filter(w=>w.c===l).sort((a,b)=>ORDER.indexOf(a.t)-ORDER.indexOf(b.t)||(a.r||"").localeCompare(b.r||"","sv")||a.n.localeCompare(b.n,"sv"));
+    const n=ws.reduce((a,w)=>a+w.q,0);
+    return `<section class="country"><h2>${esc(l)}<small>${n} ${n===1?"flaska":"flaskor"}</small></h2><ol class="wines">`+
+      ws.map(w=>`<li class="wine" id="${w.id}" style="--c:${col(w.t)}"><span class="dot" aria-hidden="true"></span>
+        <div><div class="name">${esc(w.n)}</div>
+        <div class="meta">${esc(w.p)}${w.r?", "+esc(w.r):""}${w.s?", "+esc(w.s):""}</div>
+        ${w.g?`<div class="meta grape">${esc(w.g)}</div>`:""}
+        ${w.o?`<div class="open">Öppnad</div>`:""}${dials(w)}</div>
+        <div class="yr">${w.v?esc(w.v):"<span class='qty'>utan årgång</span>"}${w.q>1?`<span class="qty">${w.q} flaskor</span>`:""}<span class="st ${w.st.k}"><b>${w.st.l}</b><br>${w.st.d}</span></div></li>`).join("")+
+      `</ol></section>`;
+  }).join("");
+}
+function go(w){
+  if(!match(w)){state.type="alla";state.land="";state.q="";state.fon="";$("q").value="";$("land").value="";$("fonster").value="";
+    [...$("types").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.t==="alla"));render();}
+  const el=$(w.id);if(!el)return;
+  el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});
+  el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash");
+}
+render();
+// ---------- pairing ----------
+const TAGRULES=[
+ [/pinot noir|pinot nero|gamay|trousseau|poulsard|beaujolais|mavro|lefkada/i,"lattrod"],
+ [/sangiovese|chianti|tempranillo|merlot|montepulciano|corvina|barbera|dolcetto|cabernet franc|grenache|garnacha|carignan|nero d'avola|nerello|abouriou|negroamaro|canaiolo|colorino|rondinella/i,"mellanrod"],
+ [/nebbiolo|barolo|barbaresco|cabernet sauvignon|syrah|shiraz|malbec|aglianico|monastrell|maratheftiko|tintorera|primitivo|amarone|marselan|mourvèdre|zinfandel|petit verdot/i,"fylligrod"],
+];
+const WHITE_FRESH=/sauvignon blanc|riesling|alvarinho|loureiro|grüner|melon|aligoté|verdicchio|vermentino|carricante|grillo|xyn|furmint|macabeo|pinot grigio|arinto|fernão|grechetto|turbiana|cortese|prié|procanico|sauvignon gris/i;
+const WHITE_RICH=/chardonnay|marsanne|viognier|semillon|sémillon|pinot gris(?!io)|moscaminer/i;
+const AROMATIC=/gewürz|muscat|moscato|riesling|pinot gris(?!io)|moscaminer/i;
+WINES.forEach(w=>{
+  const h=(w.g+" "+w.n).toLowerCase(); const T=new Set();
+  if(w.t==="rott"){let lvl=-1;TAGRULES.forEach(([re,t],i)=>{if(re.test(h))lvl=Math.max(lvl,i)});T.add(lvl<0?"mellanrod":TAGRULES[lvl][1]);}
+  if(w.t==="vitt"){if(WHITE_FRESH.test(h)||/chablis|mâcon|viré|jura|muscadet|véran/i.test(h))T.add("friskvitt");
+    if(WHITE_RICH.test(h)&&!/chablis|muscadet/i.test(h))T.add("fylligtvitt");if(AROMATIC.test(h))T.add("aromatiskt");if(!T.size)T.add("friskvitt");}
+  if(w.t==="rose")T.add("rose");
+  if(w.t==="orange")T.add("orange");
+  if(w.t==="bubbel"){T.add("bubbel");if(/moscato|muscat/i.test(h))T.add("sott");}
+  w.tags=T; w.h=[w.n,w.p,w.g,w.r,w.c,w.s].join(" ").toLowerCase();
+});
+const has=(w,re)=>re.test(w.h);
+const DISHES=[
+ {id:"skaldjur",l:"Skaldjur och ostron",w:{friskvitt:3,bubbel:3,rose:1},b:w=>has(w,/muscadet|chablis|alvarinho|blanc de blancs|champagne|albariño/)?2:0,
+  y:{friskvitt:"Frisk syra och mineralitet som lyfter skaldjurens sötma.",bubbel:"Bubblor och syra är en klassiker till ostron och räkor.",rose:"Torr rosé fungerar fint till en skaldjursbuffé."}},
+ {id:"fisk",l:"Vit fisk",w:{friskvitt:3,fylligtvitt:2,bubbel:2},b:w=>has(w,/bourgogne|chablis|loire|riesling/)?1:0,
+  y:{friskvitt:"Ett friskt vitt som inte tar över den milda fisken.",fylligtvitt:"Rundare vitt för fisk med smör- eller gräddsås.",bubbel:"Mousserande passar bra till lättare fiskrätter."}},
+ {id:"lax",l:"Lax",w:{fylligtvitt:3,friskvitt:2,rose:2,lattrod:2,bubbel:1},b:w=>has(w,/pinot noir|chardonnay/)?1:0,
+  y:{fylligtvitt:"Fylligt vitt matchar laxens fetma.",friskvitt:"Syran skär igenom laxens fett.",rose:"Rosé är ett säkert kort till lax.",lattrod:"Lätt rött med låga tanniner går fint till lax.",bubbel:"Bubblor rensar gommen mellan tuggorna."}},
+ {id:"kyckling",l:"Kyckling",w:{fylligtvitt:3,lattrod:2,friskvitt:1,rose:1,orange:1},b:()=>0,
+  y:{fylligtvitt:"Rundare vitt som gifter sig med ljust kött.",lattrod:"Lätt, bärigt rött som inte tar över.",friskvitt:"Friskt vitt för kyckling med citrus eller örter.",rose:"En allround-rosé till grillad kyckling.",orange:"Orangevinets struktur klarar kryddig kyckling."}},
+ {id:"flask",l:"Fläsk",w:{mellanrod:2,lattrod:2,fylligtvitt:2,aromatiskt:1,rose:1},b:()=>0,
+  y:{mellanrod:"Saftigt rött med lagom tanniner till fläskkött.",lattrod:"Lätt rött med frisk frukt som balanserar fettet.",fylligtvitt:"Fylligt vitt till fläskfilé med gräddsås.",aromatiskt:"Aromatiskt vitt till fläsk med sötma, till exempel äpple.",rose:"Rosé fungerar till sidfläsk och grillat."}},
+ {id:"not",l:"Grillat nötkött",w:{fylligrod:3,mellanrod:2},b:w=>has(w,/malbec|cabernet sauvignon|syrah|shiraz/)?1:0,
+  y:{fylligrod:"Kraftigt rött vars tanniner möter köttets proteiner.",mellanrod:"Medelfylligt rött till en mindre tung köttbit."}},
+ {id:"lamm",l:"Lamm",w:{fylligrod:3,mellanrod:2},b:w=>has(w,/rioja|tempranillo|bordeaux|rhône|syrah/)?1:0,
+  y:{fylligrod:"Kraftigt rött som klarar lammets smak.",mellanrod:"Kryddigt medelfylligt rött, klassiskt till lamm."}},
+ {id:"vilt",l:"Vilt: älg, ren, hjort",w:{fylligrod:3,mellanrod:2,lattrod:1},b:w=>has(w,/nebbiolo|syrah|shiraz|amarone|pinot noir/)?1:0,
+  y:{fylligrod:"Mörk frukt och struktur till viltets djupa smak.",mellanrod:"Medelfylligt rött med jordiga toner till vilt.",lattrod:"Elegant pinot noir till renfilé eller renskav."}},
+ {id:"pasta",l:"Pasta och pizza med tomat",w:{mellanrod:3,lattrod:1,fylligrod:1},b:w=>w.c==="Italien"&&w.t==="rott"?2:0,
+  y:{mellanrod:"Syrlig röd frukt som matchar tomatens syra.",lattrod:"Lätt och syrligt rött till enklare tomaträtter.",fylligrod:"Kraftigare rött till köttfärssås och lasagne."}},
+ {id:"svamp",l:"Svamp och risotto",w:{lattrod:3,fylligtvitt:2,orange:1,mellanrod:1},b:w=>has(w,/nebbiolo|pinot noir|bourgogne/)?2:0,
+  y:{lattrod:"Pinot noir och svamp delar jordiga toner.",fylligtvitt:"Krämigt vitt till risotto.",orange:"Orangevin har umami som passar svamp.",mellanrod:"Jordigt rött till mustiga svamprätter."}},
+ {id:"asiatiskt",l:"Kryddig asiatisk mat",w:{aromatiskt:3,friskvitt:2,rose:2,bubbel:1},b:w=>has(w,/riesling|gewürz|pinot gris/)?1:0,
+  y:{aromatiskt:"Aromatiskt vitt med fruktighet som dämpar hettan.",friskvitt:"Friskt och fruktigt vitt som svalkar.",rose:"Fruktig rosé klarar kryddor bra.",bubbel:"Bubblor svalkar efter stark mat."}},
+ {id:"ost",l:"Ostbricka",w:{mellanrod:2,bubbel:2,orange:2,aromatiskt:1,fylligtvitt:1,fylligrod:1},b:w=>has(w,/barbera|amarone|ripasso/)?1:0,
+  y:{mellanrod:"Fruktigt rött till lagrade hårdostar.",bubbel:"Bubblor passar till krämiga och vitmögelostar.",orange:"Orangevin klarar en blandad ostbricka.",aromatiskt:"Aromatiskt vitt till blåmögel och kryddiga ostar.",fylligtvitt:"Fylligt vitt till mjuka ostar.",fylligrod:"Kraftigt rött till riktigt lagrad ost."}},
+ {id:"tapas",l:"Tapas och chark",w:{rose:3,mellanrod:2,bubbel:2},b:w=>w.c==="Spanien"?2:w.c==="Italien"?1:0,
+  y:{rose:"Torr rosé är lätt att para med många små rätter.",mellanrod:"Saftigt rött till chark och lufttorkad skinka.",bubbel:"Cava och andra bubblor till salta tilltugg."}},
+ {id:"aperitif",l:"Aperitif",w:{bubbel:3,friskvitt:2,rose:2},b:w=>has(w,/champagne|crémant|cava/)?1:0,
+  y:{bubbel:"Ett glas bubbel väcker aptiten.",friskvitt:"Ett lätt och friskt vitt att börja kvällen med.",rose:"En lätt rosé att mingla med."}},
+ {id:"dessert",l:"Dessert och choklad",w:{sott:4},b:()=>0,
+  y:{sott:"Vinet bör vara sötare än desserten, och moscato är lätt och fruktig."}}
+];
+const hash=s=>{let x=0;for(const ch of s)x=(x*31+ch.charCodeAt(0))|0;return x};
+function suggest(d){
+  const scored=WINES.map(w=>{let best=0,tag=null;for(const t of w.tags){const v=d.w[t]||0;if(v>best){best=v;tag=t}}
+    if(!best)return null;return {w,tag,s:best+d.b(w)+(w.st.k==="vanta"?-2:w.st.k==="snart"?.4:0)}}).filter(Boolean);
+  scored.sort((a,b)=>b.s-a.s||hash(a.w.n+d.id)-hash(b.w.n+d.id));
+  const out=[],prod={},tagN={};
+  for(const x of scored){if(out.length>=6)break;
+    if((prod[x.w.p]||0)>=1)continue;if((tagN[x.tag]||0)>=3)continue;
+    prod[x.w.p]=(prod[x.w.p]||0)+1;tagN[x.tag]=(tagN[x.tag]||0)+1;out.push({w:x.w,why:d.y[x.tag]});}
+  return out;
+}
+function showPicks(list,intro){
+  const out=$("pairOut");
+  if(!list.length){out.innerHTML=`<p class="intro">Inget i källaren passar riktigt till det här. Prova en annan rätt.</p>`;return;}
+  out.innerHTML=(intro?`<p class="intro">${esc(intro)}</p>`:"")+list.map((x,i)=>
+    `<button type="button" class="pick" data-i="${i}" style="--c:${col(x.w.t)}"><span class="dot" aria-hidden="true"></span>
+     <span><span class="name">${esc(x.w.n)}</span><span class="why" style="display:block">${esc(x.why||"")}</span>
+     <span class="st ${x.w.st.k}" style="text-align:left"><b>${x.w.st.l}</b>, ${x.w.st.d}${x.w.o?", redan öppnad":""}</span></span>
+     <span class="yr">${esc(x.w.v||"")}</span></button>`).join("");
+  out.querySelectorAll(".pick").forEach(b=>b.onclick=()=>go(list[+b.dataset.i].w));
+}
+$("dishes").innerHTML=DISHES.map(d=>`<button type="button" data-d="${d.id}" aria-pressed="false">${esc(d.l)}</button>`).join("");
+$("dishes").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  const on=b.getAttribute("aria-pressed")!=="true";
+  [...$("dishes").children].forEach(x=>x.setAttribute("aria-pressed",on&&x===b));
+  if(!on){$("pairOut").innerHTML="";return;}
+  const d=DISHES.find(x=>x.id===b.dataset.d);const p=suggest(d);
+  showPicks(p,d.id==="dessert"&&p.length<3?"Källaren har få söta viner, så här är det som finns.":"");
+};
+// ---------- free text ----------
+const WORDS=[
+ ["skaldjur",/räk|hummer|krabb|ostron|mussl|kräft|havskräft|pilgrims|skaldjur|bläckfisk|calamar|scampi/],
+ ["lax",/lax|röding|öring|gravad|rökt fisk/],
+ ["fisk",/torsk|sej|gös|abborre|sik|kolja|hälleflund|rödspätt|piggvar|fisk|sill|strömming|tonfisk|kummel/],
+ ["kyckling",/kyckling|kalkon|höns|coq au vin/],
+ ["flask",/fläsk|skinka|karré|kotlett|korv|bacon|revben|pulled pork|kassler|julbord|prinskorv|köttbullar|pytt/],
+ ["not",/biff|entrecôte|entrecote|oxfilé|ryggbiff|nötkött|hamburgare|burgare|högrev|grytstek|oxkind|picanha|flankstek|steak|t-bone|kalv|stroganoff|bourguignon|gulasch|chili con carne/],
+ ["lamm",/lamm|fårstek|fårkött|moussaka|kebab/],
+ ["vilt",/ren|renskav|älg|hjort|rådjur|vilt|vildsvin|anka|fasan|ripa|and(bröst)?\b|viltgryta|kalops/],
+ ["pasta",/pasta|pizza|lasagn|bolognese|spaghetti|tomatsås|tomat|carbonara|penne|ravioli|gnocchi|marinara/],
+ ["svamp",/svamp|kantarell|karljohan|trattkantarell|champinjon|tryffel|risotto|portabello|murkla/],
+ ["asiatiskt",/thai|curry|chili|stark|sushi|kinesisk|indisk|asiatisk|wok|pad thai|ramen|tacos|mexikansk|koreansk|vietnamesisk|dumplings|teriyaki/],
+ ["ost",/\bost|ostbricka|brie|chèvre|getost|parmesan|västerbotten|gruyère|blåmögel|gorgonzola|roquefort|cheddar|fondue|raclette/],
+ ["tapas",/tapas|chark|salami|prosciutto|serrano|oliver|plockmat|antipasti|mezze|paella/],
+ ["aperitif",/aperitif|fördrink|mingel|snittar|kanapé|chips/],
+ ["dessert",/choklad|dessert|tårta|glass|kaka|paj|pannacotta|tiramisu|crème brûlée|bär|frukt|praliner|pannkak|våffl|sylt|smulpaj|kladdkaka|mousse|sött/]
+];
+const MODS=[
+ [/grädd|smör|ost(sås)?|krämig|beurre blanc|hollandaise|bearnaise|béarnaise/,{fylligtvitt:1.5}],
+ [/citron|lime|örter|dill|sallad|ceviche|rå\b|tartar/,{friskvitt:1.5,bubbel:.5}],
+ [/grill|rökt|bbq|stekt/,{fylligrod:.5,rose:.5}],
+ [/lingon|rödvinssås|rödvin/,{mellanrod:1,fylligrod:.5}],
+ [/kokos|ingefära|sötsur|honung/,{aromatiskt:1.5}]
+];
+function parseDish(txt){
+  const s=" "+txt.toLowerCase()+" ";
+  let hits=WORDS.filter(([,re])=>re.test(s)).map(([id])=>DISHES.find(d=>d.id===id));
+  if(hits.some(d=>d.id==="dessert")&&/tryffel/.test(s)&&!/choklad/.test(s))hits=hits.filter(d=>d.id!=="dessert");
+  if(hits.some(d=>d.id==="vilt")&&/renskav|ren\b|renfilé/.test(s)===false&&/\bren\b/.test(s)===false&&!/älg|hjort|rådjur|vilt|vildsvin|anka|fasan|ripa|kalops/.test(s))hits=hits.filter(d=>d.id!=="vilt");
+  if(!hits.length)return null;
+  const w={},y={};const bs=hits.map(d=>d.b);
+  hits.forEach(d=>{for(const k in d.w){w[k]=(w[k]||0)+d.w[k];if(!y[k]||d.w[k]>(hits.find(x=>x.y[k]===y[k])?.w[k]||0))y[k]=d.y[k];}});
+  MODS.forEach(([re,add])=>{if(re.test(s))for(const k in add)if(w[k]!==undefined||add[k]>1)w[k]=(w[k]||0)+add[k];});
+  for(const k in w)if(!y[k])y[k]=({fylligtvitt:"Fylligt vitt passar till krämiga och smöriga inslag.",friskvitt:"Friskt vitt lyfter syrliga och örtiga smaker.",aromatiskt:"Aromatiskt vitt möter sötma och kryddor.",mellanrod:"Medelfylligt rött till mustiga såser.",fylligrod:"Kraftigt rött till grillade smaker.",rose:"Rosé är lätt att para med grillat."})[k]||"";
+  return {id:"fri",l:hits.map(d=>d.l).join(", "),w,y,b:x=>bs.reduce((a,f)=>a+f(x),0)};
+}
+const btn=$("askBtn"),inp=$("askIn");
+function local(){
+  const txt=inp.value.trim();if(!txt){inp.focus();return;}
+  [...$("dishes").children].forEach(x=>x.setAttribute("aria-pressed","false"));
+  const d=parseDish(txt);
+  if(!d){$("pairOut").innerHTML=`<p class="intro">Sidan känner inte igen rätten. Prova att skriva huvudråvaran, till exempel lax, kyckling eller svamp, eller välj en rätt nedan.</p>`;return;}
+  const p=suggest(d);
+  showPicks(p,`Förslag till ${d.l.toLowerCase()}:`);
+}
+btn.onclick=local;inp.onkeydown=e=>{if(e.key==="Enter")local()};
+// Optional: Claude, when available
+(async()=>{
+  if(!window.claude||!window.claude.use)return;
+  let sample=null;try{sample=await window.claude.use("sample")}catch(e){}
+  if(!sample)return;
+  $("askNote").classList.add("on");
+  const cb=$("claudeBtn");
+  const listTxt=WINES.map(w=>`${w.id}|${TYPES[w.t]}|${w.n}|${w.p}|${w.g}|${w.v||"-"}|${w.c}|${w.r}|${w.st.l.toLowerCase()} (${w.st.d})${w.o?"|öppnad":""}`).join("\n");
+  cb.onclick=async()=>{
+    const dish=inp.value.trim();if(!dish){inp.focus();return;}
+    [...$("dishes").children].forEach(x=>x.setAttribute("aria-pressed","false"));
+    cb.disabled=true;btn.disabled=true;$("pairOut").innerHTML=`<p class="intro">Claude tänker…</p>`;
+    const prompt=`Du är en erfaren sommelier. En gäst ska äta: "${dish}".
+Välj 3 till 5 viner som passar bäst, ENDAST ur listan nedan (format: id|typ|namn|producent|druva|årgång|land|region). Välj gärna olika stilar och undvik viner som bör vänta.
+Svara ENBART med JSON, utan annan text: {"intro":"en mening på svenska om vad som är viktigt för rätten","val":[{"id":"w12","motivering":"max 18 ord på svenska"}]}
+
+${listTxt}`;
+    try{
+      const r=await sample.json(prompt,{modelTier:"default"});
+      const picks=(r&&Array.isArray(r.val)?r.val:[]).map(v=>{const w=WINES.find(x=>x.id===v.id);return w?{w,why:v.motivering}:null}).filter(Boolean);
+      showPicks(picks,r&&r.intro?r.intro:"");
+    }catch(e){
+      const m={not_granted:"Frågan skickades inte eftersom Claude inte fick tillåtelse.",rate_limited:"För många frågor just nu. Vänta en stund och försök igen.",cancelled:""};
+      $("pairOut").innerHTML=`<p class="intro">${esc(m[e&&e.code]??"Det gick inte att få ett svar från Claude. Tryck på Föreslå vin i stället.")}</p>`;
+      if(e&&e.code==="not_granted")$("askNote").classList.remove("on");
+    }finally{cb.disabled=false;btn.disabled=false;}
+  };
+})();
+</script>
+</body>
+</html>
