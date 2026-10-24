@@ -25,7 +25,7 @@ npm test
 ## Installera och uppgradera på servern
 
 ```bash
-cd /home/parnes/work/vin
+cd /home/parnes/work/Vin
 git pull
 ./deploy/install.sh --check
 sudo ./deploy/install.sh

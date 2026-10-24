@@ -2,7 +2,7 @@
 # Installs or upgrades Vinkällaren on the server. Same model as LB3's server/deploy/install.sh:
 # root-owned code in /opt, data in /var/lib, config in /etc, Apache in front.
 #
-#   cd /home/parnes/work/vin && git pull
+#   cd /home/parnes/work/Vin && git pull
 #   ./deploy/install.sh --check        # validate only, no changes (no sudo needed)
 #   sudo ./deploy/install.sh           # install / upgrade
 #
@@ -73,7 +73,7 @@ fill() { # template -> stdout with @VARS@ replaced
   sed -e "s#@PUBLIC_ORIGIN@#$PUBLIC_ORIGIN#g" -e "s#@SERVER_NAME@#$SERVER_NAME#g" -e "s#@PORT@#$PORT#g" \
       -e "s#@SERVICE_USER@#$SERVICE_USER#g" -e "s#@SERVICE_GROUP@#$SERVICE_GROUP#g" -e "s#@APP_DIR@#$APP_DIR#g" \
       -e "s#@ENV_FILE@#$ENV_FILE#g" -e "s#@NODE_BIN@#$NODE_BIN#g" -e "s#@DATA_DIR@#$DATA_DIR#g" \
-      -e "s#@STATE_DIR_NAME@#${DATA_DIR#/var/lib/}#g" -e "s#@OFFSITE_RW_PATHS@#${OFFSITE_RW_PATHS:-$DATA_DIR}#g" "$1"
+      -e "s#@VHOST_ADDR@#${VHOST_ADDR:-*}#g" -e "s#@STATE_DIR_NAME@#${DATA_DIR#/var/lib/}#g" -e "s#@OFFSITE_RW_PATHS@#${OFFSITE_RW_PATHS:-$DATA_DIR}#g" "$1"
 }
 env_value() { # key -> value from the existing env file (quotes stripped), empty if missing
   [ -r "$ENV_FILE" ] || return 0
@@ -108,6 +108,15 @@ if [ -n "$listener" ] && ! systemctl is-active --quiet "$SERVICE_NAME"; then
   die "Port $PORT används redan av något annat: $listener (LB3 använder 3103). Välj en annan med PORT=…"
 fi
 ok "Port $PORT är ledig eller används av $SERVICE_NAME"
+
+# Name-based vhosts only compete with others on the same address. If the server's other HTTPS
+# sites are bound to a specific IP (e.g. <VirtualHost www.parnes.com:443> = 192.168.2.80:443),
+# a *:443 vhost is never chosen for traffic to that IP, so use the same address.
+if [ -z "${VHOST_ADDR:-}" ]; then
+  VHOST_ADDR=$(apache2ctl -S 2>/dev/null | sed -n 's/^\([0-9][0-9.]*\):443 \{1,\}is a NameVirtualHost.*/\1/p' | head -n 1)
+  VHOST_ADDR=${VHOST_ADDR:-*}
+fi
+ok "Vhost-adress: $VHOST_ADDR (samma som övriga HTTPS-sajter; ändra med VHOST_ADDR=…)"
 
 if [ -f "$APACHE_VHOST" ]; then ok "HTTPS-vhost: $APACHE_VHOST"
 elif [ "$NO_CERTBOT" = yes ]; then die "HTTPS-vhosten $APACHE_VHOST saknas. Skapa den (certbot --apache -d $SERVER_NAME) eller ange APACHE_VHOST=…"
@@ -290,13 +299,22 @@ if [ ! -f "$APACHE_VHOST" ]; then
   [ -f "$APACHE_VHOST" ] || die "certbot skapade inte $APACHE_VHOST. Ange rätt fil med APACHE_VHOST=…"
   ok "Certifikat och HTTPS-vhost: $APACHE_VHOST"
 fi
+# Keep our own vhosts on the same address as the other sites (only these two files are touched).
+for pair in "$APACHE_VHOST:443" "$HTTP_VHOST:80"; do
+  f=${pair%:*}; port=${pair##*:}
+  [ -f "$f" ] || continue
+  if grep -qE "<VirtualHost [^>]*:$port>" "$f" && ! grep -qF "<VirtualHost $VHOST_ADDR:$port>" "$f"; then
+    sed -i -E "s#<VirtualHost [^>]*:$port>#<VirtualHost $VHOST_ADDR:$port>#" "$f"
+    ok "$(basename "$f"): <VirtualHost $VHOST_ADDR:$port>"
+  fi
+done
 if ! grep -q "IncludeOptional $PROXY_FILE" "$APACHE_VHOST"; then
   sed -i "0,/<\/VirtualHost>/s##    IncludeOptional $PROXY_FILE\n</VirtualHost>#" "$APACHE_VHOST"
   ok "Lade till IncludeOptional i $APACHE_VHOST"
 fi
 if ! apache2ctl configtest 2>/tmp/vinkallaren-configtest.$$; then
   cat /tmp/vinkallaren-configtest.$$ >&2
-  for f in "$APACHE_VHOST" "$PROXY_FILE"; do
+  for f in "$APACHE_VHOST" "$HTTP_VHOST" "$PROXY_FILE"; do
     if [ -f "$CFG_BACKUP/$(basename "$f")" ]; then cp -a "$CFG_BACKUP/$(basename "$f")" "$f"; else rm -f "$f"; fi
   done
   die "apache2ctl configtest misslyckades. Vhost och proxyfil är återställda; Apache är inte omladdad."
@@ -321,11 +339,18 @@ systemctl reload apache2
 ok "Apache omladdad"
 
 step "Kontrollerar $PUBLIC_ORIGIN"
+# Does Apache pick our vhost for this name on the address the other sites use?
+if command -v openssl >/dev/null; then
+  sni_addr=${VHOST_ADDR/#\*/127.0.0.1}
+  san=$(echo | openssl s_client -connect "$sni_addr:443" -servername "$SERVER_NAME" 2>/dev/null | openssl x509 -noout -ext subjectAltName 2>/dev/null || true)
+  if grep -q "DNS:$SERVER_NAME" <<<"$san"; then ok "Apache svarar med certifikatet för $SERVER_NAME på $sni_addr:443"
+  else warn "Apache svarar INTE med certifikatet för $SERVER_NAME på $sni_addr:443. Jämför vhost-adresserna i: sudo apache2ctl -S"; fi
+fi
 sleep 6   # let the scheduler take the first backup on a fresh install
-code=$(curl -s --max-time 20 -o /tmp/vinkallaren-health.$$ -w '%{http_code}' "$PUBLIC_ORIGIN/api/health") || true
+code=$(curl -sS --max-time 20 -o /tmp/vinkallaren-health.$$ -w '%{http_code}' "$PUBLIC_ORIGIN/api/health" 2>/tmp/vinkallaren-curl.$$) || true
 if [ "$code" = 200 ]; then ok "$PUBLIC_ORIGIN/api/health: 200"
-else warn "$PUBLIC_ORIGIN/api/health svarade $code: $(cat /tmp/vinkallaren-health.$$ 2>/dev/null)"; fi
-rm -f /tmp/vinkallaren-health.$$
+else warn "$PUBLIC_ORIGIN/api/health svarade ${code:-000}: $(cat /tmp/vinkallaren-health.$$ /tmp/vinkallaren-curl.$$ 2>/dev/null | head -c 400)"; fi
+rm -f /tmp/vinkallaren-health.$$ /tmp/vinkallaren-curl.$$
 
 echo
 echo "Klart. Version $(cat "$APP_DIR/REVISION" 2>/dev/null | cut -c1-7) körs på $PUBLIC_ORIGIN"
