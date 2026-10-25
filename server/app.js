@@ -16,6 +16,7 @@ import { health } from "./health.js";
 import { startScheduler } from "./scheduler.js";
 import { createTwoFactor } from "./twofactor.js";
 import { statsRouter } from "./routes/stats.js";
+import { drinksRouter } from "./routes/drinks.js";
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 const page = name => path.join(PUBLIC, name);
@@ -118,6 +119,7 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
   app.get("/konto", requireUser, (_req, res) => res.sendFile(page("konto.html")));
   app.get("/statistik", requireUser, (_req, res) => res.sendFile(page("statistik.html")));
   app.use("/api/stats", requireUser, statsRouter(db));
+  app.use("/api/drinks", requireUser, drinksRouter(db));
   app.get("/admin", requireAdmin, (_req, res) => res.sendFile(page("admin.html")));
   app.use("/api/admin", requireAdmin, adminRouter(db, auth, mailer, config, twoFactor));
   app.use("/api/wines", requireUser, winesRouter(db, createPhotos(config.photosDir)));

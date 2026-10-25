@@ -113,6 +113,8 @@ const MIGRATIONS = [
    ALTER TABLE wines_new RENAME TO wines;`,
   // 5: label photo per wine (file id in DATA_DIR/photos)
   `ALTER TABLE wines ADD COLUMN photo TEXT;`,
+  // 6: score 1–5 for a drunk bottle (events with kind 'drank')
+  `ALTER TABLE events ADD COLUMN rating INTEGER CHECK (rating BETWEEN 1 AND 5);`,
 ];
 
 // Runs fn inside a transaction; rolls back if it throws.

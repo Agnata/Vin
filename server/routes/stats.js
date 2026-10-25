@@ -51,6 +51,10 @@ export function statsRouter(db) {
       byCountry: count(drank, d => d.country || "Okänt land").slice(0, 8),
       byUser: count(drank, d => d.user || "Okänd"),
       window,
+      // Best scored wines (average over their drunk bottles), all time.
+      topRated: db.prepare(`SELECT w.name, w.vintage, w.type, ROUND(AVG(e.rating), 1) AS avg, COUNT(*) AS n
+        FROM events e JOIN wines w ON w.id = e.wine_id WHERE e.kind = 'drank' AND e.rating IS NOT NULL
+        GROUP BY w.id ORDER BY avg DESC, n DESC, w.name LIMIT 5`).all(),
     });
   });
 

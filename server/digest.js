@@ -16,7 +16,7 @@ export async function sendDigests(db, mailer, config, now = new Date()) {
   const year = Number(stockholm(now).date.slice(0, 4));
   const users = db.prepare("SELECT * FROM users WHERE digest != 'off'").all();
   const eventsSince = db.prepare(`
-    SELECT e.kind, e.detail, e.created_at, u.name AS user, COALESCE(w.name, e.detail) AS name, w.type, w.vintage
+    SELECT e.kind, e.detail, e.rating, e.created_at, u.name AS user, COALESCE(w.name, e.detail) AS name, w.type, w.vintage
     FROM events e LEFT JOIN wines w ON w.id = e.wine_id LEFT JOIN users u ON u.id = e.user_id
     WHERE e.kind IN ('added','drank','opened','deleted') AND e.created_at > ? AND e.detail != 'import'
     ORDER BY e.id LIMIT 100`);

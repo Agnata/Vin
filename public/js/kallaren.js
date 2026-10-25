@@ -4,7 +4,12 @@ const $ = id => document.getElementById(id);
 const YEAR = new Date().getFullYear();
 let WINES = [];
 let lands = [];
-const state = { type: "alla", land: "", q: "", fon: "" };
+const state = { type: "alla", land: "", q: "", fon: "", view: "cellar" };
+let DRINKS = null; // drunk bottles, loaded the first time the tab is opened
+const fmtRating = n => String(n).replace(".", ",");
+const starText = n => "★".repeat(n) + "☆".repeat(5 - n);
+const MONTHS = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"];
+const when = iso => new Date(iso.replace(" ", "T") + "Z");
 
 function status(w) {
   if (!w.f) return { k: "nu", l: "Drick nu", d: "ingen årgång" };
@@ -19,7 +24,7 @@ function fromApi(r) {
   const w = {
     id: "w" + r.id, dbId: r.id, raw: r, t: r.type, n: r.name, p: r.producer, g: r.grapes, v: r.vintage,
     c: r.country || "Okänt land", r: r.region, q: r.quantity, o: !!r.opened, s: r.style,
-    f: r.drink_from, u: r.drink_to, photo: r.photo,
+    f: r.drink_from, u: r.drink_to, photo: r.photo, ra: r.rating_avg, rn: r.rating_n,
     tk: r.taste_kind ? { k: r.taste_kind, v: [r.taste1, r.taste2, r.taste3] } : null,
   };
   w.st = status(w);
@@ -63,7 +68,7 @@ function rebuild() {
   sel.value = lands.includes(keep) ? keep : "";
   state.land = sel.value;
   $("countries").innerHTML = lands.map(l => `<option value="${esc(l)}">`).join("");
-  render();
+  state.view === "drunk" ? setView("drunk") : render();
 }
 
 $("types").innerHTML = [["alla", "Alla"], ...ORDER.map(t => [t, TYPES[t]])]
@@ -72,11 +77,11 @@ $("types").onclick = e => {
   const b = e.target.closest("button"); if (!b) return;
   state.type = b.dataset.t;
   [...$("types").children].forEach(x => x.setAttribute("aria-pressed", x === b));
-  render();
+  state.view === "drunk" ? renderDrunk() : render();
 };
-$("land").onchange = e => { state.land = e.target.value; render(); };
+$("land").onchange = e => { state.land = e.target.value; state.view === "drunk" ? renderDrunk() : render(); };
 $("fonster").onchange = e => { state.fon = e.target.value; render(); };
-$("q").oninput = e => { state.q = e.target.value.trim().toLowerCase(); render(); };
+$("q").oninput = e => { state.q = e.target.value.trim().toLowerCase(); state.view === "drunk" ? renderDrunk() : render(); };
 
 const DIAL_L = { r: ["Fyllighet", "Strävhet", "Fruktsyra"], w: ["Fyllighet", "Sötma", "Fruktsyra"] };
 function dials(w) {
@@ -97,6 +102,7 @@ function match(w) {
   return true;
 }
 function render() {
+  if (state.view === "drunk") return renderDrunk();
   const hits = WINES.filter(match); const ids = new Set(hits.map(w => w.id));
   rack.querySelectorAll(".cap").forEach(c => c.classList.toggle("dim", !ids.has(c.dataset.id)));
   if (!hits.length) {
@@ -113,7 +119,7 @@ function render() {
         <div><div class="name">${esc(w.n)}</div>
         <div class="meta">${esc(w.p)}${w.r ? ", " + esc(w.r) : ""}${w.s ? ", " + esc(w.s) : ""}</div>
         ${w.g ? `<div class="meta grape">${esc(w.g)}</div>` : ""}</div></div>
-        ${w.o ? `<div class="open">Öppnad</div>` : ""}${dials(w)}
+        ${w.o ? `<div class="open">Öppnad</div>` : ""}${w.ra ? `<div class="avg">${starText(Math.round(w.ra))} <span>${fmtRating(w.ra)} av 5 · ${w.rn} betyg</span></div>` : ""}${dials(w)}
         <div class="acts" data-id="${w.dbId}">
           <button type="button" data-act="drink">Drack en</button>
           <button type="button" data-act="open">${w.o ? "Inte öppnad" : "Öppnad"}</button>
@@ -124,6 +130,7 @@ function render() {
   }).join("");
 }
 function go(w) {
+  if (state.view !== "cellar") setView("cellar");
   if (!match(w)) {
     state.type = "alla"; state.land = ""; state.q = ""; state.fon = "";
     $("q").value = ""; $("land").value = ""; $("fonster").value = "";
@@ -153,10 +160,8 @@ $("list").onclick = async e => {
   b.disabled = true;
   try {
     if (b.dataset.act === "drink") {
-      const row = await api(`/api/wines/${id}/drink`, { method: "POST", body: {} });
-      replaceWine(row);
-      toast(row.quantity ? `Skål! ${row.quantity} kvar av ${w.n}.` : `Skål! Det var sista flaskan ${w.n}.`);
-      if (row.quantity) $(w.id)?.querySelector('[data-act="drink"]')?.focus();
+      b.disabled = false;
+      return openDrink({ wine: w });
     } else {
       const row = await api(`/api/wines/${id}/open`, { method: "POST", body: { opened: !w.o } });
       replaceWine(row);
@@ -483,3 +488,149 @@ try {
 } catch (err) {
   $("lede").textContent = `Kunde inte hämta källaren: ${err.message}`;
 }
+
+// ---------- drunk bottles and scores ----------
+
+async function loadDrinks() {
+  DRINKS = await api("/api/drinks");
+  $("tabDrunk").textContent = `Druckna (${DRINKS.length})`;
+}
+
+function setView(v) {
+  state.view = v;
+  $("tabCellar").setAttribute("aria-selected", v === "cellar");
+  $("tabDrunk").setAttribute("aria-selected", v === "drunk");
+  $("fonster").classList.toggle("hidden", v === "drunk");
+  // Countries for the filter come from what is shown.
+  const countries = v === "drunk"
+    ? [...new Set((DRINKS || []).map(d => d.country || "Okänt land"))].sort((a, b) => a.localeCompare(b, "sv"))
+    : lands;
+  const sel = $("land"), keep = state.land;
+  sel.innerHTML = `<option value="">Alla länder</option>` + countries.map(l => `<option>${esc(l)}</option>`).join("");
+  sel.value = countries.includes(keep) ? keep : "";
+  state.land = sel.value;
+  render();
+}
+$("tabCellar").onclick = () => setView("cellar");
+$("tabDrunk").onclick = async () => {
+  if (!DRINKS) { $("list").innerHTML = `<p class="empty">Hämtar…</p>`; try { await loadDrinks(); } catch (err) { toast(err.message); return; } }
+  setView("drunk");
+};
+
+function renderDrunk() {
+  const rows = (DRINKS || []).filter(d => {
+    if (state.type !== "alla" && d.type !== state.type) return false;
+    if (state.land && (d.country || "Okänt land") !== state.land) return false;
+    if (state.q) {
+      const h = [d.name, d.producer, d.region, d.country, d.vintage, d.note, d.user].join(" ").toLowerCase();
+      if (!state.q.split(/\s+/).every(x => h.includes(x))) return false;
+    }
+    return true;
+  });
+  if (!rows.length) {
+    $("list").innerHTML = `<p class="empty">${DRINKS?.length ? "Inget matchar. Prova ett annat sökord eller välj Alla." : "Inga flaskor är druckna än. Tryck på ”Drack en” vid ett vin när ni öppnar det."}</p>`;
+    return;
+  }
+  const groups = new Map();
+  for (const d of rows) {
+    const t = when(d.created_at), key = `${MONTHS[t.getMonth()]} ${t.getFullYear()}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(d);
+  }
+  const rated = rows.filter(d => d.rating);
+  const avg = rated.length ? fmtRating((rated.reduce((a, d) => a + d.rating, 0) / rated.length).toFixed(1)) : null;
+  $("list").innerHTML = `<p class="drunk-sum">${rows.length} ${rows.length === 1 ? "flaska" : "flaskor"}${avg ? `, snittbetyg ${avg} av 5` : ""}.</p>` +
+    [...groups].map(([month, ds]) => `<section class="country"><h2>${month}<small>${ds.length} ${ds.length === 1 ? "flaska" : "flaskor"}</small></h2><ol class="wines">` +
+      ds.map(d => `<li class="wine drunk" style="--c:${col(d.type || "rott")}"><span class="dot" aria-hidden="true"></span>
+        <div><div class="head">${d.photo ? `<button type="button" class="thumb" data-dview="${d.id}" aria-label="Visa etiketten för ${esc(d.name)}">
+          <img src="${photoUrl({ dbId: d.wine_id, photo: d.photo }, "thumb")}" alt="" loading="lazy" width="54" height="72"></button>` : ""}
+        <div><div class="name">${esc(d.name || "Borttaget vin")}${d.vintage ? ` <span class="vint">${esc(d.vintage)}</span>` : ""}</div>
+        <div class="meta">${esc(d.producer || "")}${d.region ? ", " + esc(d.region) : ""}</div>
+        <div class="meta">${when(d.created_at).toLocaleDateString("sv-SE", { day: "numeric", month: "short" })}${d.user ? ` · ${esc(d.user)}` : ""}</div></div></div>
+        ${d.note ? `<p class="dnote">”${esc(d.note)}”</p>` : ""}
+        <div class="acts" data-drink="${d.id}">
+          <button type="button" data-act="rate">${d.rating ? "Ändra betyg" : "Sätt betyg"}</button>
+          ${d.name ? `<button type="button" data-act="undo">Ångra</button>` : ""}
+        </div></div>
+        <div class="yr">${d.rating ? `<span class="score" role="img" aria-label="${d.rating} av 5">${starText(d.rating)}</span>` : `<span class="qty">inget betyg</span>`}</div></li>`).join("") +
+      `</ol></section>`).join("");
+}
+
+$("list").addEventListener("click", async e => {
+  const v = e.target.closest("[data-dview]");
+  if (v) {
+    const d = DRINKS.find(x => x.id === Number(v.dataset.dview));
+    return viewPhoto({ dbId: d.wine_id, photo: d.photo, n: d.name, v: d.vintage });
+  }
+  const b = e.target.closest("[data-drink] button"); if (!b) return;
+  const d = DRINKS.find(x => x.id === Number(b.parentElement.dataset.drink)); if (!d) return;
+  if (b.dataset.act === "rate") return openDrink({ drink: d });
+  if (!confirm(`Ångra att en flaska ${d.name} dracks? Flaskan läggs tillbaka i källaren.`)) return;
+  try {
+    await api(`/api/drinks/${d.id}`, { method: "DELETE" });
+    WINES = (await api("/api/wines")).map(fromApi);
+    await loadDrinks();
+    rebuild();
+    toast(`${d.name} är tillbaka i källaren.`);
+  } catch (err) { toast(err.message); }
+});
+
+// One dialog for "Drack en" (new bottle) and for scoring afterwards.
+const drinkDlg = $("drinkDlg"), drinkForm = $("drinkForm");
+let drinkTarget = null, drinkRating = null;
+function paintStars() {
+  $("stars").innerHTML = [1, 2, 3, 4, 5].map(n =>
+    `<button type="button" role="radio" aria-checked="${drinkRating === n}" aria-label="${n} av 5" data-n="${n}" class="${drinkRating >= n ? "on" : ""}">★</button>`).join("");
+  $("starsText").textContent = drinkRating ? `${drinkRating} av 5` : "Valfritt. Tryck igen för att ta bort.";
+}
+$("stars").onclick = e => {
+  const s = e.target.closest("[data-n]"); if (!s) return;
+  const n = Number(s.dataset.n);
+  drinkRating = drinkRating === n ? null : n;
+  paintStars();
+  $("stars").querySelector(`[data-n="${n}"]`).focus();
+};
+$("stars").onkeydown = e => {
+  const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (!d) return;
+  e.preventDefault();
+  drinkRating = Math.min(5, Math.max(1, (drinkRating || 0) + d));
+  paintStars();
+  $("stars").querySelector(`[data-n="${drinkRating}"]`).focus();
+};
+function openDrink(target) {
+  drinkTarget = target;
+  const d = target.drink, w = target.wine;
+  drinkRating = d ? d.rating : null;
+  drinkForm.elements.note.value = d ? d.note || "" : "";
+  $("drinkErr").textContent = "";
+  $("drinkH").textContent = d ? "Betyg och anteckning" : "Drack en flaska";
+  $("drinkWine").textContent = d ? `${d.name}${d.vintage ? " " + d.vintage : ""}` : `${w.n}${w.v ? " " + w.v : ""} · ${w.q} ${w.q === 1 ? "flaska" : "flaskor"} i källaren`;
+  $("drinkSave").textContent = d ? "Spara" : "Drack en";
+  paintStars();
+  drinkDlg.showModal();
+  $("stars").querySelector("button").focus();
+}
+$("drinkCancel").onclick = () => drinkDlg.close();
+drinkForm.onsubmit = async e => {
+  e.preventDefault();
+  $("drinkSave").disabled = true;
+  const body = { rating: drinkRating, note: drinkForm.elements.note.value };
+  try {
+    if (drinkTarget.drink) {
+      const row = await api(`/api/drinks/${drinkTarget.drink.id}`, { method: "PATCH", body });
+      Object.assign(drinkTarget.drink, row);
+      WINES = (await api("/api/wines")).map(fromApi); // averages change
+      drinkDlg.close(); rebuild(); toast("Sparat.");
+    } else {
+      const w = drinkTarget.wine;
+      const row = await api(`/api/wines/${w.dbId}/drink`, { method: "POST", body });
+      drinkDlg.close();
+      replaceWine(row);
+      if (DRINKS) await loadDrinks();
+      toast(row.quantity ? `Skål! ${row.quantity} kvar av ${w.n}.` : `Skål! Det var sista flaskan ${w.n}. Den finns under Druckna.`);
+      if (row.quantity) $(w.id)?.querySelector('[data-act="drink"]')?.focus();
+    }
+  } catch (err) { $("drinkErr").textContent = err.message; }
+  finally { $("drinkSave").disabled = false; }
+};
+loadDrinks().catch(() => {});

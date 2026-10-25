@@ -332,6 +332,32 @@ test("label photos: upload, view, replace, remove, backup and restore", async ()
   assert.equal(fs.readdirSync(config.photosDir).length, 0);
 });
 
+test("drunk bottles: score, note, list and undo", async () => {
+  const w = await (await call("/api/wines", { method: "POST", body: { type: "rott", name: "Betygsvin", vintage: "2019", quantity: 2 } })).json();
+  assert.equal((await call(`/api/wines/${w.id}/drink`, { method: "POST", body: { rating: 7 } })).status, 400);
+  const after = await (await call(`/api/wines/${w.id}/drink`, { method: "POST", body: { rating: 4, note: "Fin till lamm" } })).json();
+  assert.deepEqual([after.quantity, after.rating_avg, after.rating_n], [1, 4, 1]);
+  await call(`/api/wines/${w.id}/drink`, { method: "POST", body: {} });
+
+  let drinks = (await (await call("/api/drinks")).json()).filter(d => d.wine_id === w.id);
+  assert.equal(drinks.length, 2);
+  const unrated = drinks.find(d => d.rating === null);
+  assert.ok(drinks.some(d => d.rating === 4 && d.note === "Fin till lamm" && d.user));
+  assert.equal(drinks[0].quantity, 0);
+
+  const patched = await (await call(`/api/drinks/${unrated.id}`, { method: "PATCH", body: { rating: 5, note: "Ännu bättre" } })).json();
+  assert.deepEqual([patched.rating, patched.note], [5, "Ännu bättre"]);
+  assert.equal((await call(`/api/drinks/${unrated.id}`, { method: "PATCH", body: { rating: 0 } })).status, 400);
+  const st = await (await call("/api/stats")).json();
+  assert.deepEqual(st.topRated[0], { name: "Betygsvin", vintage: "2019", type: "rott", avg: 4.5, n: 2 });
+
+  // Undo puts the bottle back.
+  assert.equal((await call(`/api/drinks/${unrated.id}`, { method: "DELETE" })).status, 204);
+  const back = (await (await call("/api/wines")).json()).find(x => x.id === w.id);
+  assert.deepEqual([back.quantity, back.rating_avg, back.rating_n], [1, 4, 1]);
+  assert.equal((await call(`/api/drinks/${unrated.id}`, { method: "DELETE" })).status, 404);
+});
+
 test("offsite status feeds health", async () => {
   const cfg = { ...config, offsiteTarget: "backup@nas:/srv/vin" };
   const { health } = await import("../server/health.js");
