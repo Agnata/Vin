@@ -56,6 +56,9 @@ export function accountRouter(db, auth, mailer, config, twoFactor) {
   // ---- two-step verification ----
   r.post("/account/totp/setup", requireUser, limiter, async (req, res) => {
     if (!checkPassword(req, res)) return;
+    // Replacing a factor that is already on needs the same proof as turning it off.
+    if (twoFactor.status(req.user.id).enabled && !twoFactor.check(req.user.id, req.body?.code))
+      return res.status(400).json({ error: "Ange en kod från din app eller en reservkod för att byta app." });
     const secret = twoFactor.begin(req.user.id);
     const uri = otpauthUri(secret, req.user.email);
     const qr = await QRCode.toString(uri, { type: "svg", margin: 1, errorCorrectionLevel: "M" });
@@ -72,6 +75,7 @@ export function accountRouter(db, auth, mailer, config, twoFactor) {
   r.post("/account/totp/recovery", requireUser, limiter, (req, res) => {
     if (!checkPassword(req, res)) return;
     if (!twoFactor.status(req.user.id).enabled) return res.status(400).json({ error: "Tvåstegsverifiering är inte påslagen." });
+    if (!twoFactor.check(req.user.id, req.body?.code)) return res.status(400).json({ error: "Fel kod." });
     res.json({ recoveryCodes: twoFactor.newRecoveryCodes(req.user.id), ...view(req.user.id) });
   });
 

@@ -50,16 +50,18 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
       },
     },
   }));
-  // Photos are the only large request bodies; everything else stays small.
-  app.use("/api/claude/label", express.json({ limit: "8mb" }));
-  app.use(/^\/api\/wines\/\d+\/photo$/, express.json({ limit: "5mb" }));
-  app.use(express.json({ limit: "50kb" }));
+  // The session comes from the cookie alone, so it is known before any body is read.
+  app.use(auth.middleware);
+  // Photos are the only large request bodies, and only signed-in users may send them; everything else stays
+  // small. Compressed bodies are refused (our client never sends them), so the limits count real bytes.
+  if (config.claude.enabled) app.use("/api/claude/label", requireUser, express.json({ limit: "8mb", inflate: false }));
+  app.use(/^\/api\/wines\/\d+\/photo$/, requireUser, express.json({ limit: "5mb", inflate: false }));
+  app.use(express.json({ limit: "50kb", inflate: false }));
   // Signed-in pages and the API are never cached by browsers or proxies.
   app.use(["/api", "/kallaren", "/konto", "/statistik", "/admin", "/login", "/losenord"], (_req, res, next) => {
     res.set("Cache-Control", "no-store");
     next();
   });
-  app.use(auth.middleware);
   app.use("/api", sameOriginJson(config));
 
   // ---- public ----
@@ -130,6 +132,8 @@ export function createApp(config = defaultConfig, db = openDb(config.dbPath), ma
   app.use((_req, res) => res.status(404).sendFile(page("404.html")));
   app.use((err, _req, res, _next) => {
     if (err.type === "entity.parse.failed") return res.status(400).json({ error: "Ogiltig JSON." });
+    if (err.type === "entity.too.large") return res.status(413).json({ error: "För stort." });
+    if (err.type === "encoding.unsupported") return res.status(415).json({ error: "Komprimerade anrop stöds inte." });
     console.error(err);
     res.status(500).json({ error: "Något gick fel på servern." });
   });

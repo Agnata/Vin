@@ -92,6 +92,18 @@ test("cross-site and non-JSON writes are blocked", async () => {
   assert.equal(form.status, 415);
 });
 
+test("large and compressed bodies are refused before anyone has signed in", async () => {
+  const { gzipSync } = await import("node:zlib");
+  const bomb = gzipSync("[" + "{},".repeat(500_000) + "{}]"); // ~1.5 MB of JSON in a few kB
+  const post = (p, headers) => fetch(base + p, { method: "POST", headers: { "Content-Type": "application/json", "Content-Encoding": "gzip", ...headers }, body: bomb });
+  const t = Date.now();
+  assert.equal((await post("/api/wines/1/photo")).status, 401);
+  assert.equal((await post("/api/claude/label")).status, 415, "Claude is off: only the small parser, which refuses gzip");
+  assert.equal((await post("/api/login")).status, 415);
+  assert.ok(Date.now() - t < 1000, "nothing was inflated");
+  assert.equal((await post("/api/wines/1/photo", { Cookie: cookie })).status, 415, "compressed bodies are refused for users too");
+});
+
 test("CSV export", async () => {
   const r = await call("/api/wines/export.csv");
   assert.equal(r.status, 200);
@@ -138,6 +150,12 @@ test("two-step verification: required for admin, login with code or recovery cod
   r = await login();
   for (let i = 0; i < 5; i++) await step2(r.ticket, "123456");
   assert.equal((await step2(r.ticket, codeAt(secret, currentStep() + 1))).status, 410, "ticket dies after 5 attempts");
+
+  // With 2FA on, a new app or new recovery codes need the current factor, not just the password.
+  assert.equal((await call("/api/account/totp/setup", { method: "POST", body: { password: "hemligt-losenord" } })).status, 400);
+  assert.equal((await call("/api/account/totp/recovery", { method: "POST", body: { password: "hemligt-losenord" } })).status, 400);
+  assert.equal((await call("/api/account/totp/recovery", { method: "POST", body: { password: "hemligt-losenord", code: "123456" } })).status, 400);
+  assert.equal(db.prepare("SELECT totp_secret FROM users WHERE email = 'a@example.se'").get().totp_secret, secret, "factor unchanged");
 });
 
 test("admin invites a user who sets a password and signs in", async () => {
