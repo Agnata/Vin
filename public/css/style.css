@@ -291,3 +291,4 @@ fieldset.rate{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
 .stars button{font-size:34px;line-height:1;background:none;border:0;padding:2px 3px;cursor:pointer;color:var(--rule)}
 .stars button.on{color:var(--rott)}
 .stars button:focus-visible{outline:2px solid var(--focus);outline-offset:1px;border-radius:4px}
+.toplist .lbl span:last-child{color:var(--ink)} .toplist small{color:var(--muted)}
