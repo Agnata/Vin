@@ -478,11 +478,44 @@ function enableClaude() {
   };
 }
 
+// A composed dish: Claude reads the whole plate and explains what drives the choice.
+function showDetailed(r) {
+  const picks = r.val.map(v => { const w = WINES.find(x => x.dbId === v.id); return w ? { w, why: v.motivering, serve: v.servering } : null; }).filter(Boolean);
+  showPicks(picks, r.analys);
+  const out = $("pairOut");
+  if (r.nycklar.length) out.querySelector(".intro")?.insertAdjacentHTML("afterend", `<ul class="keys">${r.nycklar.map(k => `<li>${esc(k)}</li>`).join("")}</ul>`);
+  out.querySelectorAll(".pick").forEach((b, i) => {
+    if (picks[i]?.serve) b.querySelector(".why").insertAdjacentHTML("afterend", `<span class="serve">Servering: ${esc(picks[i].serve)}</span>`);
+    if (i === 0 && picks.length > 1) b.querySelector(".name").insertAdjacentHTML("afterbegin", `<span class="best">Bäst</span> `);
+  });
+  const extra = [r.undvik && `<p class="intro"><b>Undvik:</b> ${esc(r.undvik)}</p>`, r.saknas && `<p class="intro"><b>Saknas i källaren:</b> ${esc(r.saknas)}</p>`].filter(Boolean).join("");
+  if (extra) out.insertAdjacentHTML("beforeend", extra);
+}
+function enableComposed() {
+  const box = $("composed"), open = $("composedBtn"), f = $("composedForm"), ta = $("composedIn"), go = $("composedGo");
+  box.classList.remove("hidden");
+  open.onclick = () => {
+    const show = f.classList.toggle("hidden") === false;
+    open.setAttribute("aria-expanded", show);
+    if (show) { if (!ta.value && inp.value.trim()) ta.value = inp.value.trim(); ta.oninput(); ta.focus(); }
+  };
+  ta.oninput = () => { $("composedCount").textContent = `${ta.value.length} / 1000`; };
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const dish = ta.value.trim(); if (!dish) { ta.focus(); return; }
+    [...$("dishes").children].forEach(x => x.setAttribute("aria-pressed", "false"));
+    go.disabled = true; $("pairOut").innerHTML = `<p class="intro">Claude går igenom rätten…</p>`;
+    try { showDetailed(await api("/api/claude/pair/detail", { method: "POST", body: { dish } })); }
+    catch (err) { $("pairOut").innerHTML = `<p class="intro">${esc(err.message)}</p>`; }
+    finally { go.disabled = false; }
+  };
+}
+
 // ---------- start ----------
 try {
   const [me, rows] = await Promise.all([api("/api/me"), api("/api/wines")]);
   renderNav(me.user, "/kallaren");
-  if (me.claude) enableClaude();
+  if (me.claude) { enableClaude(); enableComposed(); }
   WINES = rows.map(fromApi);
   rebuild();
 } catch (err) {
