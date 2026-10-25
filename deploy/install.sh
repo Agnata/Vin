@@ -180,7 +180,8 @@ git_repo rev-parse HEAD > "$STAGE/REVISION" 2>/dev/null || true
 chown -R root:root "$STAGE"
 chmod -R u=rwX,go=rX "$STAGE"
 chmod 755 "$STAGE/deploy/"*.sh
-(cd "$STAGE" && "$NODE_BIN" --disable-warning=ExperimentalWarning --input-type=module \
+# Runs app and npm code, so it runs as the service user, never as root.
+(cd "$STAGE" && as_service --input-type=module \
   -e "await import('./server/app.js'); const { DatabaseSync } = await import('node:sqlite'); new DatabaseSync(':memory:').exec('select 1');") \
   || { rm -rf "$STAGE"; die "Den nya versionen startar inte (import/node:sqlite). Inget är bytt."; }
 ok "Kontrollerad i $STAGE"

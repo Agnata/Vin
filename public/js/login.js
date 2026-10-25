@@ -2,9 +2,15 @@ import { api } from "./common.js";
 
 const $ = id => document.getElementById(id);
 let ticket = null;
+// Only a path on this site: browsers read "/\\host" and "/<tab>/host" as another site.
 function goNext() {
   const next = new URLSearchParams(location.search).get("next");
-  location.href = next && next.startsWith("/") && !next.startsWith("//") ? next : "/kallaren";
+  let dest = "/kallaren";
+  try {
+    const u = new URL(next || "", location.origin);
+    if (next && u.origin === location.origin) dest = u.pathname + u.search + u.hash;
+  } catch { /* keep /kallaren */ }
+  location.href = dest;
 }
 $("email").focus();
 

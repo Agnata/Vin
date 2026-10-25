@@ -93,7 +93,7 @@ tfa.confirm.onsubmit = async e => {
 $("tfaNewCodes").onclick = async () => {
   $("tfaManageErr").textContent = "";
   try {
-    const r = await api("/api/account/totp/recovery", { method: "POST", body: { password: tfa.manage.elements.password.value } });
+    const r = await api("/api/account/totp/recovery", { method: "POST", body: { password: tfa.manage.elements.password.value, code: tfa.manage.elements.code.value } });
     tfa.manage.reset(); Object.assign(account, r);
     showCodes(account, r.recoveryCodes);
   } catch (err) { $("tfaManageErr").textContent = err.message; }
