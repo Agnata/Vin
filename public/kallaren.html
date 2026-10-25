@@ -29,6 +29,14 @@
     <button type="button" id="askBtn">Föreslå vin</button>
   </div>
   <p class="asknote" id="askNote"><button type="button" id="claudeBtn" class="linkbtn">Fråga Claude i stället</button> för en mer genomtänkt bedömning.</p>
+  <div class="composed hidden" id="composed">
+    <button type="button" class="btn ghost small" id="composedBtn" aria-expanded="false" aria-controls="composedForm">Komponerad rätt? Fråga Claude om helheten</button>
+    <form id="composedForm" class="hidden">
+      <label for="composedIn">Beskriv hela rätten: råvara, tillagning, sås, tillbehör och kryddor.</label>
+      <textarea id="composedIn" rows="4" maxlength="1000" placeholder="T.ex. ugnsbakad torskrygg med brynt smör, pepparrot och äggahackat, potatispuré och syrade rödbetor"></textarea>
+      <div class="row"><button type="submit" class="btn" id="composedGo">Fråga Claude</button><span class="note" id="composedCount">0 / 1000</span></div>
+    </form>
+  </div>
   <div class="dishes" id="dishes" role="group" aria-label="Maträtt"></div>
   <div id="pairOut" aria-live="polite"></div>
 </section>

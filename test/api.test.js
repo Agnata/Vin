@@ -384,6 +384,31 @@ test("scheduler: backup at night, digest in the morning, Swedish time", async ()
   assert.equal(getMeta(db, "digest_date"), "2026-11-03");
 });
 
+test("Claude: composed dish gets an analysed pairing from the cellar only", async () => {
+  let asked;
+  const reply = (id) => ({ stop_reason: "end_turn", parsed_output: {
+    analys: "Det brynta smöret styr.", nycklar: ["smör kräver fyllighet", "pepparrot", "syra", "rödbetor", "en för mycket"],
+    val: [{ id, motivering: "Fyllig och frisk.", servering: "10 °C" }, { id: 99999, motivering: "Finns inte.", servering: "" }],
+    undvik: "Tanniner.", saknas: "" } });
+  const inCellar = (await (await call("/api/wines")).json()).find(w => w.quantity > 0);
+  const client = { messages: { parse: async req => { asked = req; return reply(inCellar.id); } } };
+  const app = createApp({ ...config, claude: { enabled: true, model: "test-model", client } }, db, mailer).listen(0);
+  await new Promise(r => app.once("listening", r));
+  const at = (p, body) => fetch(`http://127.0.0.1:${app.address().port}${p}`, { method: "POST", headers: { "Content-Type": "application/json", Cookie: cookie }, body: JSON.stringify(body) });
+  try {
+    assert.equal((await at("/api/claude/pair/detail", { dish: "  " })).status, 400);
+    const r = await at("/api/claude/pair/detail", { dish: "Torskrygg med brynt smör, pepparrot och rödbetor " + "x".repeat(2000) });
+    assert.equal(r.status, 200);
+    const out = await r.json();
+    assert.deepEqual(out.val.map(v => v.id), [inCellar.id]); // ids outside the cellar are dropped
+    assert.equal(out.nycklar.length, 4);
+    assert.equal(asked.model, "test-model");
+    assert.match(asked.messages[0].content, /Torskrygg med brynt smör/);
+    assert.ok(!asked.messages[0].content.includes("x".repeat(1000))); // the description is capped at 1000 characters
+    assert.equal((await fetch(`http://127.0.0.1:${app.address().port}/api/claude/pair/detail`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })).status, 401);
+  } finally { app.close(); }
+});
+
 test("logout ends the session", async () => {
   assert.equal((await call("/api/logout", { method: "POST", body: {} })).status, 204);
   assert.equal((await call("/api/wines")).status, 401);

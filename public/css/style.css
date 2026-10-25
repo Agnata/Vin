@@ -96,6 +96,15 @@ footer{color:var(--muted);font-size:15px;font-style:italic;padding:0 0 48px}
 .asknote.on{display:block}
 .linkbtn{font:inherit;font-style:italic;color:var(--rott);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
 .linkbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.composed{margin-top:12px}
+.composed form{margin-top:10px;display:grid;gap:8px}
+.composed label{font-size:15px;color:var(--muted)}
+.composed textarea{font:inherit;font-size:17px;width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);resize:vertical}
+.composed textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.composed .row{display:flex;align-items:center;gap:12px}
+#pairOut .keys{margin:4px 0 10px;padding-left:20px;font-size:15px;color:var(--muted)}
+.pick .serve{display:block;font-size:14px;font-style:italic;color:var(--muted);margin-top:2px}
+.pick .best{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--rott);font-weight:600}
 #pairOut{margin-top:18px}
 #pairOut .intro{font-style:italic;color:var(--muted);margin:0 0 6px}
 .pick{display:grid;grid-template-columns:12px 1fr auto;gap:0 14px;padding:12px 0;border-top:1px solid var(--rule);
