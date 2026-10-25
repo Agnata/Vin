@@ -33,6 +33,10 @@
   <div id="pairOut" aria-live="polite"></div>
 </section>
 <div class="controls">
+  <div class="views" role="tablist" aria-label="Visa">
+    <button type="button" role="tab" id="tabCellar" aria-selected="true" aria-controls="list">I källaren</button>
+    <button type="button" role="tab" id="tabDrunk" aria-selected="false" aria-controls="list">Druckna</button>
+  </div>
   <div class="types" id="types" role="group" aria-label="Vintyp"></div>
   <div class="row2">
     <input id="q" type="search" placeholder="Sök vin, druva eller region" aria-label="Sök">
@@ -95,6 +99,23 @@
       <span class="spacer"></span>
       <button type="button" class="btn ghost" id="cancelBtn">Avbryt</button>
       <button type="submit" class="btn" id="saveBtn">Spara</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="drinkDlg" aria-labelledby="drinkH">
+  <form id="drinkForm" method="dialog" novalidate>
+    <h2 id="drinkH">Drack en flaska</h2>
+    <p class="sub" id="drinkWine" style="margin:-8px 0 16px;color:var(--muted);font-style:italic"></p>
+    <fieldset class="rate">
+      <legend>Betyg</legend>
+      <div class="stars" id="stars" role="radiogroup" aria-label="Betyg från 1 till 5"></div>
+      <span class="note" id="starsText"></span>
+    </fieldset>
+    <label class="f" style="margin-top:14px">Anteckning<textarea name="note" maxlength="500" placeholder="Hur var det? Vad åt ni till?"></textarea></label>
+    <p class="err" id="drinkErr" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn ghost" id="drinkCancel">Avbryt</button>
+      <button type="submit" class="btn" id="drinkSave">Spara</button>
     </div>
   </form>
 </dialog>

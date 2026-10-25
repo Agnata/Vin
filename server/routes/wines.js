@@ -47,11 +47,19 @@ export function validateWine(body, partial = false) {
   return [out, null];
 }
 
+// Wine row plus the average score of its drunk bottles.
+const WINE = `SELECT w.*,
+  (SELECT ROUND(AVG(e.rating), 1) FROM events e WHERE e.wine_id = w.id AND e.kind = 'drank' AND e.rating IS NOT NULL) AS rating_avg,
+  (SELECT COUNT(e.rating) FROM events e WHERE e.wine_id = w.id AND e.kind = 'drank') AS rating_n
+  FROM wines w`;
+
+export const ratingProblem = r => (r === null || r === undefined || (Number.isInteger(r) && r >= 1 && r <= 5) ? null : "Betyget ska vara 1–5.");
+
 export function winesRouter(db, photos) {
   const r = Router();
   const q = {
-    list: db.prepare("SELECT * FROM wines WHERE quantity > 0 ORDER BY id"),
-    get: db.prepare("SELECT * FROM wines WHERE id = ?"),
+    list: db.prepare(`${WINE} WHERE w.quantity > 0 ORDER BY w.id`),
+    get: db.prepare(`${WINE} WHERE w.id = ?`),
     event: db.prepare("INSERT INTO events (wine_id, user_id, kind, detail) VALUES (?, ?, ?, ?)"),
     history: db.prepare(`SELECT e.kind, e.detail, e.created_at, u.name AS user FROM events e
                          LEFT JOIN users u ON u.id = e.user_id WHERE e.wine_id = ? ORDER BY e.id DESC LIMIT 50`),
@@ -108,8 +116,11 @@ export function winesRouter(db, photos) {
   // Drink one bottle: decrement quantity and clear "opened".
   r.post("/:id/drink", load, (req, res) => {
     if (req.wine.quantity < 1) return res.status(409).json({ error: "Det finns inga flaskor kvar." });
+    const rating = req.body?.rating ?? null;
+    if (ratingProblem(rating)) return res.status(400).json({ error: ratingProblem(rating) });
     db.prepare("UPDATE wines SET quantity = quantity - 1, opened = 0, updated_at = datetime('now') WHERE id = ?").run(req.wine.id);
-    log(req.wine.id, req, "drank", String(req.body?.note || "").slice(0, 500));
+    db.prepare("INSERT INTO events (wine_id, user_id, kind, detail, rating) VALUES (?, ?, 'drank', ?, ?)")
+      .run(req.wine.id, req.user?.id ?? null, String(req.body?.note || "").trim().slice(0, 500), rating);
     res.json(q.get.get(req.wine.id));
   });
 

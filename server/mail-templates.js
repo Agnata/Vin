@@ -45,6 +45,7 @@ const EVENT_TEXT = {
 export function digestMail({ name, period, events, soon, baseUrl, unsubscribeUrl, settingsUrl }) {
   const heading = period === "weekly" ? "Veckan i källaren" : "Senaste nytt i källaren";
   const line = e => `${e.name}${e.vintage ? " " + e.vintage : ""} ${EVENT_TEXT[e.kind]}${e.user ? ` av ${e.user}` : ""}` +
+    (e.kind === "drank" && e.rating ? `, ${"★".repeat(e.rating)}${"☆".repeat(5 - e.rating)}` : "") +
     (e.kind === "drank" && e.detail ? ` – ”${e.detail}”` : "");
   const soonLine = w => `${w.name}${w.vintage ? " " + w.vintage : ""} (bäst till ${w.drink_to})`;
   const dot = t => `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${TYPE_COLOR[t] || "#5C605A"};margin-right:8px"></span>`;

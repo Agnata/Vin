@@ -83,3 +83,9 @@ $("window").innerHTML = [
   [pct(w.late), `efter fönstret (${w.late})`],
 ].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join("") +
   (w.unknown ? `<p class="note" style="flex-basis:100%;margin:6px 0 0">${bottles(w.unknown)} utan drickfönster räknas inte.</p>` : "");
+
+// ---------- best scored ----------
+$("topRated").innerHTML = s.topRated.length
+  ? s.topRated.map(r => `<li><div class="lbl"><span><i class="dot" style="--c:var(--${esc(r.type)})" aria-hidden="true"></i>${esc(r.name)}${r.vintage ? " " + esc(r.vintage) : ""}</span>
+      <span><span aria-hidden="true">${"★".repeat(Math.round(r.avg))}${"☆".repeat(5 - Math.round(r.avg))}</span> ${String(r.avg).replace(".", ",")} <small>(${r.n})</small></span></div></li>`).join("")
+  : `<li class="empty">Inga betyg än. Sätt betyg när ni dricker en flaska, eller i efterhand under Druckna.</li>`;

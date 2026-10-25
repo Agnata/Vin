@@ -274,3 +274,21 @@ dialog.viewer{width:auto;max-width:min(92vw,900px);padding:14px;text-align:cente
 dialog.viewer figure{margin:0}
 dialog.viewer img{display:block;max-width:100%;max-height:78dvh;margin:0 auto;border-radius:6px}
 dialog.viewer figcaption{margin:10px 0 8px;font-style:italic;color:var(--muted)}
+
+/* ---------- views: in the cellar / drunk ---------- */
+.views{display:flex;gap:2px;margin-bottom:10px;border-bottom:1px solid var(--rule)}
+.views button{font:inherit;font-size:18px;background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:6px 12px 8px;margin-bottom:-1px;cursor:pointer}
+.views button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.views button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.drunk-sum{margin:26px 0 0;color:var(--muted);font-style:italic}
+.wine .vint{font-weight:300}
+.wine .dnote{margin:8px 0 0;font-style:italic;font-size:16px}
+.wine .avg{font-size:15px;color:var(--ink);margin-top:4px}
+.wine .avg span{color:var(--muted);font-style:italic}
+.score{font-size:18px;letter-spacing:1px;color:var(--ink)}
+fieldset.rate{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.stars{display:flex;gap:2px}
+.stars button{font-size:34px;line-height:1;background:none;border:0;padding:2px 3px;cursor:pointer;color:var(--rule)}
+.stars button.on{color:var(--rott)}
+.stars button:focus-visible{outline:2px solid var(--focus);outline-offset:1px;border-radius:4px}
+.toplist .lbl span:last-child{color:var(--ink)} .toplist small{color:var(--muted)}

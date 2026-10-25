@@ -33,6 +33,7 @@
 16. **Data:** rättat Brancaia Tre, Manchuela och Crane Lake Merlot i seed-filen.
 17. **Sött:** egen vintyp och flik för dessertviner (Sauternes, Tokaji, portvin, isvin). Ingår i matmatchningen för dessert och ostbricka, i statistik, mejl och etikettfoto. Databasen migreras automatiskt (schema 4).
 18. **Etikettfoton:** ett foto per vin, miniatyr i listan och stor bild vid tryck. Läggs till i "Lägg till vin" och "Redigera"; fotot från "Fotografera etiketten" sparas automatiskt. Förminskas i webbläsaren, lagras i `/var/lib/vinkallaren/photos` och ingår i backup, extern kopia och återställning (schema 5).
+19. **Druckna och betyg:** fliken "Druckna" listar varje uppdrucken flaska per månad med datum, vem, anteckning och betyg 1–5. Betyg och anteckning sätts vid "Drack en" eller i efterhand; "Ångra" lägger tillbaka flaskan. Snittbetyg visas i källaren, högst betygsatta viner i statistiken och betygen i mejlen (schema 6).
 
 ## Att göra
 
